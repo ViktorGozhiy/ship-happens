@@ -1,0 +1,9 @@
+{
+  "name": "ship-happens",
+  "description": "Marketplace for the sh plugin",
+  "owner": { "name": "Viktor" },
+  "plugins": [
+    { "name": "sh", "source": "./",
+      "description": "Skills and agents for designing, reviewing, planning and implementing changes" }
+  ]
+}

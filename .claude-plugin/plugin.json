@@ -1,0 +1,10 @@
+{
+  "name": "sh",
+  "description": "Skills and agents for designing, reviewing, planning and implementing changes",
+  "version": "0.1.0",
+  "author": { "name": "Viktor" },
+  "userConfig": {
+    "codex_review": { "title": "Codex review", "type": "boolean", "default": false,
+      "description": "Send specs and branch diffs to Codex as an additional reviewer." }
+  }
+}
