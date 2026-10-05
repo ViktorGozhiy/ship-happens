@@ -71,6 +71,33 @@ if kind == "agent":
 PY
 }
 
+# The files of the spec's "Repository layout".
+LAYOUT_FILES='.claude-plugin/plugin.json
+.claude-plugin/marketplace.json
+skills/design/SKILL.md
+skills/review/SKILL.md
+skills/plan/SKILL.md
+skills/plan/plan-format.md
+skills/implement/SKILL.md
+skills/quick-fix/SKILL.md
+skills/debugging/SKILL.md
+skills/pr-review/SKILL.md
+agents/advisor.md
+agents/spec-reviewer.md
+agents/plan-writer.md
+agents/plan-reviewer.md
+agents/implementer.md
+agents/code-reviewer.md
+tests/check-structure.sh'
+
+check_layout() {
+  local root=$1 path
+  while IFS= read -r path; do
+    [ -f "$root/$path" ] || fail "$path" "is part of the repository layout but does not exist"
+  done <<<"$LAYOUT_FILES"
+  [ "$failures" -eq 0 ]
+}
+
 check_manifests() {
   local root=$1 plugin marketplace
   plugin=$root/.claude-plugin/plugin.json
@@ -171,7 +198,10 @@ check_tree() {
   local root=$1 kind=$2
   failures=0
   check_manifests "$root"
-  [ "$kind" = real ] && check_manifests_with_claude "$root"
+  if [ "$kind" = real ]; then
+    check_manifests_with_claude "$root"
+    check_layout "$root"
+  fi
   check_frontmatter "$root"
   check_unique_names "$root"
   check_content "$root"
@@ -240,6 +270,17 @@ new_valid_fixture() {
   dir=$(new_fixture)
   write_skill "$dir" demo
   write_agent "$dir" helper
+  echo "$dir"
+}
+
+# A fixture holding every file of the repository layout.
+new_layout_fixture() {
+  local dir path
+  dir=$(new_fixture)
+  while IFS= read -r path; do
+    mkdir -p "$dir/$(dirname "$path")"
+    touch "$dir/$path"
+  done <<<"$LAYOUT_FILES"
   echo "$dir"
 }
 
@@ -359,6 +400,28 @@ run_self_tests() {
   dir=$(new_valid_fixture)
   echo "Codex is enabled when \${user_config.other_key} is true." >>"$dir/skills/demo/SKILL.md"
   self_test_fail "user_config key missing from plugin.json" "$dir" "user_config.other_key} is not a key of userConfig"
+
+  dir=$(new_layout_fixture)
+  if out=$(check_layout "$dir"); then
+    echo "pass: self-test: complete layout"
+  else
+    echo "FAIL: self-test: complete layout should pass but failed:"
+    echo "$out"
+    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
+  fi
+
+  dir=$(new_layout_fixture)
+  rm "$dir/agents/advisor.md"
+  if out=$(check_layout "$dir"); then
+    echo "FAIL: self-test: layout without agents/advisor.md should fail but passed"
+    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
+  elif ! grep -qF -- "agents/advisor.md" <<<"$out"; then
+    echo "FAIL: self-test: layout without agents/advisor.md failed without naming the file:"
+    echo "$out"
+    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
+  else
+    echo "pass: self-test: layout without agents/advisor.md"
+  fi
 
   [ "$SELF_TEST_FAILURES" -eq 0 ]
 }
