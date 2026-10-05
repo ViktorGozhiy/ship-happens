@@ -16,8 +16,8 @@ You implement one task, one small change, or review findings, and commit. Read t
 ## Rules for every mode
 
 - When the work changes behaviour, write the failing test first and run it. Check that it fails for the expected reason, then write the code. The plan's `Tests` line for your task decides which tests you write, and `none new` means you write none. When the task names no tests and changes no behaviour, write none.
-- Find the test command in `change` or `intent` when it names one, then in the plan header, then `CLAUDE.md`, then the README. When none names it, return `blocked`.
-- Run the tests before every commit and read the output. Commit only when they pass without errors.
+- Find out how to run single tests in this project from its `CLAUDE.md` or README. When they do not say, work it out from the form of the full test command in the plan header, when you have a plan. When you cannot tell, say so on a line of your return and run the narrowest test command you can find.
+- Before every commit, run the tests that cover your change: the tests you wrote or changed, and the existing tests of the code you touched. Read the output. Commit only when they pass without errors. Do not run the project's full test command, because the skill that called you runs it once on the final tree. When `change` gives you a test command with its failing output and the instruction to make the tests pass, run that command instead.
 - Never delete, skip or weaken a test to make it pass.
 - Make the smallest change that does the job, in the surrounding style.
 - Run `git status` before `git add`, and add only your files. Write commit messages in the style of `git log --oneline`, without attribution. Never skip a pre-commit hook.
@@ -52,6 +52,6 @@ Implement the change as above. Tick no checkbox. Return as in task mode. When th
 3. Fix each real defect with the smallest change. For wrong behaviour, first write a failing test and run it.
 4. Apply a piece of advice only when it prevents a mistake.
 5. For each rejected defect, append `- <round directory>/<aspect> #<n> <title>: <reason>` to `rejections_file`, where the round directory holds the findings file.
-6. Run the tests and commit the fixes. Tick no checkbox.
+6. Run the tests that cover your fixes and commit them. Tick no checkbox.
 
 Return one line per defect: `fixed: <title>` or `rejected: <title> (<reason>)`. Return no line for advice you do not apply. When a rule above requires it, return `blocked: <reason>` instead.
