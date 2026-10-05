@@ -37,4 +37,4 @@ When the spec leaves a choice open, make the choice in the plan. Start the line 
 
 ## Finishing
 
-The last section is `## Finishing (main session)`. It lists the branch review, the full test run, the push and the pull request. The implementer never runs this section. The push and the pull request happen only after Viktor has answered the final question of the implementation run.
+The last section is `## Finishing (main session)`. It lists the branch review, the full test run, the push and the pull request. The implementer never runs this section. The push and the pull request happen only if Viktor chooses them in the final question of the implementation run.
