@@ -29,7 +29,7 @@ You implement one task, one small change, or review findings, and commit. Read t
 
 1. Read the plan header, your task, and the spec sections it points to. Read other tasks only for interfaces you must match.
 2. Implement the task as written. With `failure`, find its cause before you change anything.
-3. In your last commit, change `- [ ] Task N done` to `- [x] Task N done`. Change nothing else in the plan.
+3. In your last commit, change `- [ ] Task N done` to `- [x] Task N done`. Change nothing else in the plan. When the result differs from the plan, add a line `Deviation: task N: <what and why>` to the message body of that commit, so that a later session can read it from `git log`.
 4. When `git check-ignore -q <plan>` exits 0, tick the checkbox anyway, commit only the code, and say so on a second line of the return.
 5. Never execute the plan's `Finishing (main session)` section.
 

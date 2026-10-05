@@ -23,7 +23,7 @@ The path of a reviewed plan. Its header names the spec and the project's full te
 1. Run `git rev-parse HEAD` and keep the hash as the task base.
 2. Dispatch a fresh `sh:implementer` in task mode with `plan`, `task` and `spec`. It ticks the task's checkbox in its last commit. Its return starts with `done`, `blocked: <reason>` or `deviated: <what and why>`.
 3. `blocked` stops the loop. Report the reason to Viktor.
-4. A deviation that changes behaviour the spec describes stops the loop. Report it to Viktor. Any other deviation is recorded for the report, and the task goes to review like a `done` task. Add the deviation text to the `intent` of that task's reviewers and fixers, so that the reviewer does not report it as a defect.
+4. A deviation that changes behaviour the spec describes stops the loop. Report it to Viktor. Any other deviation is recorded by the implementer in the message of its last commit, and the task goes to review like a `done` task. Add the deviation text to the `intent` of that task's reviewers and fixers, so that the reviewer does not report it as a defect.
 5. Review the task. Create a review directory `<scratch>/review-code-<YYYYMMDD-HHMMSS>` with an empty `rejections.md`. `<scratch>` is the session's scratchpad directory, or the output of `mktemp -d` when there is none.
 6. Dispatch one `sh:code-reviewer` with `target` `<task base>..<HEAD hash>`, `aspect` `full`, `findings_file` `<review directory>/round-1/full.md`, `rejections_file` `<review directory>/rejections.md`, and `intent` "plan `<plan path>`, task `<n>`". It checks acceptance criteria and code quality in one pass.
 7. When the reviewer ends with an error, or its findings file is missing or has no verdict line, dispatch it once more. When that fails too, stop and report to Viktor. A missing file is never read as `clean`. When the verdict is `clean`, go to the next task.
@@ -34,9 +34,9 @@ A task fails when the implementer ends with an error or its return does not star
 
 ## After the last task
 
-1. Call `sh:review` with `kind` `code`, `target` `<base>..<HEAD hash>`, and `intent` the spec path and the plan path, followed by each recorded deviation with its task number. When it stops with open blocking defects or a missing findings file, show them to Viktor and stop.
+1. Call `sh:review` with `kind` `code`, `target` `<base>..<HEAD hash>`, and `intent` the spec path and the plan path, followed by each line that starts with `Deviation:` in the output of `git log --format=%B <base>..HEAD`. That output includes tasks finished in an earlier run and deviations that Viktor accepted. When it stops with open blocking defects or a missing findings file, show them to Viktor and stop.
 2. Run the project's full test command from the plan header on the final tree. A green run from before the last commit does not count. When it fails, dispatch `sh:implementer` in change mode with `change` set to the test command, its failing output and the instruction to make the tests pass, then run the command again. When the implementer returns `blocked: ` or the command fails a second time, stop and report to Viktor.
-3. Report: what was built, the deviations, the review rounds and what they found, the test result, and the peak context size if you know it. Name each commit made after the branch review as not reviewed. Add any second line an implementer returned about an ignored plan file.
+3. Report: what was built, the deviations from that same output, the review rounds and what they found, the test result, and the peak context size if you know it. Name each commit made after the branch review as not reviewed. Add any second line an implementer returned about an ignored plan file.
 4. Ask with `AskUserQuestion`: merge into the base branch, open a pull request, or leave the branch. Do not push or publish before the answer.
 
 The plan's `Finishing (main session)` section is yours, never the implementer's. Carry out its push and pull request steps only when Viktor chose them in his answer.
