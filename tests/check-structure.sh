@@ -129,7 +129,7 @@ check_manifests_with_claude() {
 }
 
 check_frontmatter() {
-  local root=$1 file kind expected problem
+  local root=$1 file kind expected output problem
   for file in "$root"/skills/*/SKILL.md "$root"/agents/*.md; do
     [ -f "$file" ] || continue
     if [[ $file == */SKILL.md ]]; then
@@ -139,9 +139,14 @@ check_frontmatter() {
       kind=agent
       expected=$(basename "$file" .md)
     fi
+    if ! output=$(frontmatter_problems "$file" "$kind" "$expected" 2>&1); then
+      fail "${file#"$root"/}" "frontmatter could not be checked: $(tail -n 1 <<<"$output")"
+      continue
+    fi
+    [ -n "$output" ] || continue
     while IFS= read -r problem; do
       fail "${file#"$root"/}" "$problem"
-    done < <(frontmatter_problems "$file" "$kind" "$expected")
+    done <<<"$output"
   done
 }
 
@@ -300,8 +305,8 @@ self_test_pass() {
 }
 
 self_test_fail() {
-  local label=$1 dir=$2 expected=$3 out rc
-  out=$(check_tree "$dir" fixture)
+  local label=$1 dir=$2 expected=$3 kind=${4:-fixture} out rc
+  out=$(check_tree "$dir" "$kind")
   rc=$?
   if [ "$rc" -eq 0 ]; then
     echo "FAIL: self-test: $label should fail but passed"
@@ -344,6 +349,10 @@ run_self_tests() {
   dir=$(new_valid_fixture)
   printf -- '---\nname: demo\ndescription: a: b\n---\nBody.\n' >"$dir/skills/demo/SKILL.md"
   self_test_fail "invalid YAML" "$dir" "frontmatter is not valid YAML"
+
+  dir=$(new_valid_fixture)
+  printf -- '---\nname: other\ndescription: Fixture skill.\n---\n\xff\n' >"$dir/skills/demo/SKILL.md"
+  self_test_fail "frontmatter helper crash on invalid UTF-8" "$dir" "frontmatter could not be checked"
 
   dir=$(new_valid_fixture)
   printf -- '---\nname:\ndescription: Fixture skill.\n---\nBody.\n' >"$dir/skills/demo/SKILL.md"
@@ -422,6 +431,10 @@ run_self_tests() {
   else
     echo "pass: self-test: layout without agents/advisor.md"
   fi
+
+  dir=$(new_layout_fixture)
+  rm "$dir/agents/advisor.md"
+  self_test_fail "repository check applies the layout" "$dir" "agents/advisor.md: is part of the repository layout" real
 
   [ "$SELF_TEST_FAILURES" -eq 0 ]
 }
