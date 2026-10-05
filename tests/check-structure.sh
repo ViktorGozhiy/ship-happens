@@ -129,7 +129,8 @@ check_unique_names() {
 }
 
 check_content() {
-  local root=$1 file rel word_count name path
+  local root=$1 file rel word_count name path key keys
+  keys=$(jq -r '.userConfig // {} | keys[]' "$root/.claude-plugin/plugin.json" 2>/dev/null)
   while IFS= read -r file; do
     rel=${file#"$root"/}
 
@@ -149,6 +150,11 @@ check_content() {
       fi
     done < <(grep -oE '\$\{CLAUDE_PLUGIN_ROOT\}/[A-Za-z0-9_./-]+' "$file" |
       sed -E 's#^\$\{CLAUDE_PLUGIN_ROOT\}/##; s#\.+$##' | sort -u)
+
+    while IFS= read -r key; do
+      grep -qxF -- "$key" <<<"$keys" ||
+        fail "$rel" "\${user_config.$key} is not a key of userConfig in plugin.json"
+    done < <(grep -oE '\$\{user_config\.[A-Za-z0-9_]+\}' "$file" | sed -E 's/^\$\{user_config\.//; s/\}$//' | sort -u)
 
     if [[ $file == */SKILL.md ]]; then
       word_count=$(wc -w <"$file")
@@ -178,7 +184,12 @@ write_manifests() {
   local dir=$1
   mkdir -p "$dir/.claude-plugin"
   cat >"$dir/.claude-plugin/plugin.json" <<'JSON'
-{ "name": "sh", "description": "Fixture plugin", "version": "0.1.0" }
+{
+  "name": "sh",
+  "description": "Fixture plugin",
+  "version": "0.1.0",
+  "userConfig": { "codex_review": { "title": "Codex review", "type": "boolean" } }
+}
 JSON
   cat >"$dir/.claude-plugin/marketplace.json" <<'JSON'
 {
@@ -340,6 +351,14 @@ run_self_tests() {
   mkdir -p "$dir/skills/helper"
   printf -- '---\nname: helper\ndescription: Fixture skill.\n---\nBody.\n' >"$dir/skills/helper/SKILL.md"
   self_test_fail "skill and agent sharing a name" "$dir" "both a skill and an agent"
+
+  dir=$(new_valid_fixture)
+  echo "Codex is enabled when \${user_config.codex_review} is true." >>"$dir/skills/demo/SKILL.md"
+  self_test_pass "user_config key declared in plugin.json" "$dir"
+
+  dir=$(new_valid_fixture)
+  echo "Codex is enabled when \${user_config.other_key} is true." >>"$dir/skills/demo/SKILL.md"
+  self_test_fail "user_config key missing from plugin.json" "$dir" "user_config.other_key} is not a key of userConfig"
 
   [ "$SELF_TEST_FAILURES" -eq 0 ]
 }
