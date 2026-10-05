@@ -15,7 +15,7 @@ The path of a reviewed plan. Its header names the spec and the project's full te
 
 1. When `git status` shows uncommitted changes, stop and ask Viktor how to handle them.
 2. The branch name is the plan's file name without the date and without `.md`. For `2026-10-05-skill-set.md` it is `skill-set`.
-3. When the branch does not exist, run `git rev-parse HEAD` and keep the hash as the base, then create the branch in the current working tree. When it exists, check it out, and the base is the output of `git merge-base HEAD <default branch>`. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD`. When that fails, ask Viktor.
+3. When the branch does not exist, run `git rev-parse HEAD` and keep the hash as the base, then create the branch in the current working tree. When it exists, check it out, and the base is the output of `git merge-base HEAD <default branch>`. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix, which is the name of the local branch. When that fails, ask Viktor.
 4. Use a git worktree only when Viktor has said that another session works in this repository.
 
 ## For each unchecked task, in order
@@ -34,7 +34,7 @@ A task fails when the implementer ends with an error or its return does not star
 
 ## After the last task
 
-1. Call `sh:review` with `kind` `code`, `target` `<base>..<HEAD hash>`, and `intent` the spec path and the plan path. When it stops with open blocking defects or a missing findings file, show them to Viktor and stop.
+1. Call `sh:review` with `kind` `code`, `target` `<base>..<HEAD hash>`, and `intent` the spec path and the plan path, followed by each recorded deviation with its task number. When it stops with open blocking defects or a missing findings file, show them to Viktor and stop.
 2. Run the project's full test command from the plan header on the final tree. A green run from before the last commit does not count. When it fails, dispatch `sh:implementer` in change mode with `change` set to the test command, its failing output and the instruction to make the tests pass, then run the command again. When the implementer returns `blocked: ` or the command fails a second time, stop and report to Viktor.
 3. Report: what was built, the deviations, the review rounds and what they found, the test result, and the peak context size if you know it. Name each commit made after the branch review as not reviewed. Add any second line an implementer returned about an ignored plan file.
 4. Ask with `AskUserQuestion`: merge into the base branch, open a pull request, or leave the branch. Do not push or publish before the answer.
