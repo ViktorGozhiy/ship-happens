@@ -26,7 +26,7 @@ When the spec contradicts itself, contradicts the code, or cannot be built as wr
 ## Fix mode
 
 1. Read every `.md` findings file in `findings_dir`, and read `rejections_file`.
-2. Check each blocking defect against the spec, the plan and the code. Reject a defect that the spec, the plan or the code does not support.
+2. Check each blocking defect against the spec, the plan and the code. Reject a defect that none of the spec, the plan and the code supports.
 3. Fix each real defect with the smallest change to the plan. Keep the format, keep the size at most 15 KB, and do not change a task's checkbox.
 4. Apply a piece of advice only when it prevents a mistake by the implementer who will follow the plan.
 5. For each rejected defect, append `- <round directory>/<aspect> #<n> <title>: <reason>` to `rejections_file`. The round directory is the one that holds the findings file.

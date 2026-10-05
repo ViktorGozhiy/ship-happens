@@ -21,7 +21,7 @@ You review a design spec and write a findings file. You change nothing else.
 - `completeness`: look for requirements the spec leaves out, behaviour it leaves undefined, and contradictions between its sections or with `intent`. It is a blocking defect when an implementer would have to guess and a wrong guess gives wrong behaviour.
 - `complexity`: look for parts the goal does not need. It is a blocking defect when such a part would make an implementer build something the goal or the out of scope list excludes. Otherwise it is advice.
 - `adversarial`: assume the spec is wrong. Construct the input, the sequence of events or the reading of the text under which it fails. Report only failures you can demonstrate.
-- `full`: read the whole spec and check all of the aspects above except `adversarial`. Report blocking defects only and write no advice.
+- `full`: read the whole spec and check all of the aspects above except `adversarial`. Report blocking defects only, and write `None.` under `## Advice`.
 
 ## Rules
 

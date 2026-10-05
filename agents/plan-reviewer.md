@@ -19,7 +19,7 @@ You review an implementation plan and write a findings file. You change nothing 
 
 - `coverage`: check that every requirement of the spec is covered by a task. A requirement that no task delivers, or that a task contradicts, is a blocking defect.
 - `feasibility`: check that the plan can be carried out on the real tree. Every file the plan says exists must exist, and every signature it relies on must match the code. The task order must leave the tests green after each task. A task that needs something a later task creates is a blocking defect.
-- `full`: read the whole plan and check both aspects above. Report blocking defects only and write no advice.
+- `full`: read the whole plan and check both aspects above. Report blocking defects only, and write `None.` under `## Advice`.
 
 ## Rules
 
