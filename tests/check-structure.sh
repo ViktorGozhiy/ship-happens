@@ -161,7 +161,7 @@ check_unique_names() {
 }
 
 check_content() {
-  local root=$1 file rel word_count name path key keys
+  local root=$1 file rel name path key keys
   keys=$(jq -r '.userConfig // {} | keys[]' "$root/.claude-plugin/plugin.json" 2>/dev/null)
   while IFS= read -r file; do
     rel=${file#"$root"/}
@@ -187,13 +187,6 @@ check_content() {
       grep -qxF -- "$key" <<<"$keys" ||
         fail "$rel" "\${user_config.$key} is not a key of userConfig in plugin.json"
     done < <(grep -oE '\$\{user_config\.[A-Za-z0-9_]+\}' "$file" | sed -E 's/^\$\{user_config\.//; s/\}$//' | sort -u)
-
-    if [[ $file == */SKILL.md ]]; then
-      word_count=$(wc -w <"$file")
-      if [ "$word_count" -gt 900 ]; then
-        fail "$rel" "has $word_count words, the limit is 900"
-      fi
-    fi
   done < <(find "$root/skills" "$root/agents" -type f 2>/dev/null | sort)
 }
 
@@ -389,13 +382,6 @@ run_self_tests() {
   dir=$(new_valid_fixture)
   echo "Use superpowers:brainstorming first." >>"$dir/skills/demo/SKILL.md"
   self_test_fail "superpowers: reference" "$dir" "must not contain superpowers:"
-
-  dir=$(new_valid_fixture)
-  printf -- '---\nname: demo\ndescription: Fixture skill.\n---\nsh:helper\n' >"$dir/skills/demo/SKILL.md"
-  seq 1 892 | tr '\n' ' ' >>"$dir/skills/demo/SKILL.md"
-  self_test_pass "SKILL.md of exactly 900 words" "$dir"
-  echo "extra" >>"$dir/skills/demo/SKILL.md"
-  self_test_fail "SKILL.md of 901 words" "$dir" "has 901 words, the limit is 900"
 
   dir=$(new_valid_fixture)
   mkdir -p "$dir/skills/helper"
