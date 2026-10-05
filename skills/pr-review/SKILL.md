@@ -32,5 +32,5 @@ A pull request number, or a branch name. For a branch Viktor may also give a des
    - Line 1 is `Reviewed head: <head hash>`.
    - Create `.claude/reviews/` if it is missing. Before the first write, run `git check-ignore -q .claude/reviews/<record name>`. When it exits non-zero, append the line `.claude/reviews/` to the file that `git rev-parse --git-path info/exclude` prints, so the record never shows as untracked.
    - When you updated an existing record, state for each earlier finding whether it is resolved, and keep the earlier findings in the record.
-8. Run `git worktree list`. When a reviewer worktree is still listed, run `git worktree remove --force <path>` and say so in your summary.
+8. Run `git worktree list`. For each of `<review directory>/wt-behaviour`, `<review directory>/wt-tests` and `<review directory>/wt-simplicity` that is still listed, run `git worktree remove --force` on it and say so in your summary. Leave every other worktree alone, because it may belong to another session.
 9. Give Viktor a summary in plain language with the most severe findings first. Say which range you reviewed. For an update, say which earlier findings are resolved. Name the review record's path.
