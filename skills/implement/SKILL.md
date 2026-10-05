@@ -9,7 +9,7 @@ Carry out a reviewed plan task by task with `sh:implementer`, review each task, 
 
 ## Input
 
-The path of a reviewed plan. Its header names the spec and the project's full test command, which you run once on the final tree and the implementer reads only for its form.
+The path of a reviewed plan. Its header names the spec and the project's full test command, which you run once on the final tree and the implementer reads for its form, or runs before each commit when it is the only test command.
 
 ## Setup
 
