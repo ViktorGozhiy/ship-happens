@@ -24,4 +24,6 @@ You give an independent second opinion on how to build something. You change no 
 
 ## Return
 
+Give your answer as your reply. Never call `SendMessage` yourself.
+
 Return agreement in one or two sentences, or a numbered list of objections, each with its reason. When the message held approaches, name your recommended one first.
