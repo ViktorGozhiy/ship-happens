@@ -19,6 +19,6 @@ Find the root cause of a failure and hand it over. You write no test and no fix.
 
 ## Handover
 
-End with a statement of three parts: the root cause, the evidence for it, and a description of the test that fails because of the root cause. Remove any diagnostic output you added.
+End with a statement of three parts: the root cause, the evidence for it, and a description of the test that fails because of the root cause. Before you hand over, undo every change you made while debugging. That includes the change that confirmed the hypothesis and any diagnostic output, so that `git status` shows the same state as when you started. The fix is written later by `sh:implementer`, after its failing test.
 
 Pass the statement as the description of the change to `sh:quick-fix`, where `sh:implementer` writes the failing test first. When the fix changes a design, pass it as the idea to `sh:design`.
