@@ -25,12 +25,12 @@ The path of a reviewed plan. Its header names the spec and the project's full te
 3. `blocked` stops the loop. Report the reason to Viktor.
 4. A deviation that changes behaviour the spec describes stops the loop. Report it to Viktor. Any other deviation is recorded for the report, and the task goes to review like a `done` task.
 5. Review the task. Create a review directory `<scratch>/review-code-<YYYYMMDD-HHMMSS>` with an empty `rejections.md`. `<scratch>` is the session's scratchpad directory, or the output of `mktemp -d` when there is none.
-6. Dispatch one `sh:code-reviewer` with `target` `<task base>..<HEAD hash>`, `aspect` `full`, `findings_file` `<review directory>/round-1/full.md`, `rejections_file`, and `intent` "plan `<plan path>`, task `<n>`". It checks acceptance criteria and code quality in one pass.
+6. Dispatch one `sh:code-reviewer` with `target` `<task base>..<HEAD hash>`, `aspect` `full`, `findings_file` `<review directory>/round-1/full.md`, `rejections_file` `<review directory>/rejections.md`, and `intent` "plan `<plan path>`, task `<n>`". It checks acceptance criteria and code quality in one pass.
 7. When the verdict is `clean`, go to the next task.
-8. Otherwise dispatch `sh:implementer` in fix mode with `findings_dir` set to the round directory that holds the findings, `rejections_file` and the same `intent`. Run `git rev-parse HEAD`. Dispatch one fresh reviewer on `<task base>..<new head>`, with its findings file in `round-2/full.md`, or in `round-3/full.md` after the second fix.
+8. Otherwise dispatch `sh:implementer` in fix mode with `findings_dir` set to the round directory that holds the findings, `rejections_file` and the same `intent`. Run `git rev-parse HEAD`. Dispatch one fresh reviewer on `<task base>..<new head>`, with its findings file in `round-2/full.md`, or in `round-3/full.md` after the second fix. Then repeat from step 7.
 9. Two fix attempts are the cap. When the review after the second fix still reports blocking defects, stop and report them to Viktor.
 
-When a task fails, for example because the implementer ends without a first line or its tests do not pass, dispatch `sh:implementer` in task mode again with `failure` set to the error text. When the second attempt fails too, stop and report to Viktor.
+A task fails when the implementer ends with an error or its return does not start with `done`, `blocked: ` or `deviated: `. A `blocked` return is never a failure. When a task fails, dispatch `sh:implementer` in task mode again with `failure` set to the error text, and keep the task base from step 1. When the second attempt fails too, stop and report to Viktor.
 
 ## After the last task
 
