@@ -5,7 +5,7 @@ description: Use when Viktor asks to review a pull request by number or a branch
 
 # Pull request review
 
-Review a pull request or a branch with three `sh:code-reviewer` agents, confirm their findings yourself, save the confirmed ones as a review record, and summarise them for Viktor. Never touch the main working tree. Never post to GitHub unless Viktor explicitly tells you to in this session.
+Review a pull request or a branch with three `sh:code-reviewer` agents, confirm their findings yourself, save the confirmed ones as a review record, and summarise them for Viktor. Never check out a branch or change a tracked file in the main working tree. Never post to GitHub unless Viktor explicitly tells you to in this session.
 
 ## Input
 
@@ -22,11 +22,11 @@ A pull request number, or a branch name. For a branch Viktor may also give a des
    Use the head hash in every later step.
 2. Find the base branch. For a pull request run `gh pr view <number> --json title,body,baseRefName` and use `baseRefName`. For a branch it is the repository's default branch, which `git symbolic-ref --short refs/remotes/origin/HEAD` prints as `origin/<name>`, unless Viktor names another. Run `git fetch origin <base branch>`.
 3. Look for an existing review record. Its name is `pr-<number>.md` for a pull request, or `branch-<name>.md` for a branch with every `/` in the name replaced by `-`. It lives in `.claude/reviews/` of the project. Its first line is `Reviewed head: <hash>`.
+   - When the recorded hash equals the head, there is nothing new. Tell Viktor and stop.
    - No record: the range starts at `git merge-base origin/<base branch> <head>`.
    - A record exists: run `git merge-base --is-ancestor <recorded hash> <head>`. When it succeeds, the range starts at the recorded hash. When it fails, the branch was rebased or force pushed, so the range starts at the merge-base as in the first case.
-   - When the recorded hash equals the head, there is nothing new. Tell Viktor and stop.
 4. Create the review directory `<scratch>/review-pr-<YYYYMMDD-HHMMSS>` and an empty `rejections.md` in it. `<scratch>` is the session's scratchpad directory, or the output of `mktemp -d` when there is none.
-5. Dispatch three `sh:code-reviewer` agents in one message, with the aspects `behaviour`, `tests` and `simplicity`. Give each `target` as `<range start>..<head>`, `findings_file` as `<review directory>/round-1/<aspect>.md`, `rejections_file`, and `intent`. The intent is the pull request's title and body, or Viktor's description for a branch. The reviewers make their own worktrees from the head commit.
+5. Dispatch three `sh:code-reviewer` agents in one message, with the aspects `behaviour`, `tests` and `simplicity`. Give each `target` as `<range start>..<head>`, `findings_file` as `<review directory>/round-1/<aspect>.md`, `rejections_file`, and `intent`. The intent is the pull request's title and body, or Viktor's description for a branch. The reviewers make their own worktrees from the head commit. When a reviewer ends with an error, or its findings file is missing or has no verdict line, dispatch it once more. When that fails too, run step 8, write no review record, and tell Viktor which aspect has no findings. A missing file is never read as `clean`.
 6. Check every finding yourself against the code at the head commit. Read files with `git show <head>:<path>`. Drop each finding you cannot confirm.
 7. Save the confirmed findings in the review record.
    - Line 1 is `Reviewed head: <head hash>`.

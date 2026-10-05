@@ -49,12 +49,12 @@ Codex counts as skipped when `codex` is not on `PATH`, when the command exits no
 2. Fix. The fixer reads every findings file in the round's directory, checks each finding, fixes the real ones, and appends each rejected one to `rejections.md` as `- <round directory>/<aspect> #<n> <title>: <reason>`.
    - `spec`: you are the fixer.
    - `plan`: dispatch `sh:plan-writer` in fix mode with `plan`, `format` (`${CLAUDE_PLUGIN_ROOT}/skills/plan/plan-format.md`), `findings_dir`, `rejections_file` and `intent`.
-   - `code`: dispatch `sh:implementer` in fix mode with `findings_dir`, `rejections_file` and `intent`. It commits its fixes. Afterwards run `git rev-parse HEAD` and use `<base>..<new head>` as the target of the next reader.
+   - `code`: dispatch `sh:implementer` in fix mode with `findings_dir`, `rejections_file` and `intent`. It commits its fixes. When it ends with an error or returns a line starting with `blocked: `, stop and report that to Viktor. Otherwise run `git rev-parse HEAD` and use `<base>..<new head>` as the target of the next reader.
 
    Both agents return one line per finding: `fixed: <title>` or `rejected: <title> (<reason>)`. For `spec` and `plan` you commit the revised document. When `git check-ignore -q <path>` exits 0 for the document, skip the commit and say so in your report.
 3. Dispatch one fresh reviewer of the same kind with the aspect `full` and `findings_file` `round-<n>/full.md`, where `<n>` is the next round number. It reads the whole target and `rejections.md` and reports blocking defects only.
 4. When its verdict is `clean`, stop. Otherwise go to step 2 with this round's directory.
-5. Three full reads are the cap. When the third still reports blocking defects, stop and show them to Viktor. This holds in the autonomous part of the cycle too.
+5. Three full reads are the cap. When the third still reports blocking defects, stop and show them to Viktor. This holds when another skill called you.
 
 ## Report
 
