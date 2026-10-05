@@ -9,7 +9,7 @@ Carry out a reviewed plan task by task with `sh:implementer`, review each task, 
 
 ## Input
 
-The path of a reviewed plan. Its header names the spec and the project's full test command.
+The path of a reviewed plan. Its header names the spec and the project's full test command, which you run once on the final tree and the implementer reads for its form, or runs before each commit when it is the only test command.
 
 ## Setup
 
@@ -36,7 +36,7 @@ A task fails when the implementer ends with an error or its return does not star
 
 1. Call `sh:review` with `kind` `code`, `target` `<base>..<HEAD hash>`, and `intent` the spec path and the plan path, followed by each line that starts with `Deviation:` in the output of `git log --format=%B <base>..HEAD`. That output includes tasks finished in an earlier run and deviations that Viktor accepted. When it stops with open blocking defects or a missing findings file, show them to Viktor and stop.
 2. Run the project's full test command from the plan header on the final tree. A green run from before the last commit does not count. When it fails, dispatch `sh:implementer` in change mode with `change` set to the test command, its failing output and the instruction to make the tests pass, then run the command again. When the implementer returns `blocked: ` or the command fails a second time, stop and report to Viktor.
-3. Report: what was built, the deviations from that same output, the review rounds and what they found, the test result, and the peak context size if you know it. Name each commit made after the branch review as not reviewed. Add any second line an implementer returned about an ignored plan file.
+3. Report: what was built, the deviations from that same output, the review rounds and what they found, the test result, and the peak context size if you know it. Name each commit made after the branch review as not reviewed. Add any second line an implementer returned about an ignored plan file, and any line in which an implementer said it could not tell how to run single tests.
 4. Ask with `AskUserQuestion`: merge into the base branch, open a pull request, or leave the branch. Do not push or publish before the answer.
 
 The plan's `Finishing (main session)` section is yours, never the implementer's. Carry out its push and pull request steps only when Viktor chose them in his answer.
