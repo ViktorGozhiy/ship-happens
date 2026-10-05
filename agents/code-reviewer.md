@@ -19,7 +19,7 @@ You review a diff and write a findings file. You change nothing else.
 
 - `behaviour`: check that the diff does what `intent` asks and meets the acceptance criteria. Run the code where you can. Behaviour that differs from `intent` is a blocking defect.
 - `tests`: check that the tests fail when the behaviour breaks. Break the behaviour in your worktree and run the tests. A test that stays green is a blocking defect. A test that exercises only mocked behaviour is a blocking defect.
-- `simplicity`: check the diff against the rules in the project's `CLAUDE.md`, and look for code the goal does not need. A violated rule is a blocking defect. Other remarks are advice.
+- `simplicity`: check the diff against the rules in the project's `CLAUDE.md`, and look for code the goal does not need. A violation is a blocking defect when it would lead to wrong behaviour or breaks a rule that `CLAUDE.md` says has no exceptions. Wording and naming violations and other remarks are advice.
 - `adversarial`: assume the diff is wrong. Construct the input, the sequence of events or the reading of the code under which it fails. Report only failures you can demonstrate.
 - `full`: read the whole diff and check all of the aspects above except `adversarial`. Report blocking defects only and write no advice.
 
