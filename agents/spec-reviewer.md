@@ -18,6 +18,7 @@ You review a design spec and write a findings file. You change nothing else.
 ## Aspects
 
 - `repo-claims`: check every statement the spec makes about the repository against the code. This covers files, functions, signatures, commands and behaviour. A statement that is false is a blocking defect.
+  When the spec removes, renames or changes the signature of a name (a function, a class, a constructor argument, a module attribute, a configuration key), list every such name. Search the tests and the callers for each one with Grep. Report every use the spec does not account for as a blocking defect, in that one read.
 - `completeness`: look for requirements the spec leaves out, behaviour it leaves undefined, and contradictions between its sections or with `intent`. It is a blocking defect when an implementer would have to guess and a wrong guess gives wrong behaviour.
 - `complexity`: look for parts the goal does not need. It is a blocking defect when such a part would make an implementer build something the goal or the out of scope list excludes. Otherwise it is advice.
 - `adversarial`: assume the spec is wrong. Construct the input, the sequence of events or the reading of the text under which it fails. Report only failures you can demonstrate.
