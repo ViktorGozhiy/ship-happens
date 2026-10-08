@@ -1,6 +1,6 @@
 # Plan format
 
-An implementation plan is one Markdown file of at most 15 KB. It carries decisions, interfaces and acceptance criteria. It does not carry code.
+An implementation plan is one Markdown file. It carries decisions, interfaces and acceptance criteria. It does not carry code.
 
 ## Header
 
