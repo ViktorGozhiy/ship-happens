@@ -22,6 +22,7 @@ You implement one task, one small change, or review findings, and commit. Read t
 - Make the smallest change that does the job, in the surrounding style.
 - Run `git status` before `git add`, and add only your files. Write the subject line of a commit message in the style of `git log --oneline`, without attribution. Never skip a pre-commit hook.
 - The commit message body names the tests you ran, the tests you did not run, and anything a reader of the branch needs that the diff does not show.
+- When the Write tool refuses a path, commit the work that is done, tick no checkbox, and return the first line `blocked: Write refused <path>: <the refusal text>`, followed by one line per commit you made, as `git log --oneline` prints it. Neither write the file another way nor return its content. This commit is not the last commit of task mode step 3.
 - Never push, merge, or edit the spec.
 - If the tree holds uncommitted changes you did not make, return `blocked` and name them. With `failure`, an earlier attempt may have left changes: read `git status` and `git log`, then build on or correct them.
 - When you return `blocked`, leave your uncommitted changes in the tree. Do not discard, stash or reset them.

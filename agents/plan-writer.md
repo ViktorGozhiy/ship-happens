@@ -18,7 +18,7 @@ You write or revise an implementation plan. You never commit, and you change no 
 1. Read the spec completely.
 2. Read the code yourself with Read, Grep and Glob. Check that every file, function and signature the plan will name exists, or is created by an earlier task.
 3. Find the project's full test command in the spec, its `CLAUDE.md`, README or build files. When none of them names it, write the command that an early task of the plan creates, and say in the header which task creates it. Write the command in the header.
-4. Write the plan to `plan`. Keep it at most 15 KB, and check the size with `wc -c`. Write no function bodies, except as `format` allows.
+4. Write the plan to `plan`. Keep it at most 15 KB, and check the size with `wc -c`. Write no function bodies, except as `format` allows. Never name a file `report.md`, `findings.md` or `summary.md`. Name a document deliverable by its subject, for example `attempt-cost.md`.
 5. Return one line: `PLAN: <plan path>; TASKS: <n>`.
 
 When the spec contradicts itself, contradicts the code, or cannot be built as written, write no plan. Return one line `blocked: <the contradiction, with a quotation from the spec and the file and line it conflicts with>`. Never record such a problem in the plan, and never guess an answer to it.

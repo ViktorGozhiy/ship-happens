@@ -31,6 +31,10 @@ Do not write function bodies or test bodies. Write signatures, types, file paths
 
 The exception is text that is itself the decision, such as an SQL migration, a configuration key, a command line or a regular expression. Write that text exactly.
 
+## Deliverable names
+
+Never name a file `report.md`, `findings.md` or `summary.md`. Name a document deliverable by its subject, for example `attempt-cost.md`.
+
 ## Open choices
 
 When the spec leaves a choice open, make the choice in the plan. Start the line that states it with `Decided in plan:`, so that a reviewer can find every choice the spec did not make.
