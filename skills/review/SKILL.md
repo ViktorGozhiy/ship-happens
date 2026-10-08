@@ -5,7 +5,7 @@ description: Use when a spec, a plan or a branch diff needs an independent revie
 
 # Review
 
-Review a spec, a plan or a branch diff with independent agents, fix what they find, and stop at a clean read or at the cap of three full reads.
+Review a spec, a plan or a branch diff with independent agents, fix what they find, and stop at a clean read or at the cap of three full reads. For `code` a fourth full read may follow.
 
 ## Input
 
@@ -18,7 +18,7 @@ Review a spec, a plan or a branch diff with independent agents, fix what they fi
 1. Create the review directory `<scratch>/review-<kind>-<YYYYMMDD-HHMMSS>`. `<scratch>` is the session's scratchpad directory, or the output of `mktemp -d` when there is none.
 2. Create an empty `rejections.md` in it.
 
-Each reviewer gets the parameters `target`, `aspect`, `findings_file`, `rejections_file` and `intent`. The agents are `sh:spec-reviewer`, `sh:plan-reviewer` and `sh:code-reviewer`. Round 1 findings files are `<review directory>/round-1/<aspect>.md`. Full reads are `round-2/full.md` to `round-4/full.md`.
+Each reviewer gets the parameters `target`, `aspect`, `findings_file`, `rejections_file` and `intent`. In the full reads `sh:code-reviewer` also gets `previous_head`. The agents are `sh:spec-reviewer`, `sh:plan-reviewer` and `sh:code-reviewer`. Round 1 findings files are `<review directory>/round-1/<aspect>.md`. Full reads are `round-2/full.md` to `round-5/full.md`, and `round-5/full.md` exists only for `code`.
 
 ## Round 1
 
@@ -52,9 +52,9 @@ Codex counts as skipped when `codex` is not on `PATH`, when the command exits no
    - `code`: dispatch `sh:implementer` in fix mode with `findings_dir`, `rejections_file` and `intent`. It commits its fixes. When it ends with an error or returns a line starting with `blocked: `, stop and report that to Viktor. Otherwise run `git rev-parse HEAD` and use `<base>..<new head>` as the target of the next reader.
 
    Both agents return one line per finding: `fixed: <title>` or `rejected: <title> (<reason>)`. For `spec` and `plan` you commit the revised document. When `git check-ignore -q <path>` exits 0 for the document, skip the commit and say so in your report.
-3. Dispatch one fresh reviewer of the same kind with the aspect `full` and `findings_file` `round-<n>/full.md`, where `<n>` is the next round number. It reads the whole target and `rejections.md` and reports blocking defects only.
+3. Dispatch one fresh reviewer of the same kind with the aspect `full` and `findings_file` `round-<n>/full.md`, where `<n>` is the next round number. It reads the whole target and `rejections.md` and reports blocking defects only. For `code` the reviewer gets `previous_head` set to the head hash of the previous read's target. After round 1 that is the head of the `target` given to the skill.
 4. When its verdict is `clean`, stop. Otherwise go to step 2 with this round's directory.
-5. Three full reads are the cap. When the third still reports blocking defects, stop and show them to Viktor. This holds when another skill called you.
+5. Three full reads are the cap for `spec` and `plan`, and for behaviour defects in `code`. When the third full read of a `code` review (`round-4/full.md`) returns `BLOCKING` equal to `TESTS`, so that every blocking defect is a missing test, one more fix and a fourth full read (`round-5/full.md`) follow without a question. The fourth full read is the cap. Otherwise, when the third full read still reports blocking defects, or when the fourth does, stop and show them to Viktor. Take `BLOCKING` and `TESTS` from the reviewer's return line. This holds when another skill called you.
 
 ## Report
 
