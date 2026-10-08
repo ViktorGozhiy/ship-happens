@@ -1,11 +1,11 @@
 ---
 name: implement
-description: Use when a reviewed implementation plan is ready to be carried out task by task.
+description: Use when a reviewed implementation plan is ready to be carried out by one implementer, with one review of the whole branch and a report to Viktor.
 ---
 
 # Implement
 
-Carry out a reviewed plan task by task with `sh:implementer`, review each task, review the whole branch, and report to Viktor. You never write code and never fix a failure yourself. Pass absolute paths to agents.
+Carry out a reviewed plan with one `sh:implementer`, review the whole branch, and report to Viktor. You never write code and never fix a failure yourself. Pass absolute paths to agents.
 
 ## Input
 
@@ -18,19 +18,17 @@ The path of a reviewed plan. Its header names the spec and the project's full te
 3. When the branch does not exist, run `git rev-parse HEAD` and keep the hash as the base, then create the branch in the current working tree. When it exists, check it out, and the base is the output of `git merge-base HEAD <default branch>`. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix, which is the name of the local branch. When that fails, ask Viktor.
 4. Use a git worktree only when Viktor has said that another session works in this repository.
 
-## For each unchecked task, in order
+## While the plan has an unchecked task
 
-1. Run `git rev-parse HEAD` and keep the hash as the task base.
-2. Dispatch a fresh `sh:implementer` in task mode with `plan`, `task` and `spec`. It ticks the task's checkbox in its last commit. Its return starts with `done`, `blocked: <reason>` or `deviated: <what and why>`.
-3. `blocked` stops the loop. Report the reason to Viktor. This holds for a reason that starts with `Write refused`, too. When Viktor has settled the file name, write it into the plan's task as a line starting `Decided in plan:`, commit the plan unless `git check-ignore -q <plan>` exits 0, and dispatch the task again in task mode with `failure` set to the blocked reason and the same task base from step 1. The implementer builds on the committed work.
-4. A deviation that changes behaviour the spec describes stops the loop. Report it to Viktor. When he rejects it, run `git reset --hard <task base>`, which removes the task's commits with their `Deviation:` line. It removes the checkbox tick only when the plan is tracked by git. When the plan path is git-ignored, the reset leaves the tick in the file, so set the task's line back to `- [ ] Task N done` yourself. Then write his decision into the plan's task as a line starting `Decided in plan:`, commit the plan unless its path is git-ignored, and start the task again at step 1, so that the commit with his decision becomes the task base. When he accepts it, the `Deviation:` line stays and the loop continues. The implementer records any other deviation in its last commit message. After an accepted deviation, and after a deviation that does not change spec behaviour, the task goes to review like a `done` task, with the deviation text added to the `intent` of its reviewers and fixers, so the reviewer does not report it.
-5. Review the task. Create a review directory `<scratch>/review-code-<YYYYMMDD-HHMMSS>` with an empty `rejections.md`. `<scratch>` is the session's scratchpad directory, or the output of `mktemp -d` when there is none.
-6. Dispatch one `sh:code-reviewer` with `target` `<task base>..<HEAD hash>`, `aspect` `full`, `findings_file` `<review directory>/round-1/full.md`, `rejections_file` `<review directory>/rejections.md`, and `intent` "plan `<plan path>`, task `<n>`". It checks acceptance criteria and code quality in one pass.
-7. When the reviewer ends with an error, or its findings file is missing or has no verdict line, dispatch it once more. When that fails too, stop and report to Viktor. A missing file is never read as `clean`. When the verdict is `clean`, go to the next task.
-8. Otherwise dispatch `sh:implementer` in fix mode with `findings_dir` set to the round directory that holds the findings, `rejections_file` and the same `intent`. When the fixer ends with an error or returns a line starting with `blocked: `, stop and report that to Viktor. Otherwise run `git rev-parse HEAD`. Dispatch one fresh reviewer on `<task base>..<new head>`, with `previous_head` set to the head hash of the previous read's target (for the read after the first fix, the `<HEAD hash>` of the first read's target), and its findings file in `round-2/full.md`, or in `round-3/full.md` after the second fix, or in `round-4/full.md` after the third fix. Then repeat from step 7.
-9. Two fix attempts are the cap for behaviour defects. When the read after the second fix returns `BLOCKING` equal to `TESTS`, so that every blocking defect is a missing test, dispatch a third fix and one more read without asking. Stop and report the blocking defects to Viktor when the read after the second fix returns `TESTS` smaller than `BLOCKING`, or when the read after the third fix still reports a blocking defect. Take `BLOCKING` and `TESTS` from the reviewer's return line.
+A task is unchecked when its line `- [ ] Task <n> done` is unticked. Before each dispatch, run `git rev-parse HEAD` and keep the hash.
 
-A task fails when the implementer ends with an error or its return does not start with `done`, `blocked: ` or `deviated: `. A `blocked` return is never a failure. When a task fails, dispatch `sh:implementer` in task mode again with `failure` set to the error text, and keep the task base from step 1. When the second attempt fails too, stop and report to Viktor.
+1. Dispatch `sh:implementer` in plan mode with `plan` and `spec`, and with `failure` when step 3 or step 5 sets it. Its return starts with `done`, `blocked: task <n>: <reason>` or `deviated: task <n>: <what and why>`.
+2. `done`: when the plan still has an unchecked task, treat the return as an error under step 5. Otherwise go to "After the last task".
+3. `blocked: task <n>: <reason>`: stop and report the reason to Viktor. When the reason is `no code in the plan`, the plan has to be written again: say so and propose `sh:plan` on the spec. For any other reason, including one that starts with `Write refused`, wait until Viktor has settled the point. Then write his answer into task `<n>` of the plan as a line starting `Decided in plan:`, commit the plan unless `git check-ignore -q <plan>` exits 0, and dispatch again with `failure` set to the blocked reason. The implementer builds on the committed work.
+4. `deviated: task <n>: <what and why>`: stop and report the deviation to Viktor.
+   - When he rejects it, find the task base: the parent of the first commit after the branch base whose message body has the line `Task: <n>`, from `git log --reverse --format='%H%n%b' <base>..HEAD`. Note each `Decided in plan:` line of task `<n>` that `git diff <task base> HEAD -- <plan>` adds. Run `git reset --hard <task base>`, which removes the task's commits with their `Deviation:` line. When the plan is git-ignored, the reset leaves the file as it is, so set the task's line back to `- [ ] Task <n> done` yourself. Write his decision into task `<n>` as a line starting `Decided in plan:`, together with each line you noted that is missing from the plan after the reset. Commit the plan unless its path is git-ignored, and go back to the loop condition.
+   - When he accepts it, go back to the loop condition. The `Deviation:` line in the commit reaches the branch review through `git log`.
+5. When the implementer ends with an error, or its return starts with none of `done`, `blocked: ` and `deviated: `, dispatch again with `failure` set to the error text. When two dispatches in a row add no commit, so that HEAD after each equals the hash you kept before it, stop and report to Viktor.
 
 ## After the last task
 
