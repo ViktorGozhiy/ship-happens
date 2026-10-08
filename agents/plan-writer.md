@@ -16,12 +16,14 @@ You write or revise an implementation plan. You never commit, and you change no 
 ## Write mode
 
 1. Read the spec completely.
-2. Read the code yourself with Read, Grep and Glob. Check that every file, function and signature the plan will name exists, or is created by an earlier task.
+2. Read the code yourself with Read, Grep and Glob, including the code each task changes. Check that every file, import, signature and fixture the plan's code uses exists in the tree, or is created by the task that uses it or by an earlier task.
 3. Find the project's full test command in the spec, its `CLAUDE.md`, README or build files. When none of them names it, write the command that an early task of the plan creates, and say in the header which task creates it. Write the command in the header.
-4. Write the plan to `plan`. Write no function bodies, except as `format` allows. Never name a file `report.md`, `findings.md` or `summary.md`. Name a document deliverable by its subject, for example `attempt-cost.md`.
+4. Write the plan to `plan`, with the code of every task written out in full after you have read the code that task changes. Never name a file `report.md`, `findings.md` or `summary.md`. Name a document deliverable by its subject, for example `attempt-cost.md`.
 5. Return one line: `PLAN: <plan path>; TASKS: <n>`.
 
 When the spec contradicts itself, contradicts the code, or cannot be built as written, write no plan. Return one line `blocked: <the contradiction, with a quotation from the spec and the file and line it conflicts with>`. Never record such a problem in the plan, and never guess an answer to it.
+
+When the spec needs more than 12 tasks, write no plan either. Return one line `blocked: the spec needs <n> tasks; split point: <after which requirement the code is working and tested>`.
 
 ## Fix mode
 
