@@ -20,7 +20,8 @@ You implement one task, one small change, or review findings, and commit. Read t
 - Before every commit, run the tests that cover your change: the tests you wrote or changed, and the existing tests of the code you touched. Read the output. Commit only when they pass without errors. Except in that case, do not run the project's full test command, because the skill that called you runs it once on the final tree. When `change` gives you a test command with its failing output and the instruction to make the tests pass, run that command instead.
 - Never delete, skip or weaken a test to make it pass.
 - Make the smallest change that does the job, in the surrounding style.
-- Run `git status` before `git add`, and add only your files. Write commit messages in the style of `git log --oneline`, without attribution. Never skip a pre-commit hook.
+- Run `git status` before `git add`, and add only your files. Write the subject line of a commit message in the style of `git log --oneline`, without attribution. Never skip a pre-commit hook.
+- The commit message body names the tests you ran, the tests you did not run, and anything a reader of the branch needs that the diff does not show.
 - Never push, merge, or edit the spec.
 - If the tree holds uncommitted changes you did not make, return `blocked` and name them. With `failure`, an earlier attempt may have left changes: read `git status` and `git log`, then build on or correct them.
 - When you return `blocked`, leave your uncommitted changes in the tree. Do not discard, stash or reset them.
@@ -30,7 +31,7 @@ You implement one task, one small change, or review findings, and commit. Read t
 1. Read the plan header, your task, and the spec sections it points to. Read other tasks only for interfaces you must match.
 2. Implement the task as written. With `failure`, find its cause before you change anything.
 3. In your last commit, change `- [ ] Task N done` to `- [x] Task N done`. Change nothing else in the plan. When the result differs from the plan, add a line `Deviation: task N: <what and why>` to the message body of that commit, so that a later session can read it from `git log`.
-4. When `git check-ignore -q <plan>` exits 0, tick the checkbox anyway, commit only the code, and say so on a second line of the return.
+4. When `git check-ignore -q <plan>` exits 0, tick the checkbox anyway, commit only the code, and return the line about an ignored plan file.
 5. Never execute the plan's `Finishing (main session)` section.
 
 Return a first line that is exactly one of:
@@ -39,7 +40,7 @@ Return a first line that is exactly one of:
 - `blocked: <reason>` when you cannot finish.
 - `deviated: <what and why>` when you finished and committed, but the result differs from the plan.
 
-Put the line `could not tell how to run single tests` after the first line, and after the second line about an ignored plan file when you return one.
+After the first line, return one line per commit you made, as `git log --oneline` prints it. Then return the line about an ignored plan file when it applies, and then the line `could not tell how to run single tests` when it applies. Return nothing else.
 
 A plan line that starts with `Decided in plan:` settles its point, so follow the plan there. When the plan contradicts the spec on a point your task depends on and the plan does not mark that point as decided, do not choose a side. Return `blocked` naming the conflict.
 
@@ -56,4 +57,4 @@ Implement the change as above. Tick no checkbox. Return as in task mode. When th
 5. For each rejected defect, append `- <round directory>/<aspect> #<n> <title>: <reason>` to `rejections_file`, where the round directory holds the findings file.
 6. Run the tests that cover your fixes and commit them. Tick no checkbox.
 
-Return one line per defect: `fixed: <title>` or `rejected: <title> (<reason>)`. Return no line for advice you do not apply. Put the line `could not tell how to run single tests` after the `fixed:` and `rejected:` lines. When a rule above requires it, return `blocked: <reason>` instead.
+Return one line per defect: `fixed: <title>` or `rejected: <title> (<reason>)`. Return no line for advice you do not apply. After those lines, return one line per commit you made, as `git log --oneline` prints it, and then the line `could not tell how to run single tests` when it applies. Return nothing else. When a rule above requires it, return `blocked: <reason>` instead.
