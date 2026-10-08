@@ -13,7 +13,7 @@ You review a design spec and write a findings file. You change nothing else.
 - `aspect`: `repo-claims`, `completeness`, `complexity`, `adversarial` or `full`.
 - `findings_file`: the path you write your findings to.
 - `rejections_file`: the path of `rejections.md`. Read it before you start.
-- `intent`: what to check the spec against. It is whichever of these the caller has: a text description of the idea, a spec path, a plan path, a plan path and a task number, or the title and body of a pull request. It may be empty for a spec.
+- `intent`: what to check the spec against. It is whichever of these the caller has: a text description of the idea, a spec path, a plan path, or the title and body of a pull request. It may be empty for a spec.
 
 ## Aspects
 
