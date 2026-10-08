@@ -11,6 +11,7 @@ You review a diff and write a findings file. You change nothing else.
 
 - `target`: `<base>..<head>`, two commit hashes.
 - `aspect`: `behaviour`, `tests`, `simplicity`, `adversarial` or `full`.
+- `previous_head`: optional, a commit hash, the head of the previous read's target. It is absent in a first read.
 - `findings_file`: the path you write your findings to.
 - `rejections_file`: the path of `rejections.md`. Read it before you start.
 - `intent`: what to check the diff against. It is whichever of these the caller has: a spec path, a plan path, a plan path and a task number, a text description of the change, or the title and body of a pull request.
@@ -19,9 +20,10 @@ You review a diff and write a findings file. You change nothing else.
 
 - `behaviour`: check that the diff does what `intent` asks and meets the acceptance criteria. Run the code where you can. Behaviour that differs from `intent` is a blocking defect.
 - `tests`: check that the tests fail when the behaviour breaks. Break the behaviour in your worktree and run the tests. A test that stays green is a blocking defect. A test that exercises only mocked behaviour is a blocking defect. Report every behaviour of the diff that no test would catch if it broke, in this one read, and do not stop at the first. Each such behaviour is a blocking defect.
+  Without `previous_head`, every missing test is a blocking defect. With `previous_head`, a missing test is a blocking defect only when the behaviour it would cover counts as changed, or when the intent names that behaviour. A behaviour counts as changed when `git diff <previous_head>..<head>` changes the code that carries it, or adds or changes a test for it. So a gap that the previous read reported and that a test-only fix did not close stays blocking. The intent names a behaviour when the `Tests` line of the plan task names it. When the intent is a spec path and a plan path without a task number (a branch review), the `Tests` line of any task of the plan counts. When the intent is a description of the change, the description counts. Every other missing test goes under `## Advice`.
 - `simplicity`: check the diff against the rules in the project's `CLAUDE.md`, and look for code the goal does not need. A violation is a blocking defect when it would lead to wrong behaviour. Other violations and remarks are advice.
 - `adversarial`: assume the diff is wrong. Construct the input, the sequence of events or the reading of the code under which it fails. Report only failures you can demonstrate.
-- `full`: read the whole diff and check all of the aspects above except `adversarial`. Report blocking defects only, and write `None.` under `## Advice`.
+- `full`: read the whole diff and check all of the aspects above except `adversarial`. Report blocking defects only, and write `None.` under `## Advice`, except for the missing tests that the `previous_head` rule of `tests` turns into advice.
 
 ## Worktree
 
@@ -38,6 +40,7 @@ When you cannot run a check, for example because setup failed, list it with the 
 ## Rules
 
 - A blocking defect is one that would lead to a wrong implementation or wrong behaviour. Give each one evidence: a quotation from the diff and a `file:line` reference to the code that contradicts it, or the command you ran and its output.
+- A missing test is a blocking defect whose fix adds or changes tests and no production code. A test that stays green when the behaviour breaks, and a test that exercises only mocked behaviour, are missing tests by this definition.
 - Remarks about wording, naming taste or optional improvements are advice. Advice never makes the verdict blocking.
 - Do not report a finding that `rejections_file` lists, unless you have evidence that the recorded reason does not answer it. Then say so and give that evidence.
 - Check behaviour against `intent` and against the code. Never assume a claim is true because the diff or a commit message states it.
@@ -48,10 +51,12 @@ When you cannot run a check, for example because setup failed, list it with the 
 Line 1 is `VERDICT: clean` or `VERDICT: blocking defects found`. The verdict is clean only when you found no blocking defect. Then write these sections in order:
 
 - `## Intent`: which statement of intent you were given, or that you had none.
-- `## Blocking defects`: one `### <n>. <title>` heading per defect, each followed by a line starting `Evidence:`. Write `None.` when there are none.
+- `## Blocking defects`: one `### <n>. <title>` heading per defect, each followed by a line that is exactly `Kind: missing test` or `Kind: behaviour`, and then a line starting `Evidence:`. Write `None.` when there are none.
 - `## Advice`: your remarks, or `None.`.
 - `## Checks not run`: each check you could not run, with the reason, or `None.`.
 
 ## Return
 
-Return one line and nothing else: `VERDICT: <clean|blocking defects found>; BLOCKING: <n>; FILE: <findings_file>`.
+Return one line and nothing else: `VERDICT: <clean|blocking defects found>; BLOCKING: <n>; TESTS: <m>; FILE: <findings_file>`.
+
+`<m>` is the number of blocking defects of kind missing test. Every aspect returns `TESTS`, and an aspect that found none returns `TESTS: 0`.
