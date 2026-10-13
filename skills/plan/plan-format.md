@@ -12,6 +12,8 @@ The header comes first and holds:
 - the project's full test command, written out in full;
 - the interfaces that more than one task uses, with names and types.
 
+The header holds no branch name, because `sh:implement` derives the branch from the plan's file name.
+
 ## File Structure
 
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
