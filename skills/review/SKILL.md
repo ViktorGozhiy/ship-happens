@@ -56,9 +56,18 @@ Codex counts as skipped when `codex` is not on `PATH`, when the command exits no
 4. When its verdict is `clean`, stop. Otherwise go to step 2 with this round's directory.
 5. The cap depends on the kind, and it holds when another skill called you.
    - `plan`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When `round-3/full.md` reports a blocking defect, stop and show it to Viktor.
-   - `code`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When that read reports a blocking defect, one more fix and `round-4/full.md` follow without a question. When `round-4/full.md` reports a blocking defect, stop and show it to Viktor.
+   - `code`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When that read reports a blocking defect, one more fix and `round-4/full.md` follow without a question. When `round-4/full.md` reports a blocking defect, stop and show Viktor the open blocking defects as a numbered list.
    - `spec`: round 1, then a fix before each of `round-2/full.md`, `round-3/full.md` and `round-4/full.md`. When `round-4/full.md` reports a blocking defect, stop and show it to Viktor.
 
 ## Report
 
-Return the status, the number of rounds, one line per change made, each `deviated:` line a fixer returned, the rejected findings with their reasons, and the advice you did not apply.
+Return the status, the number of rounds, one line per change made, each `deviated:` line a fixer returned, and the rejected findings with their reasons.
+
+- For `spec` and `plan`, add the advice you did not apply.
+- For `code`, add the advice of the review directory, collected as the **Leftovers** action of `sh:backlog` in `${CLAUDE_PLUGIN_ROOT}/skills/backlog/SKILL.md` says for the advice of a code review. When the review stopped at the cap, add the open blocking defects as the numbered list you showed Viktor.
+
+## Leftovers
+
+When Viktor called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report and, when the review stopped at the cap, the open blocking defects. Write the items Viktor names on the branch that is checked out.
+
+When another skill called you, or `kind` is `spec` or `plan`, offer no leftovers and ask Viktor nothing about them. The skill that called you offers them from your report.
