@@ -73,6 +73,6 @@ The procedure that `sh:review`, `sh:quick-fix` and `sh:implement` follow at thei
 
      Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done. Viktor sees it in the list and does not pick it.
    - A rejected finding is not a candidate, because it is wrong. An accepted deviation is not a candidate, because it is done. The part of a backlog item that a branch did not cover is not a candidate either: it stays in the open item, under its `Partly done` line.
-2. When there are no candidates, say so in one line, ask nothing, and stop.
+2. When there are no candidates, say so in one line and ask nothing. The action ends here, and the skill that ran it goes on with its next step.
 3. Show all candidates as one numbered list in plain text, one line each, with the proposed priority. Do not use `AskUserQuestion`: Viktor answers with a set of numbers.
 4. Write each item Viktor names with **Write**, and report their paths and the branch.
