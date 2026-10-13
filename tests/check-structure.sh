@@ -82,6 +82,7 @@ skills/implement/SKILL.md
 skills/quick-fix/SKILL.md
 skills/debugging/SKILL.md
 skills/pr-review/SKILL.md
+skills/backlog/SKILL.md
 skills/backlog/backlog-format.md
 agents/advisor.md
 agents/spec-reviewer.md

@@ -1,0 +1,78 @@
+---
+name: backlog
+description: Use when Viktor asks to write something into the backlog (беклог, бэклог), to list or prioritise the open backlog items, to change, defer or close one, or to take one into work.
+---
+
+# Backlog
+
+Keep the project's backlog in the format of `${CLAUDE_PLUGIN_ROOT}/skills/backlog/backlog-format.md`. Read that file before you write, update or close an item. You write items yourself and dispatch no agent for them. Every item is committed on the branch that is checked out when you write it. Never check out another branch to write an item.
+
+The backlog directory, the head of an item, the test for a git-ignored backlog and the commit messages are those of the format file. When `git check-ignore -q <path>` exits 0 for a file you change, skip its commit and say so in your report.
+
+## Write
+
+Input: what to write, from Viktor or from the session.
+
+1. When the backlog directory does not exist, ask Viktor where it goes, propose `docs/backlog/`, and create the directory he names. When he names a directory other than `docs/backlog/`, add this line to the project's `CLAUDE.md`, with `<directory>` set to his directory, and commit it with the message `docs: name the backlog directory`:
+
+   ```
+   `<directory>` — the backlog: one file per deferred task in the format of `sh:backlog`; closed items move to `closed/`.
+   ```
+
+   Do not change `.gitignore`.
+2. Read the head of each open item with `sed '/^## /q' <item>`. When an open item describes the same problem, change that item with **Update**, tell Viktor that you did, and write no second item.
+3. Write the item in the format, with today's date in its file name. Propose the priority and tell Viktor the reason in one sentence. Commit the item.
+4. Report the path, the priority with its reason, and the branch. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When the branch is not the default branch, say that the item reaches the default branch with the merge. When that command fails, name the branch and say nothing about the merge.
+
+When Viktor corrects the priority, change it with **Update**.
+
+## Update
+
+Input: an item and what to change, from Viktor or from another action: the priority, the state, a `Partly done` line, or a dated section.
+
+1. When the item has no status line of the format, give it one as the format's section on old items says, and propose a priority when it has none.
+2. Change the item as the format's section on updates says. Keep everything else.
+3. Commit it, and report the change and the branch.
+
+## List
+
+Input: none.
+
+1. Read the head of every `.md` file directly in the backlog directory, not in `closed/` or another subdirectory, with `sed '/^## /q' <item>`. Never read a body for the list.
+2. Take the state, the priority and the date raised from the status line. For an old item, take them from whatever header it has, and the date from the file name when the header has none. A missing priority is "not set".
+3. Show a numbered table with the columns priority, date raised, H1 and file name. Order the rows `high`, `normal`, `low`, then "not set"; within a priority, oldest first. Show the deferred items after the table, each with its condition, numbered after the table's last number.
+4. Below that, flag each item whose head says it is closed but which is still outside `closed/`. Propose to move them, and move only the ones Viktor confirms, with **Close by hand**.
+
+Do not flag an item because its status line names a branch. An item raised in the review of a branch names that branch, and the merge of that branch does not close the item.
+
+## Take into work
+
+Input: a number from the last list, or a path.
+
+When the item is under `closed/`, or its head records its close, say so and stop. Otherwise call `sh:design` with the item's path as the backlog item. Its step 1 sends small work to `sh:quick-fix` with the same path. The skill that finishes the work closes the item on the fix branch.
+
+## Close by hand
+
+Input: an item, and an outcome from Viktor unless the item's head already records its close. Use this action for items that close without a fix branch of `sh:quick-fix` or `sh:design`: retracted, superseded, dropped, or fixed outside those skills. Use it also for the items that **List** flags.
+
+1. When the item is under `closed/`, say so and change nothing.
+2. When its head already records its close, only move it with its references, as the format's section on closing says. Do not touch its head.
+3. Otherwise ask Viktor for the outcome when he has not given it. Write the `Closed` line and `## Resolution`, move the file and change the references, as the format's section on closing says.
+4. Commit, and report the outcome, the path under `closed/` and the branch. When the commit changes a file that is not a `.md` file, name the commit as not reviewed and list those files.
+
+## Leftovers
+
+The procedure that `sh:review`, `sh:quick-fix` and `sh:implement` follow at their end, and the action for "what should go into the backlog before this session ends".
+
+1. Collect the candidates: work that remains to be done, a problem that was not fixed, a question that was not answered. A skill that runs this action names its sources. Run directly, the source is the session.
+   - The advice of a code review is the `## Advice` section of every findings file in the review directory. Read each section from the `## Advice` line to the next line that starts with `## `, never the whole file:
+
+     ```
+     awk 'FNR==1{f=0} /^## Advice/{f=1; print "== " FILENAME; next} /^## /{f=0} f' <review directory>/round-*/*.md
+     ```
+
+     Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done. Viktor sees it in the list and does not pick it.
+   - A rejected finding is not a candidate, because it is wrong. An accepted deviation is not a candidate, because it is done. The part of a backlog item that a branch did not cover is not a candidate either: it stays in the open item, under its `Partly done` line.
+2. When there are no candidates, say so in one line, ask nothing, and stop.
+3. Show all candidates as one numbered list in plain text, one line each, with the proposed priority. Do not use `AskUserQuestion`: Viktor answers with a set of numbers.
+4. Write each item Viktor names with **Write**, and report their paths and the branch.
