@@ -32,3 +32,27 @@ A description of the change, and optionally the path of a backlog item in the fo
 13. Carry out his answer. When step 10 left the change of a git-ignored backlog for later: after "merge", once the merge is done, make that change. It needs no commit. After any other answer, leave the item as it is and tell Viktor.
 
 When the work proves larger than step 1 allows, stop, say so, and propose `sh:design`, and pass it the backlog item path when the input has one.
+
+## Fix-now mode
+
+The **Leftovers** action of `sh:backlog` runs this mode when Viktor names leftovers to fix now. The work stays on the branch that is checked out and ends before the merge question of the skill that ran **Leftovers**.
+
+Input: the items to fix, each with its full text; the intent of the skill that ran **Leftovers**, which is empty in a direct run of **Leftovers**; and optionally the full test command.
+
+Run these steps of the normal run, with these changes:
+
+1. Step 1, on all items together. When they do not fit one implementer task, or change an interface that other code depends on, make no commit and return `stopped: size: <reason>`.
+2. Step 2. Take the test command as step 2 says only when the input has none.
+3. In place of step 3, run `git rev-parse HEAD` and keep the hash as the fix-now base. Create no branch. In every step this mode runs, `<base>` is the fix-now base, so steps 6 and 8 review `<fix-now base>..<HEAD hash>`. The base of the skill that ran **Leftovers** keeps its value, also when that skill is a normal run of `sh:quick-fix`, whose step 13 uses it.
+4. Step 4, with `change` set to the items followed by the intent.
+5. Steps 5 to 8, with `intent` set to the intent followed by the items. When `round-4/full.md` reports a blocking defect, the numbered list you show Viktor holds only the open blocking defects. Write the ones he names on the branch that is checked out with the **Write** action of `sh:backlog`.
+6. Step 9.
+7. The report of step 11, with the fix-now base in place of the base. Name each commit made after the review as not reviewed, as step 11 says. List the advice of the fix-now review directory as plain lines, collected as the **Leftovers** action of `sh:backlog` says for the advice of a code review. Do not offer it as a list.
+
+Do not run step 10: this mode closes no backlog item. Offer no leftovers, and do not ask the merge question.
+
+Return one of these to **Leftovers**:
+
+- `done` when the test command passed in step 9.
+- `stopped: size: <reason>` when step 1 found the items too large. No commit was made.
+- `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, the test command failing twice, or any other stop in steps 4 to 9. The report then names the commits from the fix-now base to HEAD as carrying open defects, and names the uncommitted changes a blocked implementer left in the tree.
