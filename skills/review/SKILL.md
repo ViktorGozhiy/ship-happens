@@ -70,6 +70,14 @@ Return the status, the number of rounds, one line per change made, each `deviate
 
 ## Leftovers
 
-When Viktor called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report and, when the review stopped at the cap, the open blocking defects. Write the items Viktor names on the branch that is checked out.
+When Viktor called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report, with the path of the review directory, and, when the review stopped at the cap, the open blocking defects. Pass your `intent` and no test command. **Leftovers** writes the items Viktor names for the backlog on the branch that is checked out.
+
+Fix now is allowed only when all of these hold:
+
+- the review did not stop at the cap;
+- the branch that is checked out is not the default branch. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, fix now is not allowed;
+- `git merge-base --is-ancestor <head> HEAD` exits 0 for the `<head>` of your `target`.
+
+You ask no merge question, so after a fix-now run you end with its report.
 
 When another skill called you, or `kind` is `spec` or `plan`, offer no leftovers and ask Viktor nothing about them. The skill that called you offers them from your report.
