@@ -84,6 +84,7 @@ Add: `tests/path/test.py`, `src/path/file.py`
 
 - Number the steps and give them no checkbox. Each step is one action.
 - Write test code and production code out in full.
+- The tests of a task cover each branch of a condition and each boundary value in the task's production code, each with a test that fails when that branch or boundary breaks. A task with no production code, such as a document or a measurement, is not bound by this rule.
 - The commit step lists the files to add and nothing else. The implementer writes the commit message by its own rules and adds the plan file itself.
 - The line `- [ ] Task <n> done` is the last line of the section and the only checkbox of the task. An unchecked task is one whose `- [ ] Task <n> done` line is unticked.
 - A task whose deliverable is a document or a measurement writes its commands and its text in fenced blocks too. A slot for a value that the run produces, such as `<measured count>`, is not a placeholder. A task with no fenced block in any step is a plan failure.

@@ -46,6 +46,8 @@ Codex counts as skipped when `codex` is not on `PATH`, when the command exits no
 ## Loop
 
 1. Check that `round-1/` holds one `.md` findings file with a verdict line for every aspect you dispatched. When a reviewer returned without its file, dispatch it once more. When the file is still missing, stop and report to Viktor. A missing file is never read as `clean`. When the first line of every `.md` file in `round-1/` is `VERDICT: clean`, stop. The same check applies to `full.md` in later rounds.
+
+   For `plan`, before you stop at a clean round 1, run `awk '/^## Advice/{f=1; next} /^## /{f=0} f' <review directory>/round-1/feasibility.md | grep '^Missing test:'`. When it prints a line, dispatch `sh:plan-writer` in fix mode once, as step 2 says, with `findings_dir` `<review directory>/round-1`. It applies each `Missing test:` line. Commit the plan as step 2 says, and stop without a further read.
 2. Fix. The fixer reads every findings file in the round's directory, checks each finding, fixes the real ones, and appends each rejected one to `rejections.md` as `- <round directory>/<aspect> #<n> <title>: <reason>`.
    - `spec`: you are the fixer.
    - `plan`: dispatch `sh:plan-writer` in fix mode with `plan`, `format` (`${CLAUDE_PLUGIN_ROOT}/skills/plan/plan-format.md`), `findings_dir`, `rejections_file` and `intent`.

@@ -15,7 +15,7 @@ You carry out a reviewed plan with code, or one small change test first, or fix 
 
 ## Rules for every mode
 
-- In plan mode the test steps of the task decide which tests you write. In change mode, when the change alters behaviour, write the failing test first and run it, check that it fails for the expected reason, then write the code.
+- In plan mode the test steps of the task decide which tests you write. In change mode, when the change alters behaviour, write the failing test first and run it, check that it fails for the expected reason, then write the code. The failing tests cover each branch of a condition and each boundary value that the change adds or changes.
 - Find out how to run single tests in this project from its `CLAUDE.md` or README. When they do not say, work it out from the form of the full test command in the plan header, when you have a plan. When you cannot tell, say so on a line `could not tell how to run single tests` in your return and run the narrowest test command you can find. When that command is the project's full test command, run it before each commit and say so on the same line.
 - Before every commit, run the tests that cover your change: the tests you wrote or changed, and the existing tests of the code you touched. Read the output. Commit only when they pass without errors. Except in that case, do not run the project's full test command, because the skill that called you runs it once on the final tree. When `change` gives you a test command with its failing output and the instruction to make the tests pass, run that command instead.
 - Never delete, skip or weaken a test to make it pass.
