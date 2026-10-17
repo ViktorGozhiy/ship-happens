@@ -64,6 +64,8 @@ Input: an item, and an outcome from Viktor unless the item's head already record
 
 The procedure that `sh:review`, `sh:quick-fix` and `sh:implement` follow at their end, and the action for "what should go into the backlog before this session ends".
 
+Input from a skill that runs this action: the sources of the candidates, with the path of the review directory when a source is the advice of a code review; whether fix now is allowed; and the skill's intent and full test command when it has them. Run directly, the source is the session, and there is no intent and no test command. Fix now is then allowed only when the branch that is checked out is not the default branch. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, fix now is not allowed.
+
 1. Collect the candidates: work that remains to be done, a problem that was not fixed, a question that was not answered. A skill that runs this action names its sources. Run directly, the source is the session.
    - The advice of a code review is the `## Advice` section of every findings file in the review directory. Read each section from the `## Advice` line to the next line that starts with `## `, never the whole file:
 
@@ -74,5 +76,13 @@ The procedure that `sh:review`, `sh:quick-fix` and `sh:implement` follow at thei
      Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done. Viktor sees it in the list and does not pick it.
    - A rejected finding is not a candidate, because it is wrong. An accepted deviation is not a candidate, because it is done. The part of a backlog item that a branch did not cover is not a candidate either: it stays in the open item, under its `Partly done` line.
 2. When there are no candidates, say so in one line and ask nothing. The action ends here, and the skill that ran it goes on with its next step.
-3. Show all candidates as one numbered list in plain text, one line each, with the proposed priority. Do not use `AskUserQuestion`: Viktor answers with a set of numbers.
-4. Write each item Viktor names with **Write**, and report their paths and the branch.
+3. Show all candidates as one numbered list in plain text, one line each, with the proposed priority. Do not use `AskUserQuestion`: Viktor answers with numbers.
+   - When fix now is allowed, mark "backlog only" each candidate that may not be fixed now: an open blocking defect of a review that stopped at its cap, and a requirement of a spec's `## Deferred` section. Only the advice of a code review and, in a direct run, the candidates from the session may be fixed now. Below the list, show the answer form `backlog: 1, 3; fix now: 2`, and say that a number named in both sets counts as fix now.
+   - When fix now is not allowed, every candidate is backlog only. Show no marks and no answer form.
+4. Sort Viktor's answer into the backlog set and the fix-now set. An answer with one bare set of numbers names the backlog set. A number named in both sets belongs to the fix-now set. A number that is backlog only belongs to the backlog set, also when Viktor named it to fix now; the report says so.
+5. Write each item of the backlog set with **Write**, and report their paths and the branch.
+6. When the fix-now set is empty, the action ends here, and the skill that ran it goes on with its next step. Otherwise run `sh:quick-fix` in the section `## Fix-now mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`. This step is the only place that starts a fix-now run. Pass:
+   - the full text of each item of the fix-now set: for the advice of a code review, the whole remark from the `## Advice` section of its findings file, not the one-line candidate; for a candidate from the session, the candidate as the session states it, with its evidence;
+   - the intent you were given, or none in a direct run;
+   - the test command you were given, or none.
+7. When the run returns `stopped: size: <reason>`, show Viktor the reason and offer to write the items of the fix-now set with **Write**. Write the ones he names. Return the result of the run to the skill that ran this action: `done`, `stopped: size: <reason>` or `stopped: <reason>`.
