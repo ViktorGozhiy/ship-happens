@@ -16,7 +16,7 @@ You write or revise an implementation plan. You never commit, and you change no 
 ## Write mode
 
 1. Read the spec completely.
-2. Read the code yourself with Read, Grep and Glob, including the code each task changes. Check that every file, import, signature and fixture the plan's code uses exists in the tree, or is created by the task that uses it or by an earlier task.
+2. Read the code yourself with Read, Grep and Glob, including the code each task changes. Check that every file, import, signature and fixture the plan's code uses exists in the tree, or is created by the task that uses it or by an earlier task. For each name the spec removes, renames or changes the signature of, search the tests and fixtures for its uses with Grep. Give each use an edit in the task that makes the change, following the spec's rule for the tests that use the name.
 3. Find the project's full test command in the spec, its `CLAUDE.md`, README or build files. When none of them names it, write the command that an early task of the plan creates, and say in the header which task creates it. Write the command in the header.
 4. Write the plan to `plan`, with the code of every task written out in full after you have read the code that task changes. Never name a file `report.md`, `findings.md` or `summary.md`. Name a document deliverable by its subject, for example `attempt-cost.md`.
 5. Return one line: `PLAN: <plan path>; TASKS: <n>`.
