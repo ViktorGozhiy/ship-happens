@@ -172,6 +172,10 @@ check_content() {
       fail "$rel" "must not contain superpowers:"
     fi
 
+    if grep -q 'Viktor' "$file"; then
+      fail "$rel" "must not name Viktor"
+    fi
+
     while IFS= read -r name; do
       if [ ! -f "$root/agents/$name.md" ] && [ ! -f "$root/skills/$name/SKILL.md" ]; then
         fail "$rel" "sh:$name does not resolve to an agent or a skill"
@@ -384,6 +388,10 @@ run_self_tests() {
   dir=$(new_valid_fixture)
   echo "Use superpowers:brainstorming first." >>"$dir/skills/demo/SKILL.md"
   self_test_fail "superpowers: reference" "$dir" "must not contain superpowers:"
+
+  dir=$(new_valid_fixture)
+  echo "Use when Viktor asks for a review." >>"$dir/skills/demo/SKILL.md"
+  self_test_fail "personal name in a skill" "$dir" "must not name Viktor"
 
   dir=$(new_valid_fixture)
   mkdir -p "$dir/skills/helper"
