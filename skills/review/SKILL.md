@@ -1,6 +1,6 @@
 ---
 name: review
-description: Use when a spec, a plan or a branch diff needs an independent review, or when Viktor asks to review a document or a diff.
+description: Use when a spec, a plan or a branch diff needs an independent review, or when the user asks to review a document or a diff.
 ---
 
 # Review
@@ -45,32 +45,32 @@ Codex counts as skipped when `codex` is not on `PATH`, when the command exits no
 
 ## Loop
 
-1. Check that `round-1/` holds one `.md` findings file with a verdict line for every aspect you dispatched. When a reviewer returned without its file, dispatch it once more. When the file is still missing, stop and report to Viktor. A missing file is never read as `clean`. When the first line of every `.md` file in `round-1/` is `VERDICT: clean`, stop. The same check applies to `full.md` in later rounds.
+1. Check that `round-1/` holds one `.md` findings file with a verdict line for every aspect you dispatched. When a reviewer returned without its file, dispatch it once more. When the file is still missing, stop and report to the user. A missing file is never read as `clean`. When the first line of every `.md` file in `round-1/` is `VERDICT: clean`, stop. The same check applies to `full.md` in later rounds.
 
    For `plan`, before you stop at a clean round 1, run `awk '/^## Advice/{f=1; next} /^## /{f=0} f' <review directory>/round-1/feasibility.md | grep '^Missing test:'`. When it prints a line, dispatch `sh:plan-writer` in fix mode once, as step 2 says, with `findings_dir` `<review directory>/round-1`. It applies each `Missing test:` line. Commit the plan as step 2 says, and stop without a further read.
 2. Fix. The fixer reads every findings file in the round's directory, checks each finding, fixes the real ones, and appends each rejected one to `rejections.md` as `- <round directory>/<aspect> #<n> <title>: <reason>`.
    - `spec`: you are the fixer.
    - `plan`: dispatch `sh:plan-writer` in fix mode with `plan`, `format` (`${CLAUDE_PLUGIN_ROOT}/skills/plan/plan-format.md`), `findings_dir`, `rejections_file` and `intent`.
-   - `code`: dispatch `sh:implementer` in fix mode with `findings_dir`, `rejections_file` and `intent`. It commits its fixes. When it ends with an error or returns a line starting with `blocked: `, stop and report that to Viktor. Otherwise add the text of each `deviated:` line it returns to the `intent` of every later full reader and of every later fixer, keep the line for the report, then run `git rev-parse HEAD` and use `<base>..<new head>` as the target of the next reader.
+   - `code`: dispatch `sh:implementer` in fix mode with `findings_dir`, `rejections_file` and `intent`. It commits its fixes. When it ends with an error or returns a line starting with `blocked: `, stop and report that to the user. Otherwise add the text of each `deviated:` line it returns to the `intent` of every later full reader and of every later fixer, keep the line for the report, then run `git rev-parse HEAD` and use `<base>..<new head>` as the target of the next reader.
 
    Both agents return one line per finding: `fixed: <title>` or `rejected: <title> (<reason>)`. `sh:implementer` also returns zero or more lines `deviated: <what and why>` and one line per commit, as `git log --oneline` prints it. For `spec` and `plan` you commit the revised document. When `git check-ignore -q <path>` exits 0 for the document, skip the commit and say so in your report.
 3. Dispatch one fresh reviewer of the same kind with the aspect `full` and `findings_file` `round-<n>/full.md`, where `<n>` is the next round number. It reads the whole target and `rejections.md` and reports blocking defects only.
 4. When its verdict is `clean`, stop. Otherwise go to step 2 with this round's directory.
 5. The cap depends on the kind, and it holds when another skill called you.
-   - `plan`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When `round-3/full.md` reports a blocking defect, stop and show it to Viktor.
-   - `code`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When that read reports a blocking defect, one more fix and `round-4/full.md` follow without a question. When `round-4/full.md` reports a blocking defect, stop and show Viktor the open blocking defects as a numbered list.
-   - `spec`: round 1, then a fix before each of `round-2/full.md`, `round-3/full.md` and `round-4/full.md`. When `round-4/full.md` reports a blocking defect, stop and show it to Viktor.
+   - `plan`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When `round-3/full.md` reports a blocking defect, stop and show it to the user.
+   - `code`: round 1, fix, `round-2/full.md`, fix, `round-3/full.md`. When that read reports a blocking defect, one more fix and `round-4/full.md` follow without a question. When `round-4/full.md` reports a blocking defect, stop and show the user the open blocking defects as a numbered list.
+   - `spec`: round 1, then a fix before each of `round-2/full.md`, `round-3/full.md` and `round-4/full.md`. When `round-4/full.md` reports a blocking defect, stop and show it to the user.
 
 ## Report
 
 Return the status, the number of rounds, one line per change made, each `deviated:` line a fixer returned, and the rejected findings with their reasons.
 
 - For `spec` and `plan`, add the advice you did not apply.
-- For `code`, add the advice of the review directory, collected as the **Leftovers** action of `sh:backlog` in `${CLAUDE_PLUGIN_ROOT}/skills/backlog/SKILL.md` says for the advice of a code review. When the review stopped at the cap, add the open blocking defects as the numbered list you showed Viktor.
+- For `code`, add the advice of the review directory, collected as the **Leftovers** action of `sh:backlog` in `${CLAUDE_PLUGIN_ROOT}/skills/backlog/SKILL.md` says for the advice of a code review. When the review stopped at the cap, add the open blocking defects as the numbered list you showed the user.
 
 ## Leftovers
 
-When Viktor called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report, with the path of the review directory, and, when the review stopped at the cap, the open blocking defects. Pass your `intent` and no test command. **Leftovers** writes the items Viktor names for the backlog on the branch that is checked out.
+When the user called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report, with the path of the review directory, and, when the review stopped at the cap, the open blocking defects. Pass your `intent` and no test command. **Leftovers** writes the items the user names for the backlog on the branch that is checked out.
 
 Fix now is allowed only when all of these hold:
 
@@ -80,4 +80,4 @@ Fix now is allowed only when all of these hold:
 
 You ask no merge question, so after a fix-now run you end with its report.
 
-When another skill called you, or `kind` is `spec` or `plan`, offer no leftovers and ask Viktor nothing about them. The skill that called you offers them from your report.
+When another skill called you, or `kind` is `spec` or `plan`, offer no leftovers and ask the user nothing about them. The skill that called you offers them from your report.

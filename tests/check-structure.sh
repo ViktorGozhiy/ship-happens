@@ -224,7 +224,7 @@ JSON
   cat >"$dir/.claude-plugin/marketplace.json" <<'JSON'
 {
   "name": "ship-happens",
-  "owner": { "name": "Viktor" },
+  "owner": { "name": "the user" },
   "plugins": [ { "name": "sh", "source": "./" } ]
 }
 JSON

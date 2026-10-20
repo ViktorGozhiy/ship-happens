@@ -101,7 +101,7 @@ Every step must contain the actual content an engineer needs. These are **plan f
 
 ## Size Check
 
-A plan has at most 12 tasks. Count the tasks before you write the plan. When the spec needs more, write no plan, and return `blocked: the spec needs <n> tasks; split point: <after which requirement the code is working and tested>`. Viktor chooses where to split. The requirements after the split point move out of the spec body into a `## Deferred` section of the spec, and the plan covers what remains in the body. A requirement under `## Deferred` is not a requirement of the plan.
+A plan has at most 12 tasks. Count the tasks before you write the plan. When the spec needs more, write no plan, and return `blocked: the spec needs <n> tasks; split point: <after which requirement the code is working and tested>`. The user chooses where to split. The requirements after the split point move out of the spec body into a `## Deferred` section of the spec, and the plan covers what remains in the body. A requirement under `## Deferred` is not a requirement of the plan.
 
 ## Deliverable names
 
@@ -115,10 +115,10 @@ When the spec leaves a choice open, make the choice in the plan. Start the line 
 
 A task changes only the working tree and the local test environment. It may run commands on another host that only read, such as reading a journal for a measurement.
 
-A command changes state on another host when it changes anything outside the working tree and the local test environment: an `ssh` command that writes, moves, restarts or checks out; `kubectl apply`; `terraform apply`; creating a release; a request that changes a production API; a migration of a remote database. `git push` and the creation of a pull request are not covered by this definition: they run when Viktor chose a push or "open a pull request" in the final question of the implementation run.
+A command changes state on another host when it changes anything outside the working tree and the local test environment: an `ssh` command that writes, moves, restarts or checks out; `kubectl apply`; `terraform apply`; creating a release; a request that changes a production API; a migration of a remote database. `git push` and the creation of a pull request are not covered by this definition: they run when the user chose a push or "open a pull request" in the final question of the implementation run.
 
 Each step that changes state on another host goes into `## Finishing (main session)`. A measurement that needs the changed code deployed goes there too, together with the deploy.
 
 ## Finishing
 
-The last section is `## Finishing (main session)`. It lists the branch review, the full test run, the push, the pull request, and the steps that change state on another host, including a measurement that needs the changed code deployed. The implementer never runs this section. The push and the pull request happen only if Viktor chooses them in the final question of the implementation run. The steps that change state on another host run only after Viktor answered "merge" to that question, after the merge is done, and after a separate question that lists those steps and that Viktor answers yes.
+The last section is `## Finishing (main session)`. It lists the branch review, the full test run, the push, the pull request, and the steps that change state on another host, including a measurement that needs the changed code deployed. The implementer never runs this section. The push and the pull request happen only if the user chooses them in the final question of the implementation run. The steps that change state on another host run only after the user answered "merge" to that question, after the merge is done, and after a separate question that lists those steps and that the user answers yes.

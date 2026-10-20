@@ -1,6 +1,6 @@
 ---
 name: backlog
-description: Use when Viktor asks to write something into the backlog (беклог, бэклог), to list or prioritise the open backlog items, to change, defer or close one, or to take one into work.
+description: Use when the user asks to write something into the backlog (беклог, бэклог), to list or prioritise the open backlog items, to change, defer or close one, or to take one into work.
 ---
 
 # Backlog
@@ -11,24 +11,24 @@ The backlog directory, the head of an item, the test for a git-ignored backlog a
 
 ## Write
 
-Input: what to write, from Viktor or from the session.
+Input: what to write, from the user or from the session.
 
-1. When the backlog directory does not exist, ask Viktor where it goes, propose `docs/backlog/`, and create the directory he names. When he names a directory other than `docs/backlog/`, add this line to the project's `CLAUDE.md`, with `<directory>` set to his directory, and commit it with the message `docs: name the backlog directory`:
+1. When the backlog directory does not exist, ask the user where it goes, propose `docs/backlog/`, and create the directory they name. When they name a directory other than `docs/backlog/`, add this line to the project's `CLAUDE.md`, with `<directory>` set to their directory, and commit it with the message `docs: name the backlog directory`:
 
    ```
    `<directory>` — the backlog: one file per deferred task in the format of `sh:backlog`; closed items move to `closed/`.
    ```
 
    Do not change `.gitignore`.
-2. Read the head of each open item with `sed '/^## /q' <item>`. When an open item describes the same problem, change that item with **Update**, tell Viktor that you did, and write no second item.
-3. Write the item in the format, with today's date in its file name. Propose the priority and tell Viktor the reason in one sentence. Commit the item.
+2. Read the head of each open item with `sed '/^## /q' <item>`. When an open item describes the same problem, change that item with **Update**, tell the user that you did, and write no second item.
+3. Write the item in the format, with today's date in its file name. Propose the priority and tell the user the reason in one sentence. Commit the item.
 4. Report the path, the priority with its reason, and the branch. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When the branch is not the default branch, say that the item reaches the default branch with the merge. When that command fails, name the branch and say nothing about the merge.
 
-When Viktor corrects the priority, change it with **Update**.
+When the user corrects the priority, change it with **Update**.
 
 ## Update
 
-Input: an item and what to change, from Viktor or from another action: the priority, the state, a `Partly done` line, or a dated section.
+Input: an item and what to change, from the user or from another action: the priority, the state, a `Partly done` line, or a dated section.
 
 1. When the item has no status line of the format, give it one as the format's section on old items says, and propose a priority when it has none.
 2. Change the item as the format's section on updates says. Keep everything else.
@@ -41,7 +41,7 @@ Input: none.
 1. Read the head of every `.md` file directly in the backlog directory, not in `closed/` or another subdirectory, with `sed '/^## /q' <item>`. Never read a body for the list.
 2. Take the state, the priority and the date raised from the status line. For an old item, take them from whatever header it has, and the date from the file name when the header has none. A missing priority is "not set".
 3. Show a numbered table with the columns priority, date raised, H1 and file name. Order the rows `high`, `normal`, `low`, then "not set"; within a priority, oldest first. Show the deferred items after the table, each with its condition, numbered after the table's last number.
-4. Below that, flag each item whose head says it is closed but which is still outside `closed/`. Propose to move them, and move only the ones Viktor confirms, with **Close by hand**.
+4. Below that, flag each item whose head says it is closed but which is still outside `closed/`. Propose to move them, and move only the ones the user confirms, with **Close by hand**.
 
 Do not flag an item because its status line names a branch. An item raised in the review of a branch names that branch, and the merge of that branch does not close the item.
 
@@ -53,11 +53,11 @@ When the item is under `closed/`, or its head records its close, say so and stop
 
 ## Close by hand
 
-Input: an item, and an outcome from Viktor unless the item's head already records its close. Use this action for items that close without a fix branch of `sh:quick-fix` or `sh:design`: retracted, superseded, dropped, or fixed outside those skills. Use it also for the items that **List** flags.
+Input: an item, and an outcome from the user unless the item's head already records its close. Use this action for items that close without a fix branch of `sh:quick-fix` or `sh:design`: retracted, superseded, dropped, or fixed outside those skills. Use it also for the items that **List** flags.
 
 1. When the item is under `closed/`, say so and change nothing.
 2. When its head already records its close, only move it with its references, as the format's section on closing says. Do not touch its head.
-3. Otherwise ask Viktor for the outcome when he has not given it. Write the `Closed` line and `## Resolution`, move the file and change the references, as the format's section on closing says.
+3. Otherwise ask the user for the outcome when they have not given it. Write the `Closed` line and `## Resolution`, move the file and change the references, as the format's section on closing says.
 4. Commit, and report the outcome, the path under `closed/` and the branch. When the commit changes a file that is not a `.md` file, name the commit as not reviewed and list those files.
 
 ## Leftovers
@@ -73,16 +73,16 @@ Input from a skill that runs this action: the sources of the candidates, with th
      awk 'FNR==1{f=0} /^## Advice/{f=1; print "== " FILENAME; next} /^## /{f=0} f' <review directory>/round-*/*.md
      ```
 
-     Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done. Viktor sees it in the list and does not pick it.
+     Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done. The user sees it in the list and does not pick it.
    - A rejected finding is not a candidate, because it is wrong. An accepted deviation is not a candidate, because it is done. The part of a backlog item that a branch did not cover is not a candidate either: it stays in the open item, under its `Partly done` line.
 2. When there are no candidates, say so in one line and ask nothing. The action ends here, and the skill that ran it goes on with its next step.
-3. Show all candidates as one numbered list in plain text, one line each, with the proposed priority. Do not use `AskUserQuestion`: Viktor answers with numbers.
+3. Show all candidates as one numbered list in plain text, one line each, with the proposed priority. Do not use `AskUserQuestion`: the user answers with numbers.
    - When fix now is allowed, mark "backlog only" each candidate that may not be fixed now: an open blocking defect of a review that stopped at its cap, and a requirement of a spec's `## Deferred` section. Only the advice of a code review and, in a direct run, the candidates from the session may be fixed now. Below the list, show the answer form `backlog: 1, 3; fix now: 2`, and say that a number named in both sets counts as fix now.
    - When fix now is not allowed, every candidate is backlog only. Show no marks and no answer form.
-4. Sort Viktor's answer into the backlog set and the fix-now set. An answer with one bare set of numbers names the backlog set. A number named in both sets belongs to the fix-now set. A number that is backlog only belongs to the backlog set, also when Viktor named it to fix now; the report says so.
+4. Sort the user's answer into the backlog set and the fix-now set. An answer with one bare set of numbers names the backlog set. A number named in both sets belongs to the fix-now set. A number that is backlog only belongs to the backlog set, also when the user named it to fix now; the report says so.
 5. Write each item of the backlog set with **Write**, and report their paths and the branch.
 6. When the fix-now set is empty, the action ends here, and the skill that ran it goes on with its next step. Otherwise run `sh:quick-fix` in the section `## Fix-now mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`. This step is the only place that starts a fix-now run. Pass:
    - the full text of each item of the fix-now set: for the advice of a code review, the whole remark from the `## Advice` section of its findings file, not the one-line candidate; for a candidate from the session, the candidate as the session states it, with its evidence;
    - the intent you were given, or none in a direct run;
    - the test command you were given, or none.
-7. When the run returns `stopped: size: <reason>`, show Viktor the reason and offer to write the items of the fix-now set with **Write**. Write the ones he names. Return the result of the run to the skill that ran this action: `done`, `stopped: size: <reason>` or `stopped: <reason>`.
+7. When the run returns `stopped: size: <reason>`, show the user the reason and offer to write the items of the fix-now set with **Write**. Write the ones they name. Return the result of the run to the skill that ran this action: `done`, `stopped: size: <reason>` or `stopped: <reason>`.

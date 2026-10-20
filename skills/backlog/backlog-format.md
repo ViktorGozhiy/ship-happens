@@ -20,8 +20,8 @@ The head is the lines from the H1 up to the first line that starts with `## `. R
 
 - Line 1 is `# <the problem as a sentence>`.
 - After a blank line comes the status line, one paragraph that may wrap: `Status: <state>, priority <high|normal|low>. Raised <YYYY-MM-DD> <source>.`
-  - `<state>` is `open`, or `deferred by Viktor <YYYY-MM-DD> until <condition>`.
-  - `<source>` says where the item came from, for example `in the branch review of <branch>`, `by Viktor`, `while <what the session was doing>`, or `from the Deferred section of <spec path>`.
+  - `<state>` is `open`, or `deferred by the user <YYYY-MM-DD> until <condition>`.
+  - `<source>` says where the item came from, for example `in the branch review of <branch>`, `by the user`, `while <what the session was doing>`, or `from the Deferred section of <spec path>`.
 - For each partial fix, a line `Partly done <YYYY-MM-DD> on <branch>: <what was done>.` follows the status line, after any earlier `Partly done` line.
 - On a closed item, the line `Closed <YYYY-MM-DD>: <outcome>.` comes before the status line.
 
@@ -45,7 +45,7 @@ Partly done 2026-10-15 on fix/gas-l1-fee: the L1 part of the fee is included.
 - `normal`: everything else that has to be done.
 - `low`: cosmetic, rare, or research with no deadline.
 
-The writer proposes the priority and tells Viktor the reason in one sentence. The reason is not written into the item. When Viktor corrects the priority, the status line takes his value.
+The writer proposes the priority and tells the user the reason in one sentence. The reason is not written into the item. When the user corrects the priority, the status line takes their value.
 
 ## Sections
 
@@ -63,7 +63,7 @@ An open question stays an open question. Never write it as a decision.
 
 An update does one of these things and keeps everything else:
 
-- it rewrites the status line, for example to change the priority or to set the state `deferred by Viktor <YYYY-MM-DD> until <condition>`;
+- it rewrites the status line, for example to change the priority or to set the state `deferred by the user <YYYY-MM-DD> until <condition>`;
 - it adds a `Partly done` line;
 - it adds a dated section `## Update <YYYY-MM-DD>` at the end of the item.
 
@@ -86,7 +86,7 @@ References in code, tests, scripts and configuration change too, such as a path 
 
 An item without the status line of this format is an old item. Read it as text. Its state and priority come from whatever header it has, and a missing priority is "not set". In some backlogs the state of old items is in body sections such as `## Status 2026-09-10, later`; the list of open items does not see it.
 
-When an update or a close touches an old item, put the status line of this format after the H1, and keep the old header lines below the status line. Take the state, the date raised and the source from the old header or the file name. When the date is not known, use the date of the file's first commit, from `git log --diff-filter=A --follow --format=%as -- <item> | tail -n 1`, or in a git-ignored backlog the date of its last change, from `date -r <item> +%F`. When the source is not known, end the status line after the date. When the item has no priority, propose one and tell Viktor the reason in one sentence, as for an item being written.
+When an update or a close touches an old item, put the status line of this format after the H1, and keep the old header lines below the status line. Take the state, the date raised and the source from the old header or the file name. When the date is not known, use the date of the file's first commit, from `git log --diff-filter=A --follow --format=%as -- <item> | tail -n 1`, or in a git-ignored backlog the date of its last change, from `date -r <item> +%F`. When the source is not known, end the status line after the date. When the item has no priority, propose one and tell the user the reason in one sentence, as for an item being written.
 
 ## Commits
 

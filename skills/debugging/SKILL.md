@@ -15,7 +15,7 @@ Find the root cause of a failure and hand it over. You write no test and no fix.
 4. When the system has several components, find where it breaks. Log or print what enters and leaves each component, run once, and read the result. Trace a bad value backward through its callers to its source.
 5. Find similar code that works and list every difference from the code that fails.
 6. State one hypothesis: "I think X is the cause because Y". Test it with the smallest possible change, one variable at a time. When the test disproves it, discard that change and form a new hypothesis. Never stack changes.
-7. When three hypotheses have failed, or each one exposes a new problem elsewhere, stop and tell Viktor that the design may be wrong. When you do not understand something, say so and ask.
+7. When three hypotheses have failed, or each one exposes a new problem elsewhere, stop and tell the user that the design may be wrong. When you do not understand something, say so and ask.
 
 ## Handover
 
