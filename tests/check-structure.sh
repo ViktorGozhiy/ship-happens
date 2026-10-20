@@ -90,7 +90,9 @@ agents/plan-writer.md
 agents/plan-reviewer.md
 agents/implementer.md
 agents/code-reviewer.md
-tests/check-structure.sh'
+tests/check-structure.sh
+LICENSE
+README.md'
 
 check_layout() {
   local root=$1 path
@@ -101,14 +103,21 @@ check_layout() {
 }
 
 check_manifests() {
-  local root=$1 plugin marketplace
+  local root=$1 plugin marketplace field
   plugin=$root/.claude-plugin/plugin.json
   marketplace=$root/.claude-plugin/marketplace.json
 
   if ! jq empty "$plugin" >/dev/null 2>&1; then
     fail ".claude-plugin/plugin.json" "is not valid JSON"
-  elif [ "$(jq -r '.name' "$plugin")" != "sh" ]; then
-    fail ".claude-plugin/plugin.json" "plugin name must be sh"
+  else
+    [ "$(jq -r '.name' "$plugin")" = "sh" ] ||
+      fail ".claude-plugin/plugin.json" "plugin name must be sh"
+    [ "$(jq -r '.license' "$plugin")" = "MIT" ] ||
+      fail ".claude-plugin/plugin.json" "license must be MIT"
+    for field in homepage repository; do
+      [ "$(jq -r --arg f "$field" '.[$f] | if type == "string" then . else "" end' "$plugin")" != "" ] ||
+        fail ".claude-plugin/plugin.json" "$field must be set"
+    done
   fi
 
   if ! jq empty "$marketplace" >/dev/null 2>&1; then
@@ -222,6 +231,9 @@ write_manifests() {
   "name": "sh",
   "description": "Fixture plugin",
   "version": "0.1.0",
+  "homepage": "https://example.com/fixture",
+  "repository": "https://example.com/fixture",
+  "license": "MIT",
   "userConfig": { "codex_review": { "title": "Codex review", "type": "boolean" } }
 }
 JSON
@@ -330,6 +342,22 @@ run_self_tests() {
   self_test_fail "invalid manifest JSON" "$dir" "is not valid JSON"
 
   dir=$(new_fixture)
+  sed -i '/"license"/d' "$dir/.claude-plugin/plugin.json"
+  self_test_fail "plugin.json without license" "$dir" "license must be MIT"
+
+  dir=$(new_fixture)
+  sed -i 's/"license": "MIT"/"license": "GPL-3.0"/' "$dir/.claude-plugin/plugin.json"
+  self_test_fail "plugin.json with another license" "$dir" "license must be MIT"
+
+  dir=$(new_fixture)
+  sed -i '/"homepage"/d' "$dir/.claude-plugin/plugin.json"
+  self_test_fail "plugin.json without homepage" "$dir" "homepage must be set"
+
+  dir=$(new_fixture)
+  sed -i '/"repository"/d' "$dir/.claude-plugin/plugin.json"
+  self_test_fail "plugin.json without repository" "$dir" "repository must be set"
+
+  dir=$(new_fixture)
   sed -i 's/"name": "sh"/"name": "other"/' "$dir/.claude-plugin/plugin.json"
   self_test_fail "wrong plugin name" "$dir" "plugin name must be sh"
 
@@ -431,6 +459,14 @@ run_self_tests() {
   else
     echo "pass: self-test: layout without agents/advisor.md"
   fi
+
+  dir=$(new_layout_fixture)
+  rm "$dir/LICENSE"
+  self_test_fail "layout without LICENSE" "$dir" "LICENSE: is part of the repository layout" real
+
+  dir=$(new_layout_fixture)
+  rm "$dir/README.md"
+  self_test_fail "layout without README.md" "$dir" "README.md: is part of the repository layout" real
 
   dir=$(new_layout_fixture)
   rm "$dir/agents/advisor.md"

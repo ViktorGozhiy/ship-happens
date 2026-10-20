@@ -47,7 +47,7 @@ Claude Code loads agent definitions when it starts. Restart Claude Code after yo
 
 The plugin has one option, `codex_review`. It is a boolean and is off by default.
 
-When it is on, the first round of a spec review and of a `sh:review` of a diff also sends the target to Codex, run as `codex exec --sandbox read-only`. Codex gets the path of the spec or the commit range, and the intent of the review, and reads the files. This sends your specs and branch diffs to an external service, so turn the option on only when your project allows that. The `codex` CLI must be on `PATH`. The code reviews of `sh:quick-fix` and `sh:pr-review` do not use Codex.
+When it is on, the first round of a spec review and of a `sh:review` of a diff also sends the target to Codex, run as `codex exec --sandbox read-only`. Codex gets the path of the spec or the commit range, and the intent of the review, and reads the files. The `codex` CLI must be on `PATH`. The code reviews of `sh:quick-fix` and `sh:pr-review` do not use Codex.
 
 When the option is off, an extra Claude reviewer with the aspect `adversarial` takes the place of Codex in the first round. The same happens when Codex is skipped. Codex counts as skipped when `codex` is not on `PATH`, when the command exits with an error, or when it writes no findings file with a verdict on its first line. The skill then reports "Codex review skipped" with the reason, adds the `adversarial` reviewer, and never reads a skipped run as a clean review. Plan reviews do not use Codex.
 
@@ -60,7 +60,7 @@ When the option is off, an extra Claude reviewer with the aspect `adversarial` t
 - The backlog is the directory that `CLAUDE.md` names for it, else `docs/backlog/`. When the directory does not exist, `sh:backlog` asks where it goes, proposes `docs/backlog/`, and records another choice in `CLAUDE.md`. Closed items move to `closed/` inside it.
 - The full test command comes from the project. `sh:quick-fix` takes it from `CLAUDE.md`, then the README, and asks you when neither names it. The `plan-writer` looks in the spec, `CLAUDE.md`, the README and the build files, and writes the command into the plan header. `sh:implement` runs that command once on the final tree. The `implementer` also looks in `CLAUDE.md` or the README for how to run a single test.
 - A git-ignored spec or plan is still used, but the skills skip its commit and say so in the report. For a git-ignored backlog, `sh:backlog` makes no commit, and an item that `sh:quick-fix` or `sh:implement` closes is changed only after you answer "merge". `sh:pr-review` adds `.claude/reviews/` to the repository's `info/exclude` file when it is not ignored, so review records never show as untracked.
-- No skill pushes or publishes before you answer its question about merging, opening a pull request, or leaving the branch.
+- No skill pushes or publishes before you answer its question about merging, opening a pull request, or leaving the branch. The exception is `sh:pr-review`, which asks no such question and posts to GitHub only when you tell it to.
 
 The skills and agents read the project's `CLAUDE.md`, so that file is the place to tell Claude when to use them and where your documents live. For example:
 
@@ -77,7 +77,7 @@ The full test command is `make test`.
 bash tests/check-structure.sh
 ```
 
-The script needs `jq`, the `claude` CLI and `python3` with PyYAML, and it reports a missing tool as a failure. It first runs its own tests on small fixture trees. Then it checks the repository: that the manifests are valid JSON with the expected names, that `claude plugin validate --strict` accepts both manifests, that every file of the repository layout exists, that every skill and agent has valid frontmatter with a matching name (an agent also needs `model` set to `opus` or `sonnet`, and `tools`), that no skill and agent share a name, that no skill or agent contains `superpowers:` or the author's first name in any letter case, and that every `sh:<name>` reference, every `${CLAUDE_PLUGIN_ROOT}/` path and every `${user_config.<key>}` reference in the skills and agents resolves. It exits 0 only when all of that passes, and prints a `FAIL:` line for each problem.
+The script needs `jq`, the `claude` CLI and `python3` with PyYAML, and it reports a missing tool as a failure. It first runs its own tests on small fixture trees. Then it checks the repository: that the manifests are valid JSON with the expected names, that `plugin.json` has the license `MIT` and sets `homepage` and `repository`, that `claude plugin validate --strict` accepts both manifests, that every file of the repository layout exists, that every skill and agent has valid frontmatter with a matching name and a non-empty `description` (an agent also needs `model` set to `opus` or `sonnet`, and `tools`), that no skill and agent share a name, that no skill or agent contains `superpowers:` or the author's first name in any letter case, and that every `sh:<name>` reference, every `${CLAUDE_PLUGIN_ROOT}/` path and every `${user_config.<key>}` reference in the skills and agents resolves. It exits 0 only when all of that passes, and prints a `FAIL:` line for each problem.
 
 ## Credits
 
