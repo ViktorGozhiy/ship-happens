@@ -172,7 +172,7 @@ check_content() {
       fail "$rel" "must not contain superpowers:"
     fi
 
-    if grep -q 'Viktor' "$file"; then
+    if grep -qi 'Viktor' "$file"; then
       fail "$rel" "must not name Viktor"
     fi
 
@@ -228,7 +228,7 @@ JSON
   cat >"$dir/.claude-plugin/marketplace.json" <<'JSON'
 {
   "name": "ship-happens",
-  "owner": { "name": "the user" },
+  "owner": { "name": "Fixture owner" },
   "plugins": [ { "name": "sh", "source": "./" } ]
 }
 JSON
@@ -392,6 +392,10 @@ run_self_tests() {
   dir=$(new_valid_fixture)
   echo "Use when Viktor asks for a review." >>"$dir/skills/demo/SKILL.md"
   self_test_fail "personal name in a skill" "$dir" "must not name Viktor"
+
+  dir=$(new_valid_fixture)
+  echo "Read /home/viktor/notes before starting." >>"$dir/skills/demo/SKILL.md"
+  self_test_fail "lowercase personal name in a skill" "$dir" "must not name Viktor"
 
   dir=$(new_valid_fixture)
   mkdir -p "$dir/skills/helper"
