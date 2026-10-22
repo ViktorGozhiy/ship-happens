@@ -40,7 +40,7 @@ For `spec` and `code` the round also has Codex or the `adversarial` reviewer, as
 2. Run `mkdir -p <review directory>/round-1`. Codex exits 0 without writing the file when the directory is missing.
 3. For `spec`, run in the background: `codex exec --sandbox read-only -o <review directory>/round-1/codex.md - < <review directory>/codex-prompt.txt`.
 4. For `code`, Codex works in its own worktree with write access and network access, so that it can install the dependencies and run the tests. You create and remove the worktree and initialise its submodules, because the git directory of a linked worktree lies outside the paths Codex may write. Do this only when `codex` is on `PATH`. The command also needs `timeout` from GNU coreutils on `PATH`.
-   1. Run `git worktree add --detach <review directory>/wt-codex <head>`, with the `<head>` of `target`. When `<review directory>/wt-codex/.gitmodules` exists, run `git -C <review directory>/wt-codex submodule update --init --recursive`.
+   1. Run `git worktree add --detach <review directory>/wt-codex <head>`, with the `<head>` of `target`. When `<review directory>/wt-codex/.gitmodules` exists, run `git -C <review directory>/wt-codex submodule update --init --recursive`. When either command fails, run no Codex command: Codex counts as skipped, as the rule below says.
    2. Run in the background:
 
       ```
@@ -51,7 +51,7 @@ For `spec` and `code` the round also has Codex or the `adversarial` reviewer, as
    3. After the command ends, whatever its result, run `git worktree remove --force <review directory>/wt-codex`.
 5. Wait for the Codex command and for every reviewer of the round before you decide anything about the round.
 
-Codex counts as skipped when `codex` is not on `PATH`, when the command exits non-zero, when `codex.md` does not exist, or when its first line is not a verdict line. A run that `timeout` ends exits non-zero. Then rename any output to `round-1/codex.failed`, report "Codex review skipped" with the reason, and continue with the Claude results. A skipped run is never read as `clean`. Codex is not a Claude agent and does not count toward the limit of four.
+Codex counts as skipped when `codex` is not on `PATH`, when `git worktree add` or the submodule update of step 4 fails, when the command exits non-zero, when `codex.md` does not exist, or when its first line is not a verdict line. A run that `timeout` ends exits non-zero. When a setup step failed, run `git worktree remove --force <review directory>/wt-codex` if the worktree was created. Then rename any output to `round-1/codex.failed`, report "Codex review skipped" with the reason, and continue with the Claude results. A skipped run is never read as `clean`. Codex is not a Claude agent and does not count toward the limit of four.
 
 **Adversarial reviewer.** When Codex does not take part, or was skipped, add a reviewer with the aspect `adversarial`. Its findings file is `round-1/adversarial.md`. When the option is `true`, wait for Codex first and dispatch this reviewer only after a skipped run.
 

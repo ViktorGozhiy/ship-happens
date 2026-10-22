@@ -62,26 +62,26 @@ Before the first item:
 1. Find the default branch: the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, ask the user for the default branch.
 2. When `git status --short` prints anything, stop and ask the user how to handle the changes.
 3. When the branch that is checked out is not the default branch, ask the user whether to check out the default branch or to stop. **List** reads the backlog of the branch that is checked out, and every item is fixed on a branch cut from the default branch.
-4. Take the full test command from the project's `CLAUDE.md`, then the README, else ask the user.
+4. Take the full test command as step 2 of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says.
 5. Say in one line that the action now runs without questions until its leftovers list, and name the largest number of items.
 
 For the items:
 
 6. Read the heads and order the open items as steps 1 to 3 of **List** say. The deferred items, and the items whose head records their close, are not candidates. When there is no candidate, say so and end.
-7. Take the candidates in that order, one at a time: read the next candidate only after `sh:quick-fix` has returned for the previous one. Stop when the items given to `sh:quick-fix` that did not return `skipped: size` reach the largest number, or when the candidates run out. Do not read the candidates after that point. For each candidate, `<slug>` is its file name without the date prefix and without `.md`.
+7. Take the candidates in that order, one at a time: read the next candidate only after `sh:quick-fix` has returned for the previous one. Stop when the items given to `sh:quick-fix` that did not return `skipped: size` reach the largest number, or when the candidates run out. Do not read the candidates after that point. For each candidate, `<slug>` is the slug that the section `## Unattended mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` gives the branch `fix/<slug>`, so that the check below finds the branch that `sh:quick-fix` would create.
    - When `git rev-parse --verify --quiet refs/heads/fix/<slug>` prints a hash, skip the candidate. Its branch is an unmerged branch of an earlier run of this action.
    - Otherwise read the whole item, and skip it, with the reason, when any of these holds. Keep the names of the options of a skipped item for the report.
      - It has a `## Options` section, or its `## What to do` offers alternatives of which only one is to be carried out, also when one of them is marked as recommended. Numbered steps that are all carried out are not alternatives.
      - It has a `## Open questions` section.
      - Its `## What to do` or its `## Done when` needs a change in another repository or a change of state on another host. A `## Related` section that names another repository does not skip the item.
    - Run no size check yourself. `sh:quick-fix` runs it in its step 1.
-8. Before each item, run `git checkout <default branch>`, then `git status --short`. When the checkout fails or the status prints anything, stop the action as step 10 says for a dirty tree, and name the item and the files.
+8. Before each item, run `git checkout <default branch>`, then `git status --short`. When the checkout fails or the status prints anything, stop the action as step 10 says for a dirty tree, and name the item, the error text of a failed checkout and the files.
 9. Load `sh:quick-fix` with the Skill tool, and run the section `## Unattended mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` with the item's path, the full test command and the default branch. Record the line it returns.
-10. After the line, whatever it says, run `git status --short`. When it prints anything, stop the action. Stay on the branch that is checked out, give the report of step 11 with the files that `git status --short` prints and the review directories that the returned lines named, and end. Show no leftovers list and ask nothing: the user can run **Leftovers** directly once the tree is clean. Write nothing on a fix branch. When the tree is clean, go on with the next candidate. A `skipped: size: <reason>` line does not count toward the largest number.
+10. After the line, whatever it says, run `git status --short`. When it prints anything, stop the action. Stay on the branch that is checked out, give the report of step 11 with the files that `git status --short` prints and the review directories that the returned lines named, and end. Show no leftovers list and ask nothing: the user can run **Leftovers** directly once the tree is clean. Write nothing on a fix branch. When the tree is clean, go on with the next candidate.
 
 After the last item:
 
-11. Unless the action stopped on a dirty tree, run `git checkout <default branch>`. When that checkout fails, treat it as a stop on a dirty tree as step 10 says: stay on the branch that is checked out, give the report below with the files that `git status --short` prints, show no leftovers list and ask nothing. Report:
+11. Unless the action stopped on a dirty tree, run `git checkout <default branch>`. When that checkout fails, treat it as a stop on a dirty tree as step 10 says: stay on the branch that is checked out, give the report below with the error text of the failed checkout and the files that `git status --short` prints, show no leftovers list and ask nothing. Report:
     - each item merged, with its branch, the commits that `git log --oneline <base hash>..fix/<slug>` prints with the base hash of its returned line, the number of `round-*` directories in its review directory, and the commit or the `mv` that closed the item;
     - each branch left unmerged, with its reason: the items that returned `unmerged:`, the items that returned `stopped:` on a clean tree, and the branches of an earlier run that step 7 skipped;
     - each item skipped, with its reason, and for an item with options the names of the options;

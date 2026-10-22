@@ -5,7 +5,7 @@ description: Use when the user asks for a small change that fits one task and ch
 
 # Quick fix
 
-Carry out a small change, often one backlog item, on a branch with `sh:implementer`, review it with `sh:code-reviewer`, then ask the user about merging. You never write code and never fix a failure yourself. Pass absolute paths to agents.
+Carry out a small change, often one backlog item, on a branch with `sh:implementer`, review it with `sh:code-reviewer`, then ask the user about merging, except in the unattended mode that the **Fix small items** action of `sh:backlog` starts, which asks nothing. You never write code and never fix a failure yourself. Pass absolute paths to agents.
 
 ## Input
 
@@ -77,14 +77,12 @@ Run the steps of the normal run with these changes:
 1. Step 1: when the change does not fit, make no commit and return `skipped: size: <reason>`. Never ask about a choice between solutions, and propose no `sh:design`.
 2. Step 2 does not run. The caller checked the tree and passed the test command.
 3. Step 3: the branch is `fix/<slug>`, where `<slug>` is the item's file name without the date prefix and without `.md`.
-4. Step 4: return `stopped: <reason>` when the implementer returns `blocked`, ends with an error or returns none of the three lines, or when the change proves larger than step 1 allows. Record a `deviated:` line and add its text to the `intent` of the reviewers and fixers, as step 4 says. The review goes on, and the branch is not merged.
-5. Steps 5 to 8: return `stopped: <reason>` when a reviewer fails twice as step 7 says, or when a fixer ends with an error or returns a line starting with `blocked: `. Record each `deviated:` line of a fixer and add its text to the `intent` as step 8 says; the branch is not merged. When `round-4/full.md` reports a blocking defect, the review ends there and the branch is not merged. Show nothing to the user and write nothing into the backlog.
+4. Step 4: return `stopped: <reason>` when the implementer returns `blocked`, ends with an error or returns none of the three lines, or when the change proves larger than step 1 allows. The branch is not merged after a `deviated:` line.
+5. Steps 5 to 8: return `stopped: <reason>` when a reviewer fails twice as step 7 says, or when a fixer ends with an error or returns a line starting with `blocked: `. The branch is not merged after a `deviated:` line of a fixer. When `round-4/full.md` reports a blocking defect, the review ends there and the branch is not merged. Show nothing to the user and write nothing into the backlog.
 6. Step 9: run the test command once, also when the branch will not be merged for another reason. When it fails, dispatch no implementer; the branch is not merged.
 7. Step 10, only when the first three conditions above hold. In a tracked backlog, close the item and commit the close on the fix branch. When that commit changes a file that is not a `.md` file, the branch is not merged. In a git-ignored backlog, change nothing in this step; step 9 of this list closes the item after the merge.
 8. Steps 11 to 13 do not run: make no report to the user, run no **Leftovers** and ask no merge question.
-9. When all four conditions hold, run `git checkout <default branch>`. When the checkout fails, run no merge and the branch stays unmerged, because a merge on `fix/<slug>` would report "Already up to date". Then run `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, in a git-ignored backlog, close the item as step 10 says; it needs no commit.
-
-When the work proves larger than step 1 allows, return `stopped: <reason>` as step 4 of this list says.
+9. When all four conditions hold, run `git checkout <default branch>`. When the checkout fails, run no merge and the branch stays unmerged. Then run `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, in a git-ignored backlog, close the item as step 10 says; it needs no commit.
 
 Return one line:
 

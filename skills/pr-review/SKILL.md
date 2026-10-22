@@ -9,11 +9,11 @@ Review a pull request or a branch with three `sh:code-reviewer` agents, check it
 
 ## Input
 
-A pull request number, or a branch name. For a branch the user may also give a description of the change and the name of a base branch.
+A pull request number, or a branch name. For a branch the user may also give a description of the change and the name of a base branch. Or the request to post named findings of a pull request, which step 1 handles.
 
 ## Steps
 
-1. When the user asks to post named findings of a pull request, and its review record `pr-<number>.md` of step 5 exists, run only this step and step 12. Read the head hash from line 1 of the record; it is the head in step 12. Run `gh pr view <number> --json title,body,baseRefName`, take the base branch from `baseRefName`, and run `git fetch origin <base branch>`. Create the directory `<scratch>/review-pr-post-<YYYYMMDD-HHMMSS>` for the JSON file of step 12, with `<scratch>` as step 6 says. When no record exists, say so and post nothing. A request to review runs steps 2 to 11, and step 12 when the user names findings to post.
+1. When the user asks to post named findings of a pull request, and its review record `pr-<number>.md` of step 5 exists, run only this step and step 12. Read the head hash from line 1 of the record; it is the head in step 12. Run `gh pr view <number> --json title,body,baseRefName`, take the base branch from `baseRefName`, and run `git fetch origin <base branch>` and `git fetch origin pull/<number>/head`. When `git cat-file -e <head>^{commit}` fails for the head hash of the record, for example after a force push, say so and post nothing. Create the directory `<scratch>/review-pr-post-<YYYYMMDD-HHMMSS>` for the JSON file of step 12, with `<scratch>` as step 6 says. When no record exists, say so and post nothing. A request to review runs steps 2 to 11, and step 12 when the user names findings to post.
 2. Get the head commit.
    - Pull request number: run `git fetch origin pull/<number>/head`.
    - Branch name with no local branch: run `git fetch origin <branch>`.
@@ -27,7 +27,7 @@ A pull request number, or a branch name. For a branch the user may also give a d
    - For a pull request, run `gh pr view <number> --json mergeable,mergeStateStatus`. Report `mergeable` `UNKNOWN` as unknown. `git merge-tree` decides whether the head conflicts.
    - For a pull request, run `gh pr checks <number>` and read its printed output, never its exit code: a pending check, a failed check and a pull request with no checks all exit non-zero. Each line names a check and its state, such as `pass`, `fail`, `pending` or `skipping`. A pull request with no checks prints that no checks were reported. Keep the checks that failed or are pending.
 5. Look for an existing review record. Its name is `pr-<number>.md` for a pull request, or `branch-<name>.md` for a branch with every `/` in the name replaced by `-`. It lives in `.claude/reviews/` of the project. Its first line is `Reviewed head: <hash>`.
-   - When the recorded hash equals the head, there is nothing new to review. Give the user the merge state of step 4 in the form of step 11, say that the head has no new commits since the record, and stop. Change no record.
+   - When the recorded hash equals the head, there is nothing new to review. Give the user the merge state of step 4 as the second bullet of step 11 says, say that the head has no new commits since the record, and stop. Change no record.
    - No record: the range starts at `git merge-base origin/<base branch> <head>`.
    - A record exists: run `git merge-base --is-ancestor <recorded hash> <head>`. When it succeeds, the range starts at the recorded hash. When it fails, the branch was rebased or force pushed, so the range starts at the merge-base as in the first case.
 6. Create the review directory `<scratch>/review-pr-<YYYYMMDD-HHMMSS>` and an empty `rejections.md` in it. `<scratch>` is the session's scratchpad directory, or the output of `mktemp -d` when there is none.
