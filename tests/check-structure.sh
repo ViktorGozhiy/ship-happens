@@ -94,10 +94,11 @@ tests/check-structure.sh
 LICENSE
 README.md'
 
-# Text that the specs rely on, one "<file>|<string>" per line. The check runs on
-# the repository only.
-REQUIRED_TEXT='skills/backlog/SKILL.md|Fix small items
-skills/pr-review/SKILL.md|post named findings
+# Text that the specs rely on, one "<file>|<string>" per line. A file written as
+# "description:<file>" must hold the string in its frontmatter description, which
+# is the text that loads the skill. The check runs on the repository only.
+REQUIRED_TEXT='description:skills/backlog/SKILL.md|Fix small items
+description:skills/pr-review/SKILL.md|post named findings
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
 skills/quick-fix/SKILL.md|## Unattended mode
 skills/pr-review/SKILL.md|git merge-tree --write-tree
@@ -107,11 +108,36 @@ skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
 skills/review/SKILL.md|--sandbox workspace-write
 skills/review/SKILL.md|--sandbox read-only'
 
+# Prints the frontmatter description of a file. Prints nothing when the file or
+# the description is missing.
+frontmatter_description() {
+  python3 -I - "$1" <<'PY' 2>/dev/null
+import sys
+import yaml
+
+lines = open(sys.argv[1], encoding="utf-8").read().split("\n")
+if lines[0].rstrip() != "---":
+    sys.exit()
+end = next((i for i in range(1, len(lines)) if lines[i].rstrip() == "---"), None)
+if end is None:
+    sys.exit()
+data = yaml.safe_load("\n".join(lines[1:end]))
+if isinstance(data, dict) and isinstance(data.get("description"), str):
+    print(data["description"])
+PY
+}
+
 check_required_text() {
   local root=$1 file string
   while IFS='|' read -r file string; do
-    grep -qF -- "$string" "$root/$file" 2>/dev/null ||
-      fail "required text" "$file: $string"
+    if [[ $file == description:* ]]; then
+      file=${file#description:}
+      grep -qF -- "$string" <<<"$(frontmatter_description "$root/$file")" ||
+        fail "required text" "$file: description lacks: $string"
+    else
+      grep -qF -- "$string" "$root/$file" 2>/dev/null ||
+        fail "required text" "$file: $string"
+    fi
   done <<<"$REQUIRED_TEXT"
   [ "$failures" -eq 0 ]
 }
@@ -329,11 +355,20 @@ new_layout_fixture() {
   echo "$dir"
 }
 
-# A fixture whose files hold every string of REQUIRED_TEXT.
+# A fixture whose files hold every string of REQUIRED_TEXT. A file with a
+# description string starts with a frontmatter that holds it, so the entries of
+# that kind are written first.
 new_required_text_fixture() {
   local dir file string
   dir=$(new_fixture)
   while IFS='|' read -r file string; do
+    [[ $file == description:* ]] || continue
+    file=${file#description:}
+    mkdir -p "$dir/$(dirname "$file")"
+    printf -- '---\nname: fixture\ndescription: Use when asked (%s).\n---\n' "$string" >"$dir/$file"
+  done <<<"$REQUIRED_TEXT"
+  while IFS='|' read -r file string; do
+    [[ $file == description:* ]] && continue
     mkdir -p "$dir/$(dirname "$file")"
     printf '%s\n' "$string" >>"$dir/$file"
   done <<<"$REQUIRED_TEXT"
@@ -531,40 +566,41 @@ run_self_tests() {
   self_test_function_pass "required text present" "$dir" check_required_text
 
   dir=$(new_required_text_fixture)
-  sed -i 's/Fix small items//' "$dir/skills/backlog/SKILL.md"
+  sed -i 's/--sandbox read-only//' "$dir/skills/review/SKILL.md"
   self_test_function_fail "required text missing" "$dir" \
-    "FAIL: required text: skills/backlog/SKILL.md: Fix small items" check_required_text
+    "FAIL: required text: skills/review/SKILL.md: --sandbox read-only" check_required_text
+
+  dir=$(new_required_text_fixture)
+  sed -i 's/Fix small items//' "$dir/skills/backlog/SKILL.md"
+  self_test_function_fail "description trigger missing" "$dir" \
+    "FAIL: required text: skills/backlog/SKILL.md: description lacks: Fix small items" check_required_text
+
+  dir=$(new_required_text_fixture)
+  sed -i '/^description:/d' "$dir/skills/pr-review/SKILL.md"
+  echo "post named findings" >>"$dir/skills/pr-review/SKILL.md"
+  self_test_function_fail "description trigger only in the body" "$dir" \
+    "FAIL: required text: skills/pr-review/SKILL.md: description lacks: post named findings" check_required_text
 
   dir=$(new_required_text_fixture)
   rm "$dir/skills/review/SKILL.md"
   self_test_function_fail "file of a required text missing" "$dir" \
     "FAIL: required text: skills/review/SKILL.md: --sandbox read-only" check_required_text
 
+  dir=$(new_required_text_fixture)
+  rm "$dir/skills/backlog/SKILL.md"
+  self_test_function_fail "file of a description trigger missing" "$dir" \
+    "FAIL: required text: skills/backlog/SKILL.md: description lacks: Fix small items" check_required_text
+
   dir=$(new_layout_fixture)
   self_test_fail "repository check applies the required text" "$dir" \
     "required text: skills/pr-review/SKILL.md: gh pr checks" real
 
   dir=$(new_layout_fixture)
-  if out=$(check_layout "$dir"); then
-    echo "pass: self-test: complete layout"
-  else
-    echo "FAIL: self-test: complete layout should pass but failed:"
-    echo "$out"
-    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
-  fi
+  self_test_function_pass "complete layout" "$dir" check_layout
 
   dir=$(new_layout_fixture)
   rm "$dir/agents/advisor.md"
-  if out=$(check_layout "$dir"); then
-    echo "FAIL: self-test: layout without agents/advisor.md should fail but passed"
-    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
-  elif ! grep -qF -- "agents/advisor.md" <<<"$out"; then
-    echo "FAIL: self-test: layout without agents/advisor.md failed without naming the file:"
-    echo "$out"
-    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
-  else
-    echo "pass: self-test: layout without agents/advisor.md"
-  fi
+  self_test_function_fail "layout without agents/advisor.md" "$dir" "agents/advisor.md" check_layout
 
   dir=$(new_layout_fixture)
   rm "$dir/LICENSE"
