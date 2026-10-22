@@ -56,3 +56,39 @@ Return one of these to **Leftovers**:
 - `done` when the test command passed in step 9.
 - `stopped: size: <reason>` when step 1 found the items too large. No commit was made.
 - `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, the test command failing twice, or any other stop in steps 4 to 9. The report then lists the commits that `git log --oneline <fix-now base>..HEAD` prints, with the hash in place of `<fix-now base>`, as carrying open defects, and names the uncommitted changes a blocked implementer left in the tree.
+
+## Unattended mode
+
+Only the **Fix small items** action of `sh:backlog` runs this mode. It asks the user nothing, and it returns one line to that action in place of the report, the leftovers and the merge question.
+
+Input: the path of a backlog item, the full test command and the default branch. The description of the change is the item's whole text, as `## Input` says.
+
+Merge the fix branch only when all of these hold:
+
+- the review ended with a clean read within the cap of step 8;
+- no implementer returned a `deviated:` line, neither in change mode nor in fix mode;
+- the test command passed on its first run in step 9;
+- in a tracked backlog, the close commit of step 10 changes only `.md` files.
+
+A deviation changes the goal that the review checks against. A commit made after a failed test run, and a close commit that changes a reference in code or configuration, are read by no reviewer and covered by no test run.
+
+Run the steps of the normal run with these changes:
+
+1. Step 1: when the change does not fit, make no commit and return `skipped: size: <reason>`. Never ask about a choice between solutions, and propose no `sh:design`.
+2. Step 2 does not run. The caller checked the tree and passed the test command.
+3. Step 3: the branch is `fix/<slug>`, where `<slug>` is the item's file name without the date prefix and without `.md`.
+4. Step 4: return `stopped: <reason>` when the implementer returns `blocked`, ends with an error or returns none of the three lines, or when the change proves larger than step 1 allows. Record a `deviated:` line and add its text to the `intent` of the reviewers and fixers, as step 4 says. The review goes on, and the branch is not merged.
+5. Steps 5 to 8: return `stopped: <reason>` when a reviewer fails twice as step 7 says, or when a fixer ends with an error or returns a line starting with `blocked: `. Record each `deviated:` line of a fixer and add its text to the `intent` as step 8 says; the branch is not merged. When `round-4/full.md` reports a blocking defect, the review ends there and the branch is not merged. Show nothing to the user and write nothing into the backlog.
+6. Step 9: run the test command once, also when the branch will not be merged for another reason. When it fails, dispatch no implementer; the branch is not merged.
+7. Step 10, only when the first three conditions above hold. In a tracked backlog, close the item and commit the close on the fix branch. When that commit changes a file that is not a `.md` file, the branch is not merged. In a git-ignored backlog, change nothing in this step; step 9 of this list closes the item after the merge.
+8. Steps 11 to 13 do not run: make no report to the user, run no **Leftovers** and ask no merge question.
+9. When all four conditions hold, run `git checkout <default branch>` and `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, in a git-ignored backlog, close the item as step 10 says; it needs no commit.
+
+When the work proves larger than step 1 allows, return `stopped: <reason>` as step 4 of this list says.
+
+Return one line:
+
+- `merged: fix/<slug>; base: <base hash>; review: <review directory>` after the fast-forward.
+- `unmerged: <reason>; branch: fix/<slug>; base: <base hash>; review: <review directory>` when the branch stays unmerged. `<reason>` is one or more of `deviated: <text>`, `open defects at the cap`, `tests failed`, `close changes <files>` and `fast-forward failed`, separated by commas.
+- `skipped: size: <reason>` when step 1 found the change too large. No branch and no commit were made.
+- `stopped: <reason>` when the mode stopped in steps 4 to 8. Add `; branch: fix/<slug>; base: <base hash>` when the branch exists, `; review: <review directory>` when the review directory exists, and `; uncommitted: <paths>`, with the paths that `git status --short` prints, when a blocked implementer left uncommitted changes.
