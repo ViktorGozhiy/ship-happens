@@ -34,12 +34,24 @@ For `spec` and `code` the round also has Codex or the `adversarial` reviewer, as
 
 **Codex.** The value of the Codex option is `${user_config.codex_review}`. Use Codex only when that value is exactly `true`. Any other text, including a value that still looks like a reference, means Codex does not take part.
 
-1. Write the prompt to `<review directory>/codex-prompt.txt` with the Write tool. It names the target and the intent, defines a blocking defect as one that leads to wrong behaviour, and asks for the findings file layout of the reviewers. The first line is `VERDICT: clean` or `VERDICT: blocking defects found`. Sections follow for the intent, the blocking defects (each with evidence) and the advice. The prompt asks for these findings as Codex's final reply, because `-o` saves that reply and the read-only sandbox blocks file writes.
+1. Write the prompt to `<review directory>/codex-prompt.txt` with the Write tool. It names the target and the intent, defines a blocking defect as one that leads to wrong behaviour, and asks for the findings file layout of the reviewers. The first line is `VERDICT: clean` or `VERDICT: blocking defects found`. Sections follow for the intent, the blocking defects (each with evidence) and the advice. The prompt asks for these findings as Codex's final reply.
+   - For `spec`, the prompt gives the reason: `-o` saves that reply, and the read-only sandbox blocks file writes.
+   - For `code`, the layout has a section `## Checks not run` after the advice, with each check Codex could not run and the reason. The prompt gives the reason for the final reply: `-o` saves it outside the worktree. It tells Codex that `<review directory>/wt-codex` is its working root; to install the project's dependencies and run its tests as the project's `CLAUDE.md` or README says; to point a cache that it cannot write at `<review directory>/cache` with the tool's own environment variable; to change nothing outside the worktree, that cache directory and the temporary directory; and to run no command on another host. It says that a dependency that needs the ssh agent, such as a git dependency from a private repository, fails, and that such a failure goes under `## Checks not run`.
 2. Run `mkdir -p <review directory>/round-1`. Codex exits 0 without writing the file when the directory is missing.
-3. Run in the background: `codex exec --sandbox read-only -o <review directory>/round-1/codex.md - < <review directory>/codex-prompt.txt`.
-4. Wait for this command and for every reviewer of the round before you decide anything about the round.
+3. For `spec`, run in the background: `codex exec --sandbox read-only -o <review directory>/round-1/codex.md - < <review directory>/codex-prompt.txt`.
+4. For `code`, Codex works in its own worktree with write access and network access, so that it can install the dependencies and run the tests. You create and remove the worktree and initialise its submodules, because the git directory of a linked worktree lies outside the paths Codex may write. Do this only when `codex` is on `PATH`. The command also needs `timeout` from GNU coreutils on `PATH`.
+   1. Run `git worktree add --detach <review directory>/wt-codex <head>`, with the `<head>` of `target`. When `<review directory>/wt-codex/.gitmodules` exists, run `git -C <review directory>/wt-codex submodule update --init --recursive`.
+   2. Run in the background:
 
-Codex counts as skipped when `codex` is not on `PATH`, when the command exits non-zero, when `codex.md` does not exist, or when its first line is not a verdict line. Then rename any output to `round-1/codex.failed`, report "Codex review skipped" with the reason, and continue with the Claude results. A skipped run is never read as `clean`. Codex is not a Claude agent and does not count toward the limit of four.
+      ```
+      timeout 1800 env -u SSH_AUTH_SOCK codex exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true --add-dir "$(uv cache dir)" -C <review directory>/wt-codex -o <review directory>/round-1/codex.md - < <review directory>/codex-prompt.txt
+      ```
+
+      Leave out `--add-dir "$(uv cache dir)"` when `uv` is not on `PATH`. `timeout` ends a run that hangs after 1800 seconds. `env -u SSH_AUTH_SOCK` removes the ssh agent from Codex's environment, so that Codex cannot use the agent to reach another host.
+   3. After the command ends, whatever its result, run `git worktree remove --force <review directory>/wt-codex`.
+5. Wait for the Codex command and for every reviewer of the round before you decide anything about the round.
+
+Codex counts as skipped when `codex` is not on `PATH`, when the command exits non-zero, when `codex.md` does not exist, or when its first line is not a verdict line. A run that `timeout` ends exits non-zero. Then rename any output to `round-1/codex.failed`, report "Codex review skipped" with the reason, and continue with the Claude results. A skipped run is never read as `clean`. Codex is not a Claude agent and does not count toward the limit of four.
 
 **Adversarial reviewer.** When Codex does not take part, or was skipped, add a reviewer with the aspect `adversarial`. Its findings file is `round-1/adversarial.md`. When the option is `true`, wait for Codex first and dispatch this reviewer only after a skipped run.
 
