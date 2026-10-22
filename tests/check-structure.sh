@@ -94,6 +94,28 @@ tests/check-structure.sh
 LICENSE
 README.md'
 
+# Text that the specs rely on, one "<file>|<string>" per line. The check runs on
+# the repository only.
+REQUIRED_TEXT='skills/backlog/SKILL.md|Fix small items
+skills/pr-review/SKILL.md|post named findings
+skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
+skills/quick-fix/SKILL.md|## Unattended mode
+skills/pr-review/SKILL.md|git merge-tree --write-tree
+skills/pr-review/SKILL.md|gh pr checks
+skills/pr-review/SKILL.md|"commit_id"
+skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
+skills/review/SKILL.md|--sandbox workspace-write
+skills/review/SKILL.md|--sandbox read-only'
+
+check_required_text() {
+  local root=$1 file string
+  while IFS='|' read -r file string; do
+    grep -qF -- "$string" "$root/$file" 2>/dev/null ||
+      fail "required text" "$file: $string"
+  done <<<"$REQUIRED_TEXT"
+  [ "$failures" -eq 0 ]
+}
+
 check_layout() {
   local root=$1 path
   while IFS= read -r path; do
@@ -198,6 +220,12 @@ check_content() {
     done < <(grep -oE '\$\{CLAUDE_PLUGIN_ROOT\}/[A-Za-z0-9_./-]+' "$file" |
       sed -E 's#^\$\{CLAUDE_PLUGIN_ROOT\}/##; s#\.+$##' | sort -u)
 
+    while IFS='|' read -r heading path; do
+      grep -qxF -- "## $heading" "$root/$path" 2>/dev/null ||
+        fail "$rel" "section \`## $heading\` does not exist in $path"
+    done < <(grep -oE 'section `## [^`]+` of `\$\{CLAUDE_PLUGIN_ROOT\}/[^`]+`' "$file" |
+      sed -E 's~^section `## ([^`]+)` of `\$\{CLAUDE_PLUGIN_ROOT\}/([^`]+)`$~\1|\2~' | sort -u)
+
     while IFS= read -r key; do
       grep -qxF -- "$key" <<<"$keys" ||
         fail "$rel" "\${user_config.$key} is not a key of userConfig in plugin.json"
@@ -214,6 +242,7 @@ check_tree() {
   if [ "$kind" = real ]; then
     check_manifests_with_claude "$root"
     check_layout "$root"
+    check_required_text "$root"
   fi
   check_frontmatter "$root"
   check_unique_names "$root"
@@ -300,6 +329,17 @@ new_layout_fixture() {
   echo "$dir"
 }
 
+# A fixture whose files hold every string of REQUIRED_TEXT.
+new_required_text_fixture() {
+  local dir file string
+  dir=$(new_fixture)
+  while IFS='|' read -r file string; do
+    mkdir -p "$dir/$(dirname "$file")"
+    printf '%s\n' "$string" >>"$dir/$file"
+  done <<<"$REQUIRED_TEXT"
+  echo "$dir"
+}
+
 SELF_TEST_FAILURES=0
 
 self_test_pass() {
@@ -320,6 +360,35 @@ self_test_fail() {
   out=$(check_tree "$dir" "$kind")
   rc=$?
   if [ "$rc" -eq 0 ]; then
+    echo "FAIL: self-test: $label should fail but passed"
+    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
+  elif ! grep -qF -- "$expected" <<<"$out"; then
+    echo "FAIL: self-test: $label failed without the message '$expected':"
+    echo "$out"
+    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
+  else
+    echo "pass: self-test: $label"
+  fi
+}
+
+# Runs one check function on a fixture, which must pass.
+self_test_function_pass() {
+  local label=$1 dir=$2 check=$3 out
+  failures=0
+  if out=$("$check" "$dir"); then
+    echo "pass: self-test: $label"
+  else
+    echo "FAIL: self-test: $label should pass but failed:"
+    echo "$out"
+    SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
+  fi
+}
+
+# Runs one check function on a fixture, which must fail with the expected message.
+self_test_function_fail() {
+  local label=$1 dir=$2 expected=$3 check=$4 out
+  failures=0
+  if out=$("$check" "$dir"); then
     echo "FAIL: self-test: $label should fail but passed"
     SELF_TEST_FAILURES=$((SELF_TEST_FAILURES + 1))
   elif ! grep -qF -- "$expected" <<<"$out"; then
@@ -437,6 +506,43 @@ run_self_tests() {
   dir=$(new_valid_fixture)
   echo "Codex is enabled when \${user_config.other_key} is true." >>"$dir/skills/demo/SKILL.md"
   self_test_fail "user_config key missing from plugin.json" "$dir" "user_config.other_key} is not a key of userConfig"
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' '## Mode' 'Body.' >"$dir/skills/demo/notes.md"
+  echo "Run the section \`## Mode\` of \`\${CLAUDE_PLUGIN_ROOT}/skills/demo/notes.md\`." >>"$dir/skills/demo/SKILL.md"
+  self_test_pass "section reference to an existing heading" "$dir"
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' '## Mode' 'Body.' >"$dir/skills/demo/notes.md"
+  echo "Run it in the section \`## Mode\` of \`\${CLAUDE_PLUGIN_ROOT}/skills/demo/notes.md\`." >>"$dir/skills/demo/SKILL.md"
+  self_test_pass "section reference with a leading preposition" "$dir"
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' '## Other' 'Body.' >"$dir/skills/demo/notes.md"
+  echo "Run the section \`## Mode\` of \`\${CLAUDE_PLUGIN_ROOT}/skills/demo/notes.md\`." >>"$dir/skills/demo/SKILL.md"
+  self_test_fail "section reference to a missing heading" "$dir" "section \`## Mode\` does not exist in skills/demo/notes.md"
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' '## Modes' 'Body.' >"$dir/skills/demo/notes.md"
+  echo "Run the section \`## Mode\` of \`\${CLAUDE_PLUGIN_ROOT}/skills/demo/notes.md\`." >>"$dir/skills/demo/SKILL.md"
+  self_test_fail "section reference to a heading that only starts alike" "$dir" "section \`## Mode\` does not exist in skills/demo/notes.md"
+
+  dir=$(new_required_text_fixture)
+  self_test_function_pass "required text present" "$dir" check_required_text
+
+  dir=$(new_required_text_fixture)
+  sed -i 's/Fix small items//' "$dir/skills/backlog/SKILL.md"
+  self_test_function_fail "required text missing" "$dir" \
+    "FAIL: required text: skills/backlog/SKILL.md: Fix small items" check_required_text
+
+  dir=$(new_required_text_fixture)
+  rm "$dir/skills/review/SKILL.md"
+  self_test_function_fail "file of a required text missing" "$dir" \
+    "FAIL: required text: skills/review/SKILL.md: --sandbox read-only" check_required_text
+
+  dir=$(new_layout_fixture)
+  self_test_fail "repository check applies the required text" "$dir" \
+    "required text: skills/pr-review/SKILL.md: gh pr checks" real
 
   dir=$(new_layout_fixture)
   if out=$(check_layout "$dir"); then
