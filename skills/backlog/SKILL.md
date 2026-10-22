@@ -62,7 +62,7 @@ Before the first item:
 1. Find the default branch: the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, ask the user for the default branch.
 2. When `git status --short` prints anything, stop and ask the user how to handle the changes.
 3. When the branch that is checked out is not the default branch, ask the user whether to check out the default branch or to stop. **List** reads the backlog of the branch that is checked out, and every item is fixed on a branch cut from the default branch.
-4. Take the full test command as step 2 of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says.
+4. Take the full test command as the last sentence of step 2 of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says: from the project's `CLAUDE.md`, then the README, else ask the user.
 5. Say in one line that the action now runs without questions until its leftovers list, and name the largest number of items.
 
 For the items:

@@ -101,12 +101,18 @@ REQUIRED_TEXT='description:skills/backlog/SKILL.md|Fix small items
 description:skills/pr-review/SKILL.md|post named findings
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
 skills/quick-fix/SKILL.md|## Unattended mode
+skills/quick-fix/SKILL.md|Fix small items
 skills/pr-review/SKILL.md|git merge-tree --write-tree
+skills/pr-review/SKILL.md|git fetch origin pull/<number>/head
+skills/pr-review/SKILL.md|git cat-file -e
 skills/pr-review/SKILL.md|gh pr checks
 skills/pr-review/SKILL.md|"commit_id"
 skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
 skills/review/SKILL.md|--sandbox workspace-write
-skills/review/SKILL.md|--sandbox read-only'
+skills/review/SKILL.md|--sandbox read-only
+skills/review/SKILL.md|`git worktree add` or the submodule update
+README.md|Fix small items
+README.md|--sandbox workspace-write'
 
 # Prints the frontmatter description of a file. Prints nothing when the file or
 # the description is missing.
@@ -579,6 +585,12 @@ run_self_tests() {
   sed -i '/^description:/d' "$dir/skills/pr-review/SKILL.md"
   echo "post named findings" >>"$dir/skills/pr-review/SKILL.md"
   self_test_function_fail "description trigger only in the body" "$dir" \
+    "FAIL: required text: skills/pr-review/SKILL.md: description lacks: post named findings" check_required_text
+
+  dir=$(new_required_text_fixture)
+  sed -i 's/^description:.*/description: Use when asked./' "$dir/skills/pr-review/SKILL.md"
+  echo "post named findings" >>"$dir/skills/pr-review/SKILL.md"
+  self_test_function_fail "description present without the trigger, trigger in the body" "$dir" \
     "FAIL: required text: skills/pr-review/SKILL.md: description lacks: post named findings" check_required_text
 
   dir=$(new_required_text_fixture)
