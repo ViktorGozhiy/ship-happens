@@ -77,11 +77,11 @@ For the items:
    - Run no size check yourself. `sh:quick-fix` runs it in its step 1.
 8. Before each item, run `git checkout <default branch>`, then `git status --short`. When the checkout fails or the status prints anything, stop the action as step 10 says for a dirty tree, and name the item and the files.
 9. Load `sh:quick-fix` with the Skill tool, and run the section `## Unattended mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` with the item's path, the full test command and the default branch. Record the line it returns.
-10. When the line starts with `stopped: ` and `git status --short` prints anything, stop the action. Stay on the branch that is checked out, give the report of step 11 with the files that `git status --short` prints and the review directories that the returned lines named, and end. Show no leftovers list and ask nothing: the user can run **Leftovers** directly once the tree is clean. Write nothing on a fix branch. When the tree is clean, go on with the next candidate. A `skipped: size: <reason>` line does not count toward the largest number.
+10. After the line, whatever it says, run `git status --short`. When it prints anything, stop the action. Stay on the branch that is checked out, give the report of step 11 with the files that `git status --short` prints and the review directories that the returned lines named, and end. Show no leftovers list and ask nothing: the user can run **Leftovers** directly once the tree is clean. Write nothing on a fix branch. When the tree is clean, go on with the next candidate. A `skipped: size: <reason>` line does not count toward the largest number.
 
 After the last item:
 
-11. Unless the action stopped on a dirty tree, run `git checkout <default branch>`. Report:
+11. Unless the action stopped on a dirty tree, run `git checkout <default branch>`. When that checkout fails, treat it as a stop on a dirty tree as step 10 says: stay on the branch that is checked out, give the report below with the files that `git status --short` prints, show no leftovers list and ask nothing. Report:
     - each item merged, with its branch, the commits that `git log --oneline <base hash>..fix/<slug>` prints with the base hash of its returned line, the number of `round-*` directories in its review directory, and the commit or the `mv` that closed the item;
     - each branch left unmerged, with its reason: the items that returned `unmerged:`, the items that returned `stopped:` on a clean tree, and the branches of an earlier run that step 7 skipped;
     - each item skipped, with its reason, and for an item with options the names of the options;
