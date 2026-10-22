@@ -72,7 +72,7 @@ Merge the fix branch only when all of these hold:
 
 A deviation changes the goal that the review checks against. A commit made after a failed test run, and a close commit that changes a reference in code or configuration, are read by no reviewer and covered by no test run.
 
-Whenever the work proves larger than step 1 allows after step 1 has passed it, in any later step, return `stopped: <reason>` and propose nothing, not `sh:design` either. This overrides the paragraph after step 13 and the end of step 4.
+Whenever the work proves larger than step 1 allows after step 1 has passed it, in any later step, return `stopped: <reason>` and propose nothing, not `sh:design` either. This overrides the sentence of step 4 that proposes `sh:design` when the change is larger than step 1 allows, and the paragraph after step 13.
 
 Run the steps of the normal run with these changes:
 
