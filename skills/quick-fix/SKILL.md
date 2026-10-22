@@ -82,13 +82,13 @@ Run the steps of the normal run with these changes:
 6. Step 9: run the test command once, also when the branch will not be merged for another reason. When it fails, dispatch no implementer; the branch is not merged.
 7. Step 10, only when the first three conditions above hold. In a tracked backlog, close the item and commit the close on the fix branch. When that commit changes a file that is not a `.md` file, the branch is not merged. In a git-ignored backlog, change nothing in this step; step 9 of this list closes the item after the merge.
 8. Steps 11 to 13 do not run: make no report to the user, run no **Leftovers** and ask no merge question.
-9. When all four conditions hold, run `git checkout <default branch>` and `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, in a git-ignored backlog, close the item as step 10 says; it needs no commit.
+9. When all four conditions hold, run `git checkout <default branch>`. When the checkout fails, run no merge and the branch stays unmerged, because a merge on `fix/<slug>` would report "Already up to date". Then run `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, in a git-ignored backlog, close the item as step 10 says; it needs no commit.
 
 When the work proves larger than step 1 allows, return `stopped: <reason>` as step 4 of this list says.
 
 Return one line:
 
 - `merged: fix/<slug>; base: <base hash>; review: <review directory>` after the fast-forward.
-- `unmerged: <reason>; branch: fix/<slug>; base: <base hash>; review: <review directory>` when the branch stays unmerged. `<reason>` is one or more of `deviated: <text>`, `open defects at the cap`, `tests failed`, `close changes <files>` and `fast-forward failed`, separated by commas.
+- `unmerged: <reason>; branch: fix/<slug>; base: <base hash>; review: <review directory>` when the branch stays unmerged. `<reason>` is one or more of `deviated: <text>`, `open defects at the cap`, `tests failed`, `close changes <files>`, `checkout failed` and `fast-forward failed`, separated by commas.
 - `skipped: size: <reason>` when step 1 found the change too large. No branch and no commit were made.
 - `stopped: <reason>` when the mode stopped in steps 4 to 8. Add `; branch: fix/<slug>; base: <base hash>` when the branch exists, `; review: <review directory>` when the review directory exists, and `; uncommitted: <paths>`, with the paths that `git status --short` prints, when a blocked implementer left uncommitted changes.
