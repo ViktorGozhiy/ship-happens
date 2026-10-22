@@ -1,7 +1,7 @@
 {
   "name": "sh",
   "description": "Skills and agents for designing, reviewing, planning and implementing changes",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": { "name": "Viktor Hozhyi" },
   "homepage": "https://github.com/ViktorGozhiy/ship-happens",
   "repository": "https://github.com/ViktorGozhiy/ship-happens",
