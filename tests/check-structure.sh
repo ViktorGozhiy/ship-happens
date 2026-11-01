@@ -109,6 +109,10 @@ skills/pr-review/SKILL.md|gh pr checks
 skills/pr-review/SKILL.md|"commit_id"
 skills/pr-review/SKILL.md|with its posted number and its title
 skills/pr-review/SKILL.md|<posted number>=<record number>
+skills/backlog/SKILL.md|The proposal is `fix now`, `backlog` with its priority
+skills/backlog/SKILL.md|accepts every proposal, and so does an answer that hands the choice to you
+skills/backlog/SKILL.md|A candidate that such an answer does not name is dropped.
+skills/backlog/SKILL.md|Write nothing for the dropped candidates, and name them in one line of the report
 skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
 skills/review/SKILL.md|--sandbox workspace-write
 skills/review/SKILL.md|--sandbox read-only
