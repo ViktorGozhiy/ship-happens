@@ -107,6 +107,8 @@ skills/pr-review/SKILL.md|git fetch origin pull/<number>/head
 skills/pr-review/SKILL.md|git cat-file -e
 skills/pr-review/SKILL.md|gh pr checks
 skills/pr-review/SKILL.md|"commit_id"
+skills/pr-review/SKILL.md|with its posted number and its title
+skills/pr-review/SKILL.md|<posted number>=<record number>
 skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
 skills/review/SKILL.md|--sandbox workspace-write
 skills/review/SKILL.md|--sandbox read-only
