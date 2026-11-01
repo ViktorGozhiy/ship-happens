@@ -111,6 +111,9 @@ skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
 skills/review/SKILL.md|--sandbox workspace-write
 skills/review/SKILL.md|--sandbox read-only
 skills/review/SKILL.md|`git worktree add` or the submodule update
+agents/implementer.md|never wait with `sleep`, which the harness blocks
+agents/code-reviewer.md|never wait with `sleep`, which the harness blocks
+agents/plan-writer.md|never wait with `sleep`, which the harness blocks
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 

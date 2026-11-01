@@ -30,7 +30,7 @@ The review directory is two levels above `findings_file`. Work only in your own 
 1. If `git worktree list` shows `<review directory>/wt-<aspect>`, a failed earlier run left it. Run `git worktree remove --force` on that path first.
 2. Run `git worktree add --detach <review directory>/wt-<aspect> <head>`.
 3. If the worktree lacks something the project needs, such as installed dependencies or a build, run the setup command that the project's `CLAUDE.md` or README names.
-4. Run all experiments and checks in that worktree.
+4. Run all experiments and checks in that worktree. Run a long test run in the foreground with a timeout long enough for it, and never wait with `sleep`, which the harness blocks; `Monitor` is not available to you.
 5. Before every return, including a return after a failure, run `git worktree remove --force <review directory>/wt-<aspect>`. A plain `remove` fails when the worktree holds untracked files.
 
 When you cannot run a check, for example because setup failed, list it with the reason under `## Checks not run`. Never run it in the main working tree.
