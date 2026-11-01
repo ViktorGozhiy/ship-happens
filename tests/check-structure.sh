@@ -109,17 +109,43 @@ skills/pr-review/SKILL.md|gh pr checks
 skills/pr-review/SKILL.md|"commit_id"
 skills/pr-review/SKILL.md|with its posted number and its title
 skills/pr-review/SKILL.md|<posted number>=<record number>
+skills/pr-review/SKILL.md|Number the findings that you post from 1, in the order of their record numbers
+skills/pr-review/SKILL.md|so the posted text never shows a record number
+skills/pr-review/SKILL.md|those stay record numbers in everything you say to the user
+skills/pr-review/SKILL.md|Append to the review record the line `Posted
+skills/pr-review/SKILL.md|with the same posted numbers
+skills/pr-review/SKILL.md|starts at 1 again
+skills/pr-review/SKILL.md|the posted number with its record number
+skills/pr-review/SKILL.md|take its record number from the `Posted` line
+skills/pr-review/SKILL.md|the review it was posted in and the number it got there
 skills/backlog/SKILL.md|The proposal is `fix now`, `backlog` with its priority
 skills/backlog/SKILL.md|accepts every proposal, and so does an answer that hands the choice to you
 skills/backlog/SKILL.md|A candidate that such an answer does not name is dropped.
 skills/backlog/SKILL.md|Write nothing for the dropped candidates, and name them in one line of the report
+skills/backlog/SKILL.md|the reason for the proposal in one clause
+skills/backlog/SKILL.md|Propose `fix now` only for such a candidate
+skills/backlog/SKILL.md|propose `backlog` or `drop` for every candidate
+skills/backlog/SKILL.md|Propose `drop` for a candidate that is probably done already
+skills/backlog/SKILL.md|An answer with one bare set of numbers names the backlog set
+skills/backlog/SKILL.md|A number named in both sets belongs to the fix-now set
+skills/backlog/SKILL.md|A number that is backlog only belongs to the backlog set
+skills/backlog/SKILL.md|Mark "backlog only" each other candidate
+skills/backlog/SKILL.md|puts each candidate into the set of its proposal
+skills/backlog/SKILL.md|has the priority of its proposal
+skills/backlog/SKILL.md|Leave that line out when none is dropped
 skills/review/SKILL.md|timeout 1800 env -u SSH_AUTH_SOCK
 skills/review/SKILL.md|--sandbox workspace-write
 skills/review/SKILL.md|--sandbox read-only
 skills/review/SKILL.md|`git worktree add` or the submodule update
 agents/implementer.md|never wait with `sleep`, which the harness blocks
+agents/implementer.md|Run a long test run in the foreground with a timeout long enough for it
+agents/implementer.md|`Monitor` is not available to you
 agents/code-reviewer.md|never wait with `sleep`, which the harness blocks
+agents/code-reviewer.md|Run a long test run in the foreground with a timeout long enough for it
+agents/code-reviewer.md|`Monitor` is not available to you
 agents/plan-writer.md|never wait with `sleep`, which the harness blocks
+agents/plan-writer.md|Run a long test run in the foreground with a timeout long enough for it
+agents/plan-writer.md|`Monitor` is not available to you
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 

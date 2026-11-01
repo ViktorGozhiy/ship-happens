@@ -82,7 +82,7 @@ Return the status, the number of rounds, one line per change made, each `deviate
 
 ## Leftovers
 
-When the user called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report, with the path of the review directory, and, when the review stopped at the cap, the open blocking defects. Pass your `intent` and no test command. **Leftovers** writes the items the user names for the backlog on the branch that is checked out.
+When the user called you directly with `kind` `code`, end with the **Leftovers** action of `sh:backlog` after the report. Its sources are the advice of the report, with the path of the review directory, and, when the review stopped at the cap, the open blocking defects. Pass your `intent` and no test command. **Leftovers** writes the candidates that the answer puts in the backlog set on the branch that is checked out.
 
 Fix now is allowed only when all of these hold:
 

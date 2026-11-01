@@ -88,7 +88,7 @@ After the last item:
     - the items not read because of the largest number.
 
     Say that nothing was pushed. Every merged tree passed the full test command before its fast-forward, so run no further test.
-12. Run **Leftovers** with fix now not allowed. Its sources are the advice of every review directory that a returned line names, with the path of each, and the open blocking defects of `round-4/full.md` in the review directory of each item that returned `unmerged:` with `open defects at the cap`. Those defects are backlog only, and each candidate made from one names the unmerged branch it was found on. **Leftovers** writes the items the user names on the default branch, which is checked out.
+12. Run **Leftovers** with fix now not allowed. Its sources are the advice of every review directory that a returned line names, with the path of each, and the open blocking defects of `round-4/full.md` in the review directory of each item that returned `unmerged:` with `open defects at the cap`. Those defects are backlog only, and each candidate made from one names the unmerged branch it was found on. **Leftovers** writes the candidates that the answer puts in the backlog set on the default branch, which is checked out.
 
 ## Close by hand
 
@@ -112,7 +112,7 @@ Input from a skill that runs this action: the sources of the candidates, with th
      awk 'FNR==1{f=0} /^## Advice/{f=1; print "== " FILENAME; next} /^## /{f=0} f' <review directory>/round-*/*.md
      ```
 
-     Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done. Propose `drop` for it, and the user sees that in the list.
+     Turn each remark into one candidate line, merge remarks that repeat across files, and skip `None.`. No fixer reports which advice it applied, so a candidate may already be done.
    - A rejected finding is not a candidate, because it is wrong. An accepted deviation is not a candidate, because it is done. The part of a backlog item that a branch did not cover is not a candidate either: it stays in the open item, under its `Partly done` line.
 2. When there are no candidates, say so in one line and ask nothing. The action ends here, and the skill that ran it goes on with its next step.
 3. Show all candidates as one numbered list in plain text, one line each: the candidate, a proposal, and the reason for the proposal in one clause. The proposal is `fix now`, `backlog` with its priority (`high`, `normal` or `low`), or `drop`. Do not use `AskUserQuestion`: the user answers in text.
