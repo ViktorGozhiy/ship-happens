@@ -96,7 +96,7 @@ After the last item:
 15. Unless the action stopped as step 14 says, run `git checkout <default branch>`. When that checkout fails, treat it as a stop on a dirty tree as step 14 says: stay on the branch that is checked out, give the report below with the error text of the failed checkout and the files that `git status --short` prints, show no leftovers list and ask nothing. Report:
     - each item merged, with its branch, the commits that `git log --oneline <base hash>..fix/<slug>` prints with the base hash of its returned line, the number of `round-*` directories in its review directory, and the commit or the `mv` that closed the item;
     - each branch left unmerged, with its reason: the items that returned `unmerged:`, the items that returned `stopped:` on a clean tree, and the branches of an earlier run that step 6 put under **Not now**;
-    - each item skipped, with its reason. An item with a chosen option that returned `skipped: size` is listed as needing a design: a sweep tries no second option;
+    - each item skipped, with its reason. An item with a chosen option that returned `skipped: size` is listed as needing a design: **Fix small items** tries no second option;
     - a list of decisions: each item, its option and the reason;
     - the new failures and the base failures of each item, with the path from its returned line. An `unmerged:` line with `tests failed` and no `; tests:` part means that the comparison did not run, and the report says so;
     - the items the action did not take, with their groups, also those past the largest number.

@@ -360,7 +360,7 @@ README.md|in three groups
 README.md|A document other than a spec
 README.md|also fails on the base commit
 README.md|asks one question: whether to push
-README.md|a sweep may ask Codex about a choice
+README.md|**Fix small items** may ask Codex about a choice
 README.md|Plan reviews and document reviews do not use Codex
 README.md|Fix small items
 README.md|--sandbox workspace-write'
