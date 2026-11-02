@@ -202,6 +202,14 @@ skills/quick-fix/SKILL.md|with the reason `tests failed`
 skills/quick-fix/SKILL.md|after a failing run with no comparison, after a new failure and after a void result
 skills/quick-fix/SKILL.md|; tests: <path>
 skills/quick-fix/SKILL.md|so that the report can name the test that blocked the branch
+skills/implement/SKILL.md|with its output in `test-head.txt`
+skills/implement/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`
+skills/implement/SKILL.md|the names of the new failures, how to run them, their output
+skills/implement/SKILL.md|After a void result `change` holds the test command
+skills/implement/SKILL.md|delete `test-comparison.md`, because its failures are gone
+skills/implement/SKILL.md|its step 5 reuses `test-base.txt` when it exists
+skills/implement/SKILL.md|new failures remain a second time
+skills/implement/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
