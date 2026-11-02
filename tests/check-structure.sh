@@ -314,14 +314,15 @@ skills/pr-review/SKILL.md|Never force
 skills/pr-review/SKILL.md|Git rejects the push when the branch moved
 skills/pr-review/SKILL.md|except a finding that a `deviated:` line names
 skills/pr-review/SKILL.md|git -C <worktree> switch -c pr-<number>-fixes
-skills/pr-review/SKILL.md|report the error with the worktree
+skills/pr-review/SKILL.md|names no branch, because no ref holds the commits. The user then has to save them
 skills/pr-review/SKILL.md|The numbers are record numbers, as for posting
 skills/pr-review/SKILL.md|Load `sh:quick-fix` with the Skill tool, and run the section `## Pull request mode`
 skills/pr-review/SKILL.md|names in `<that directory>/wt-fix`, with `cd <that directory>/wt-fix &&` at its start
 skills/pr-review/SKILL.md|Copy from the main working tree into `<that directory>/wt-fix`
 skills/pr-review/SKILL.md|run the `git switch -c` command of step 11 when `git -C <worktree> rev-parse HEAD` differs from `<head>`
-skills/pr-review/SKILL.md|the branch when it exists and the head hash
-skills/pr-review/SKILL.md|Git rejects the push when the branch moved: run the `git switch -c` command of step 11, report the error, keep the worktree and stop
+skills/pr-review/SKILL.md|The report gives the reason, the worktree'\''s path, the head hash and the branch that the command created
+skills/pr-review/SKILL.md|Git rejects the push when the branch moved: run the `git switch -c` command of step 11, keep the worktree and stop
+skills/pr-review/SKILL.md|The report gives the error of the push, the worktree'\''s path, the head hash and the branch that the command created
 skills/pr-review/SKILL.md|Keep the worktree, and report its path, the branch and the head hash
 agents/document-reviewer.md|`claims`, `reasoning` or `full`
 agents/document-reviewer.md|a wrong belief or a wrong decision
@@ -372,7 +373,8 @@ skills/quick-fix/SKILL.md|2|- `stopped: size: <reason>` when step 1 found the it
 skills/quick-fix/SKILL.md|2|- `stopped: <reason>` when the mode stopped after it started work
 skills/quick-fix/SKILL.md|2|new failures remaining after the second run
 skills/quick-fix/SKILL.md|2|the exit status is that of `tee`
-skills/pr-review/SKILL.md|2|## Fix named findings'
+skills/pr-review/SKILL.md|2|## Fix named findings
+skills/pr-review/SKILL.md|2|When the command fails, the report says what step 11 says of that failure.'
 
 # Prints the frontmatter description of a file. Prints nothing when the file or
 # the description is missing.
@@ -892,6 +894,10 @@ run_self_tests() {
   dir=$(new_layout_fixture)
   self_test_fail "repository check applies the required text" "$dir" \
     "required text: skills/pr-review/SKILL.md: gh pr checks" real
+
+  dir=$(new_layout_fixture)
+  self_test_fail "repository check applies the required counts" "$dir" \
+    "required count: skills/pr-review/SKILL.md: 2 lines with: ## Fix named findings (found 0)" real
 
   counts=$'skills/demo/SKILL.md|2|repeated line\nskills/demo/SKILL.md|1|single line'
 
