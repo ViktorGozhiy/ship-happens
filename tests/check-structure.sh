@@ -396,18 +396,18 @@ new_layout_fixture() {
   echo "$dir"
 }
 
-# A fixture whose files hold every string of REQUIRED_TEXT. A file with a
-# description string starts with a frontmatter that holds it, so the entries of
-# that kind are written first.
+# A fixture whose files hold every string of REQUIRED_TEXT. A file with
+# description strings starts with one frontmatter that holds all of them, so the
+# entries of that kind are written first.
 new_required_text_fixture() {
-  local dir file string
+  local dir file string strings
   dir=$(new_fixture)
-  while IFS='|' read -r file string; do
-    [[ $file == description:* ]] || continue
+  while IFS= read -r file; do
+    strings=$(grep -F "$file|" <<<"$REQUIRED_TEXT" | cut -d'|' -f2- | paste -sd';' -)
     file=${file#description:}
     mkdir -p "$dir/$(dirname "$file")"
-    printf -- '---\nname: fixture\ndescription: Use when asked (%s).\n---\n' "$string" >"$dir/$file"
-  done <<<"$REQUIRED_TEXT"
+    printf -- '---\nname: fixture\ndescription: Use when asked (%s).\n---\n' "$strings" >"$dir/$file"
+  done < <(grep '^description:' <<<"$REQUIRED_TEXT" | cut -d'|' -f1 | sort -u)
   while IFS='|' read -r file string; do
     [[ $file == description:* ]] && continue
     mkdir -p "$dir/$(dirname "$file")"
@@ -477,7 +477,7 @@ self_test_function_fail() {
 }
 
 run_self_tests() {
-  local dir
+  local dir two_triggers
 
   self_test_pass "manifests alone" "$(new_fixture)"
   self_test_pass "valid skill naming a valid agent" "$(new_valid_fixture)"
@@ -637,6 +637,21 @@ run_self_tests() {
   rm "$dir/skills/backlog/SKILL.md"
   self_test_function_fail "file of a description trigger missing" "$dir" \
     "FAIL: required text: skills/backlog/SKILL.md: description lacks: Fix small items" check_required_text
+
+  two_triggers=$'description:skills/demo/SKILL.md|first trigger\ndescription:skills/demo/SKILL.md|second trigger'
+
+  dir=$(REQUIRED_TEXT=$two_triggers new_required_text_fixture)
+  REQUIRED_TEXT=$two_triggers self_test_function_pass "two description triggers of one file" "$dir" check_required_text
+
+  dir=$(REQUIRED_TEXT=$two_triggers new_required_text_fixture)
+  sed -i 's/first trigger//' "$dir/skills/demo/SKILL.md"
+  REQUIRED_TEXT=$two_triggers self_test_function_fail "first of two description triggers missing" "$dir" \
+    "FAIL: required text: skills/demo/SKILL.md: description lacks: first trigger" check_required_text
+
+  dir=$(REQUIRED_TEXT=$two_triggers new_required_text_fixture)
+  sed -i 's/second trigger//' "$dir/skills/demo/SKILL.md"
+  REQUIRED_TEXT=$two_triggers self_test_function_fail "second of two description triggers missing" "$dir" \
+    "FAIL: required text: skills/demo/SKILL.md: description lacks: second trigger" check_required_text
 
   dir=$(new_layout_fixture)
   self_test_fail "repository check applies the required text" "$dir" \
