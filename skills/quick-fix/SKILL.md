@@ -117,4 +117,4 @@ Return one of these to `sh:pr-review`:
 
 - `done` when step 9 left no new failure.
 - `stopped: size: <reason>` when step 1 found the items too large. No commit was made.
-- `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, new failures remaining after the second run, or any other stop in steps 4 to 9.
+- `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, new failures remaining after the second run, or any other stop in steps 4 to 9. When `test-failures.md` stopped on a failed return to the head, add `; head: <head hash>`, the head hash of its step 3. The worktree then stays on the head of the pull request, and no ref holds the commits made after it; the report says so.

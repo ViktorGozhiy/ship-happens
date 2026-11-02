@@ -320,7 +320,9 @@ skills/pr-review/SKILL.md|The numbers are record numbers, as for posting
 skills/pr-review/SKILL.md|Load `sh:quick-fix` with the Skill tool, and run the section `## Pull request mode`
 skills/pr-review/SKILL.md|names in `<that directory>/wt-fix`, with `cd <that directory>/wt-fix &&` at its start
 skills/pr-review/SKILL.md|Copy from the main working tree into `<that directory>/wt-fix`
-skills/pr-review/SKILL.md|run the `git switch -c` command of step 11 when `git -C <worktree> rev-parse HEAD` differs from `<head>`
+skills/pr-review/SKILL.md|run the `git switch -c` command of step 11 when the head hash of the `stopped:` line, or else `git -C <worktree> rev-parse HEAD`, differs from `<head>`
+skills/quick-fix/SKILL.md|add `; head: <head hash>`, the head hash of its step 3
+skills/quick-fix/SKILL.md|no ref holds the commits made after it
 skills/pr-review/SKILL.md|The report gives the reason, the worktree'\''s path, the head hash and the branch that the command created
 skills/pr-review/SKILL.md|Git rejects the push when the branch moved: run the `git switch -c` command of step 11, keep the worktree and stop
 skills/pr-review/SKILL.md|The report gives the error of the push, the worktree'\''s path, the head hash and the branch that the command created
