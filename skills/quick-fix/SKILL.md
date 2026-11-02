@@ -61,7 +61,7 @@ Return one of these to **Leftovers**:
 
 Only the **Fix small items** action of `sh:backlog` runs this mode. It asks the user nothing, and it returns one line to that action in place of the report, the leftovers and the merge question.
 
-Input: the path of a backlog item, the full test command and the default branch. The description of the change is the item's whole text, as `## Input` says.
+Input: the path of a backlog item, the full test command, the default branch, and optionally the chosen option with its reason. The description of the change is the item's whole text, as `## Input` says. With a chosen option, a sentence that names the option follows the text. This sentence does not narrow the change, so step 10 closes the item and writes no `Partly done` line. `## Resolution` also names the option and the reason, because `git log` does not hold them.
 
 Merge the fix branch only when all of these hold:
 
@@ -76,7 +76,7 @@ Whenever the work proves larger than step 1 allows after step 1 has passed it, i
 
 Run the steps of the normal run with these changes:
 
-1. Step 1: when the change does not fit, make no commit and return `skipped: size: <reason>`. Never ask about a choice between solutions, and propose no `sh:design`.
+1. Step 1: when the change does not fit, make no commit and return `skipped: size: <reason>`. Never ask about a choice between solutions, and propose no `sh:design`. Try no second option.
 2. Step 2 does not run. The caller checked the tree and passed the test command.
 3. Step 3: the branch is `fix/<slug>`, where `<slug>` is the item's file name without the date prefix and without `.md`.
 4. Step 4: return `stopped: <reason>` when the implementer returns `blocked`, ends with an error or returns none of the three lines. The branch is not merged after a `deviated:` line.

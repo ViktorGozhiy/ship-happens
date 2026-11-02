@@ -99,6 +99,7 @@ README.md'
 # "description:<file>" must hold the string in its frontmatter description, which
 # is the text that loads the skill. The check runs on the repository only.
 REQUIRED_TEXT='description:skills/backlog/SKILL.md|Fix small items
+description:skills/backlog/SKILL.md|sort the open items
 description:skills/pr-review/SKILL.md|post named findings
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
 skills/quick-fix/SKILL.md|## Unattended mode
@@ -210,6 +211,36 @@ skills/implement/SKILL.md|delete `test-comparison.md`, because its failures are 
 skills/implement/SKILL.md|its step 5 reuses `test-base.txt` when it exists
 skills/implement/SKILL.md|new failures remain a second time
 skills/implement/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
+skills/backlog/SKILL.md|There is no limit unless the user names one
+skills/backlog/SKILL.md|**Not now**, shown below the three groups with its reason
+skills/backlog/SKILL.md|it waits for data that does not exist yet
+skills/backlog/SKILL.md|A `## Related` section that names another repository does not put an item here
+skills/backlog/SKILL.md|**Needs a design**: it does not fit
+skills/backlog/SKILL.md|Never switch to a smaller option that was not recommended
+skills/backlog/SKILL.md|**Quick fix with a choice**: it fits one implementer task
+skills/backlog/SKILL.md|Judge the size by the chosen option
+skills/backlog/SKILL.md|**Quick fix, no choice**: every other item
+skills/backlog/SKILL.md|A choice stays out of the item
+skills/backlog/SKILL.md|timeout 600 codex exec --sandbox read-only
+skills/backlog/SKILL.md|is exactly `true`
+skills/backlog/SKILL.md|its file is missing or empty, make the choice yourself
+skills/backlog/SKILL.md|Then stop and wait
+skills/backlog/SKILL.md|A word that accepts, such as "бери", takes both quick-fix groups
+skills/backlog/SKILL.md|Bare numbers name the items to take
+skills/backlog/SKILL.md|Numbers after "без" name the items to leave out
+skills/backlog/SKILL.md|is not taken, also with another choice, and the report says so
+skills/backlog/SKILL.md|does not count toward that number
+skills/backlog/SKILL.md|and the chosen option with its reason when the item has one
+skills/backlog/SKILL.md|A line that starts `stopped: tree:` stops the action in the same way
+skills/backlog/SKILL.md|a list of decisions: each item, its option and the reason
+skills/backlog/SKILL.md|An item with a chosen option that returned `skipped: size` is listed as needing a design
+skills/backlog/SKILL.md|no `; tests:` part means that the comparison did not run
+skills/backlog/SKILL.md|the items the action did not take, with their groups, also those past the largest number
+skills/backlog/SKILL.md|No merged tree had a new failure before its fast-forward
+skills/quick-fix/SKILL.md|and optionally the chosen option with its reason
+skills/quick-fix/SKILL.md|This sentence does not narrow the change
+skills/quick-fix/SKILL.md|`## Resolution` also names the option and the reason
+skills/quick-fix/SKILL.md|Try no second option
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
