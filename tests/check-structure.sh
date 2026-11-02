@@ -196,6 +196,7 @@ skills/quick-fix/test-failures.md|it shows a build error, a collection error, a 
 skills/quick-fix/test-failures.md|When it prints anything, the result is void
 skills/quick-fix/test-failures.md|the project needs a rebuild after each checkout
 skills/quick-fix/test-failures.md|Take the rebuild command from the project
+skills/quick-fix/test-failures.md|so the rebuild command has to rebuild it
 skills/quick-fix/test-failures.md|the rebuild when step 4 asks for it, and the test command
 skills/quick-fix/test-failures.md|then the rebuild when step 4 asks for it. After a reused
 skills/quick-fix/test-failures.md|return: `git checkout <branch>`, or
