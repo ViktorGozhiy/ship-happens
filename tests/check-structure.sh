@@ -101,6 +101,7 @@ README.md'
 # is the text that loads the skill. The check runs on the repository only.
 REQUIRED_TEXT='description:skills/backlog/SKILL.md|Fix small items
 description:skills/backlog/SKILL.md|sort the open items
+description:skills/backlog/SKILL.md|without questions
 description:skills/review/SKILL.md|only when the user asks
 description:skills/pr-review/SKILL.md|post named findings
 description:skills/pr-review/SKILL.md|fix named findings
@@ -156,7 +157,8 @@ agents/implementer.md|`intent` (what the work is checked against), optionally `w
 agents/implementer.md|with `cd <worktree> &&` at its start
 agents/implementer.md|`findings_dir` and `rejections_file` may lie outside it
 agents/implementer.md|The rule on uncommitted changes applies to that tree
-agents/implementer.md|before your first edit, run the existing tests of the code you will touch
+agents/implementer.md|every project file you change lies under it
+agents/implementer.md|In change mode and fix mode, before your first edit, run the existing tests of the code you will touch
 agents/implementer.md|that `change` lists as failing on the base commit
 agents/implementer.md|unless `change` asks you to fix it
 agents/implementer.md|these failures exist before the change, and the user accepted that they do not block it
@@ -188,7 +190,22 @@ skills/quick-fix/test-failures.md|the diff from the base commit does not change 
 skills/quick-fix/test-failures.md|Write `test-comparison.md`
 skills/quick-fix/test-failures.md|also for a void result
 skills/quick-fix/test-failures.md|every test run of these steps runs in the worktree
-skills/quick-fix/SKILL.md|with its output in `<review directory>/test-head.txt`
+skills/quick-fix/test-failures.md|every rebuild and every test run of these steps runs in the worktree
+skills/quick-fix/test-failures.md|the run stopped before all its suites ran
+skills/quick-fix/test-failures.md|it shows a build error, a collection error, a lint error or a timeout
+skills/quick-fix/test-failures.md|When it prints anything, the result is void
+skills/quick-fix/test-failures.md|the project needs a rebuild after each checkout
+skills/quick-fix/test-failures.md|Take the rebuild command from the project
+skills/quick-fix/test-failures.md|the rebuild when step 4 asks for it, and the test command
+skills/quick-fix/test-failures.md|then the rebuild when step 4 asks for it. After a reused
+skills/quick-fix/test-failures.md|return: `git checkout <branch>`, or
+skills/quick-fix/test-failures.md|When the checkout or the rebuild fails, stop and report the branch and the head hash
+skills/quick-fix/test-failures.md|A failure is a base failure only when all of these hold; otherwise it is new
+skills/quick-fix/test-failures.md|its error text is the same, apart from addresses
+skills/quick-fix/test-failures.md|the new failures by name, and one line per base failure with its test and error text
+skills/quick-fix/test-failures.md|the exit status is that of `tee`
+skills/quick-fix/SKILL.md|Run the test command on the final tree with its output in `<review directory>/test-head.txt`
+skills/quick-fix/SKILL.md|run the test command once with its output in `<review directory>/test-head.txt`
 skills/quick-fix/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`
 skills/quick-fix/SKILL.md|the names of the new failures, how to run them, their output
 skills/quick-fix/SKILL.md|After a void result `change` holds the test command
@@ -197,16 +214,19 @@ skills/quick-fix/SKILL.md|its step 5 reuses `test-base.txt` when it exists
 skills/quick-fix/SKILL.md|new failures remain a second time
 skills/quick-fix/SKILL.md|When the input named a backlog item and step 9 left no new failure
 skills/quick-fix/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
-skills/quick-fix/SKILL.md|- `done` when step 9 left no new failure.
-skills/quick-fix/SKILL.md|new failures remaining after the second run
 skills/quick-fix/SKILL.md|the first run in step 9 left no new failure
+skills/quick-fix/SKILL.md|and the list of base failures
+skills/quick-fix/SKILL.md|When it fails, dispatch no implementer
 skills/quick-fix/SKILL.md|A commit made after a test run with a new failure
 skills/quick-fix/SKILL.md|only when the first two conditions above hold
 skills/quick-fix/SKILL.md|with the reason `tests failed`
 skills/quick-fix/SKILL.md|after a failing run with no comparison, after a new failure and after a void result
-skills/quick-fix/SKILL.md|; tests: <path>
+skills/quick-fix/SKILL.md|after the fast-forward. Add `; tests: <path>`
+skills/quick-fix/SKILL.md|separated by commas. Add `; tests: <path>`
 skills/quick-fix/SKILL.md|so that the report can name the test that blocked the branch
 skills/implement/SKILL.md|with its output in `test-head.txt`
+skills/implement/SKILL.md|and the list of base failures
+skills/implement/SKILL.md|the exit status is that of `tee`
 skills/implement/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`
 skills/implement/SKILL.md|the names of the new failures, how to run them, their output
 skills/implement/SKILL.md|After a void result `change` holds the test command
@@ -215,6 +235,20 @@ skills/implement/SKILL.md|its step 5 reuses `test-base.txt` when it exists
 skills/implement/SKILL.md|new failures remain a second time
 skills/implement/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
 skills/backlog/SKILL.md|There is no limit unless the user names one
+skills/backlog/SKILL.md|Every question comes before the first item
+skills/backlog/SKILL.md|ask the user nothing until the leftovers list of step 16
+skills/backlog/SKILL.md|Every question came before this point, and nothing is asked until the leftovers list
+skills/backlog/SKILL.md|runs without questions until its leftovers list
+skills/backlog/SKILL.md|Load `sh:quick-fix` with the Skill tool, and run the section
+skills/backlog/SKILL.md|The answer may come later in the session, and it continues at step 10
+skills/backlog/SKILL.md|in the order **Not now**, **Needs a design**, **Quick fix with a choice**, **Quick fix, no choice**
+skills/backlog/SKILL.md|needs a change in another repository or on another host
+skills/backlog/SKILL.md|prints a hash, which marks an unmerged branch
+skills/backlog/SKILL.md|Pick the recommended option
+skills/backlog/SKILL.md|make your own choice and give the reason
+skills/backlog/SKILL.md|the chosen option and its reason for each item with a choice
+skills/backlog/SKILL.md|It becomes the chosen option of that item
+skills/backlog/SKILL.md|the new failures and the base failures of each item, with the path from its returned line
 skills/backlog/SKILL.md|**Not now**, shown below the three groups with its reason
 skills/backlog/SKILL.md|it waits for data that does not exist yet
 skills/backlog/SKILL.md|A `## Related` section that names another repository does not put an item here
@@ -254,8 +288,12 @@ skills/quick-fix/SKILL.md|Step 9, with the parameter `worktree` for its implemen
 skills/quick-fix/SKILL.md|with `git -C <worktree>` or `cd <worktree> &&`
 skills/quick-fix/SKILL.md|Do not run step 10, and offer no leftovers and no merge question
 skills/quick-fix/SKILL.md|Return one of these to `sh:pr-review`
+skills/quick-fix/SKILL.md|every rebuild and every test run of these steps runs in `<worktree>`
+skills/quick-fix/SKILL.md|When they do not fit, make no commit
+skills/quick-fix/SKILL.md|Ask no question about a choice between solutions: make the choice
+skills/quick-fix/SKILL.md|the items followed by the intent, and the parameter `worktree`
+skills/quick-fix/SKILL.md|the `deviated:` lines, the commits made after the review, and the new failures and the base failures
 skills/pr-review/SKILL.md|run only the section `## Fix named findings`
-skills/pr-review/SKILL.md|## Fix named findings
 skills/pr-review/SKILL.md|exists, say so and fix nothing
 skills/pr-review/SKILL.md|stop and propose an update review
 skills/pr-review/SKILL.md|a number the record does not hold
@@ -265,7 +303,7 @@ skills/pr-review/SKILL.md|--json title,body,baseRefName,headRefName,isCrossRepos
 skills/pr-review/SKILL.md|say that the branch lies in a fork, and stop
 skills/pr-review/SKILL.md|git worktree add --detach <that directory>/wt-fix <head>
 skills/pr-review/SKILL.md|git -C <that directory>/wt-fix submodule update --init --recursive
-skills/pr-review/SKILL.md|Copy from the main working tree each git-ignored file that the test command reads
+skills/pr-review/SKILL.md|each git-ignored file that the test command reads
 skills/pr-review/SKILL.md|section `## Pull request mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`
 skills/pr-review/SKILL.md|another session may work there
 skills/pr-review/SKILL.md|no commit exists: remove the worktree
@@ -277,6 +315,14 @@ skills/pr-review/SKILL.md|Git rejects the push when the branch moved
 skills/pr-review/SKILL.md|except a finding that a `deviated:` line names
 skills/pr-review/SKILL.md|git -C <worktree> switch -c pr-<number>-fixes
 skills/pr-review/SKILL.md|report the error with the worktree
+skills/pr-review/SKILL.md|The numbers are record numbers, as for posting
+skills/pr-review/SKILL.md|Load `sh:quick-fix` with the Skill tool, and run the section `## Pull request mode`
+skills/pr-review/SKILL.md|names in `<that directory>/wt-fix`, with `cd <that directory>/wt-fix &&` at its start
+skills/pr-review/SKILL.md|Copy from the main working tree into `<that directory>/wt-fix`
+skills/pr-review/SKILL.md|run the `git switch -c` command of step 11 when `git -C <worktree> rev-parse HEAD` differs from `<head>`
+skills/pr-review/SKILL.md|the branch when it exists and the head hash
+skills/pr-review/SKILL.md|Git rejects the push when the branch moved: run the `git switch -c` command of step 11, report the error, keep the worktree and stop
+skills/pr-review/SKILL.md|Keep the worktree, and report its path, the branch and the head hash
 agents/document-reviewer.md|`claims`, `reasoning` or `full`
 agents/document-reviewer.md|a wrong belief or a wrong decision
 agents/document-reviewer.md|A false or unsupported statement is a blocking defect
@@ -285,6 +331,14 @@ agents/document-reviewer.md|Report blocking defects only
 agents/document-reviewer.md|Advice never makes the verdict blocking
 agents/document-reviewer.md|When `intent` names no sources, say so under `## Intent`
 agents/document-reviewer.md|that exists at `<head>`
+agents/document-reviewer.md|model: opus
+agents/document-reviewer.md|tools: Read, Grep, Glob, Bash, Write
+agents/document-reviewer.md|Do not report a finding that `rejections_file` lists
+agents/document-reviewer.md|Never change a file in the project
+agents/document-reviewer.md|## Findings file
+agents/document-reviewer.md|Line 1 is `VERDICT: clean` or `VERDICT: blocking defects found`
+agents/document-reviewer.md|## Return
+agents/document-reviewer.md|Return one line and nothing else: `VERDICT:
 skills/review/SKILL.md|`sh:code-reviewer` and `sh:document-reviewer`
 skills/review/SKILL.md|`spec`, `plan`, `code` or `document`
 skills/review/SKILL.md|two full reads for `plan` and `document`
@@ -308,6 +362,17 @@ README.md|a sweep may ask Codex about a choice
 README.md|Plan reviews and document reviews do not use Codex
 README.md|Fix small items
 README.md|--sandbox workspace-write'
+
+# Text that must stand on exactly the given number of lines of a file, one
+# "<file>|<number>|<string>" per line. It covers lines that two sections repeat
+# on purpose, and a heading that a reference to it also contains. The check runs
+# on the repository only.
+REQUIRED_COUNTS='skills/quick-fix/SKILL.md|2|- `done` when step 9 left no new failure.
+skills/quick-fix/SKILL.md|2|- `stopped: size: <reason>` when step 1 found the items too large. No commit was made.
+skills/quick-fix/SKILL.md|2|- `stopped: <reason>` when the mode stopped after it started work
+skills/quick-fix/SKILL.md|2|new failures remaining after the second run
+skills/quick-fix/SKILL.md|2|the exit status is that of `tee`
+skills/pr-review/SKILL.md|2|## Fix named findings'
 
 # Prints the frontmatter description of a file. Prints nothing when the file or
 # the description is missing.
@@ -340,6 +405,16 @@ check_required_text() {
         fail "required text" "$file: $string"
     fi
   done <<<"$REQUIRED_TEXT"
+  [ "$failures" -eq 0 ]
+}
+
+check_required_counts() {
+  local root=$1 file count string found
+  while IFS='|' read -r file count string; do
+    found=$(grep -cF -- "$string" "$root/$file" 2>/dev/null)
+    [ "$found" = "$count" ] ||
+      fail "required count" "$file: $count lines with: $string (found ${found:-0})"
+  done <<<"$REQUIRED_COUNTS"
   [ "$failures" -eq 0 ]
 }
 
@@ -470,6 +545,7 @@ check_tree() {
     check_manifests_with_claude "$root"
     check_layout "$root"
     check_required_text "$root"
+    check_required_counts "$root"
   fi
   check_frontmatter "$root"
   check_unique_names "$root"
@@ -637,7 +713,7 @@ self_test_function_fail() {
 }
 
 run_self_tests() {
-  local dir two_triggers
+  local dir two_triggers counts
 
   self_test_pass "manifests alone" "$(new_fixture)"
   self_test_pass "valid skill naming a valid agent" "$(new_valid_fixture)"
@@ -816,6 +892,22 @@ run_self_tests() {
   dir=$(new_layout_fixture)
   self_test_fail "repository check applies the required text" "$dir" \
     "required text: skills/pr-review/SKILL.md: gh pr checks" real
+
+  counts=$'skills/demo/SKILL.md|2|repeated line\nskills/demo/SKILL.md|1|single line'
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' "repeated line" "repeated line" "single line" >>"$dir/skills/demo/SKILL.md"
+  REQUIRED_COUNTS=$counts self_test_function_pass "required counts met" "$dir" check_required_counts
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' "repeated line" "single line" >>"$dir/skills/demo/SKILL.md"
+  REQUIRED_COUNTS=$counts self_test_function_fail "line repeated on purpose stands once" "$dir" \
+    "FAIL: required count: skills/demo/SKILL.md: 2 lines with: repeated line (found 1)" check_required_counts
+
+  dir=$(new_valid_fixture)
+  printf '%s\n' "repeated line" "repeated line" >>"$dir/skills/demo/SKILL.md"
+  REQUIRED_COUNTS=$counts self_test_function_fail "line missing" "$dir" \
+    "FAIL: required count: skills/demo/SKILL.md: 1 lines with: single line (found 0)" check_required_counts
 
   dir=$(new_layout_fixture)
   self_test_function_pass "complete layout" "$dir" check_layout
