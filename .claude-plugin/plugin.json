@@ -1,7 +1,7 @@
 {
   "name": "sh",
   "description": "Skills and agents for designing, reviewing, planning and implementing changes",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": { "name": "Viktor Hozhyi" },
   "homepage": "https://github.com/ViktorGozhiy/ship-happens",
   "repository": "https://github.com/ViktorGozhiy/ship-happens",
@@ -9,6 +9,6 @@
   "keywords": ["workflow", "code-review", "planning", "tdd", "subagents"],
   "userConfig": {
     "codex_review": { "title": "Codex review", "type": "boolean", "default": false,
-      "description": "Send specs and branch diffs to Codex as an additional reviewer." }
+      "description": "Send specs, branch diffs and choices on backlog items to Codex." }
   }
 }

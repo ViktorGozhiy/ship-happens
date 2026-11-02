@@ -299,6 +299,13 @@ skills/review/SKILL.md|For `spec`, `plan` and `document` you commit the revised 
 skills/review/SKILL.md|`plan` and `document`: round 1, fix
 skills/review/SKILL.md|For `spec`, `plan` and `document`, add the advice you did not apply
 skills/review/SKILL.md|or `kind` is `spec`, `plan` or `document`, offer no leftovers
+README.md|`document-reviewer`
+README.md|in three groups
+README.md|A document other than a spec
+README.md|also fails on the base commit
+README.md|asks one question: whether to push
+README.md|a sweep may ask Codex about a choice
+README.md|Plan reviews and document reviews do not use Codex
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
