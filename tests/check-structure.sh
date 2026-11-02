@@ -205,18 +205,23 @@ skills/quick-fix/test-failures.md|A failure is a base failure only when all of t
 skills/quick-fix/test-failures.md|its error text is the same, apart from addresses
 skills/quick-fix/test-failures.md|the new failures by name, and one line per base failure with its test and error text
 skills/quick-fix/test-failures.md|the exit status is that of `tee`
+skills/quick-fix/test-failures.md|## After the comparison
+skills/quick-fix/test-failures.md|Dispatch `sh:implementer` in change mode with `change` set to the names of the new failures, how to run them, their output
+skills/quick-fix/test-failures.md|and the list of base failures
+skills/quick-fix/test-failures.md|After a void result `change` holds the test command
+skills/quick-fix/test-failures.md|delete `test-comparison.md`, because its failures are gone
+skills/quick-fix/test-failures.md|step 5 reuses `test-base.txt` when it exists
+skills/quick-fix/test-failures.md|new failures remain a second time
+skills/quick-fix/test-failures.md|stop and report to the user
+skills/quick-fix/SKILL.md|its section `## After the comparison` says what follows
+skills/implement/SKILL.md|its section `## After the comparison` says what follows
+skills/quick-fix/SKILL.md|which is its steps and not its section `## After the comparison`
 skills/quick-fix/SKILL.md|Run the test command on the final tree with its output in `<review directory>/test-head.txt`
 skills/quick-fix/SKILL.md|run the test command once with its output in `<review directory>/test-head.txt`
 skills/quick-fix/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`
-skills/quick-fix/SKILL.md|the names of the new failures, how to run them, their output
-skills/quick-fix/SKILL.md|After a void result `change` holds the test command
-skills/quick-fix/SKILL.md|delete `test-comparison.md`, because its failures are gone
-skills/quick-fix/SKILL.md|its step 5 reuses `test-base.txt` when it exists
-skills/quick-fix/SKILL.md|new failures remain a second time
 skills/quick-fix/SKILL.md|When the input named a backlog item and step 9 left no new failure
 skills/quick-fix/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
 skills/quick-fix/SKILL.md|the first run in step 9 left no new failure
-skills/quick-fix/SKILL.md|and the list of base failures
 skills/quick-fix/SKILL.md|When it fails, dispatch no implementer
 skills/quick-fix/SKILL.md|A commit made after a test run with a new failure
 skills/quick-fix/SKILL.md|only when the first two conditions above hold
@@ -226,14 +231,8 @@ skills/quick-fix/SKILL.md|after the fast-forward. Add `; tests: <path>`
 skills/quick-fix/SKILL.md|separated by commas. Add `; tests: <path>`
 skills/quick-fix/SKILL.md|so that the report can name the test that blocked the branch
 skills/implement/SKILL.md|with its output in `test-head.txt`
-skills/implement/SKILL.md|and the list of base failures
 skills/implement/SKILL.md|the exit status is that of `tee`
 skills/implement/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`
-skills/implement/SKILL.md|the names of the new failures, how to run them, their output
-skills/implement/SKILL.md|After a void result `change` holds the test command
-skills/implement/SKILL.md|delete `test-comparison.md`, because its failures are gone
-skills/implement/SKILL.md|its step 5 reuses `test-base.txt` when it exists
-skills/implement/SKILL.md|new failures remain a second time
 skills/implement/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
 skills/backlog/SKILL.md|There is no limit unless the user names one
 skills/backlog/SKILL.md|Every question comes before the first item

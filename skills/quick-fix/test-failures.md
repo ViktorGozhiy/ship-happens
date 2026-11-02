@@ -29,3 +29,9 @@ In the pull request mode every git command, every rebuild and every test run of 
    - the source of the change does not name the test or its file. The source is the description in a normal run and in the unattended mode, the items in the fix-now mode, the findings in the pull request mode, and the spec and the plan in `sh:implement`;
    - the diff from the base commit does not change the file of the test.
 9. Write `test-comparison.md` in the same directory, also for a void result: the base commit, the reason when the result is void, the new failures by name, and one line per base failure with its test and error text.
+
+## After the comparison
+
+The skill that ran the test command follows this section after step 9, when new failures remain.
+
+Dispatch `sh:implementer` in change mode with `change` set to the names of the new failures, how to run them, their output, the instruction to make them pass, and the list of base failures. After a void result `change` holds the test command, its output and that instruction, because there may be no test name. Then run the command again. When it exits 0, delete `test-comparison.md`, because its failures are gone. When it exits non-zero, follow the steps above again: step 5 reuses `test-base.txt` when it exists. When the implementer returns `blocked: ` or new failures remain a second time, stop and report to the user.
