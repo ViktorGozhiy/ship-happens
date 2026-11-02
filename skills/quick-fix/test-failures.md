@@ -32,6 +32,6 @@ In the pull request mode every git command, every rebuild and every test run of 
 
 ## After the comparison
 
-The skill that ran the test command follows this section after step 9, when new failures remain.
+The skill that ran the test command follows this section after step 9, when new failures remain. The unattended mode does not follow it, because it dispatches no implementer.
 
 Dispatch `sh:implementer` in change mode with `change` set to the names of the new failures, how to run them, their output, the instruction to make them pass, and the list of base failures. After a void result `change` holds the test command, its output and that instruction, because there may be no test name. Then run the command again. When it exits 0, delete `test-comparison.md`, because its failures are gone. When it exits non-zero, follow the steps above again: step 5 reuses `test-base.txt` when it exists. When the implementer returns `blocked: ` or new failures remain a second time, stop and report to the user.

@@ -108,7 +108,7 @@ Run these steps of the normal run, with these changes:
 3. In place of step 3, run `git -C <worktree> rev-parse HEAD` and keep the hash as the base. Create no branch.
 4. Step 4, with `change` set to the items followed by the intent, and the parameter `worktree`.
 5. Steps 5 to 8, with `intent` set to the intent followed by the items, and the parameter `worktree` for every fixer. The reviewers need no change, because they work from commit hashes. When `round-4/full.md` reports a blocking defect, show the user the open blocking defects as a numbered list, write nothing into the backlog, and return `stopped: <reason>`: this mode has no fix branch.
-6. Step 9, with the parameter `worktree` for its implementer.
+6. Step 9, with the parameter `worktree` for the implementer of its section `## After the comparison`.
 7. The report of step 11, with the head of the pull request in place of the base: the `deviated:` lines, the commits made after the review, and the new failures and the base failures. List the advice as plain lines, as the fix-now mode says.
 
 Do not run step 10, and offer no leftovers and no merge question.
@@ -117,4 +117,4 @@ Return one of these to `sh:pr-review`:
 
 - `done` when step 9 left no new failure.
 - `stopped: size: <reason>` when step 1 found the items too large. No commit was made.
-- `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, new failures remaining after the second run, or any other stop in steps 4 to 9. When `test-failures.md` stopped on a failed return to the head, add `; head: <head hash>`, the head hash of its step 3. The worktree then stays on the head of the pull request, and no ref holds the commits made after it; the report says so.
+- `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, new failures remaining after the second run, or any other stop in steps 4 to 9. When `test-failures.md` stopped on a failed return to the head, add `; head: <head hash>`, the head hash of its step 3.

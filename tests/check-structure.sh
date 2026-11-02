@@ -208,10 +208,13 @@ skills/quick-fix/test-failures.md|the exit status is that of `tee`
 skills/quick-fix/test-failures.md|## After the comparison
 skills/quick-fix/test-failures.md|Dispatch `sh:implementer` in change mode with `change` set to the names of the new failures, how to run them, their output
 skills/quick-fix/test-failures.md|and the list of base failures
-skills/quick-fix/test-failures.md|After a void result `change` holds the test command
+skills/quick-fix/test-failures.md|follows this section after step 9, when new failures remain
+skills/quick-fix/test-failures.md|The unattended mode does not follow it, because it dispatches no implementer
+skills/quick-fix/test-failures.md|After a void result `change` holds the test command, its output and that instruction, because there may be no test name
+skills/quick-fix/test-failures.md|Then run the command again. When it exits 0
 skills/quick-fix/test-failures.md|delete `test-comparison.md`, because its failures are gone
-skills/quick-fix/test-failures.md|step 5 reuses `test-base.txt` when it exists
-skills/quick-fix/test-failures.md|new failures remain a second time
+skills/quick-fix/test-failures.md|When it exits non-zero, follow the steps above again: step 5 reuses `test-base.txt` when it exists
+skills/quick-fix/test-failures.md|When the implementer returns `blocked: ` or new failures remain a second time
 skills/quick-fix/test-failures.md|stop and report to the user
 skills/quick-fix/SKILL.md|its section `## After the comparison` says what follows
 skills/implement/SKILL.md|its section `## After the comparison` says what follows
@@ -284,7 +287,7 @@ skills/quick-fix/SKILL.md|Step 2 does not run: the worktree is new
 skills/quick-fix/SKILL.md|run `git -C <worktree> rev-parse HEAD` and keep the hash as the base
 skills/quick-fix/SKILL.md|and the parameter `worktree` for every fixer
 skills/quick-fix/SKILL.md|this mode has no fix branch
-skills/quick-fix/SKILL.md|Step 9, with the parameter `worktree` for its implementer
+skills/quick-fix/SKILL.md|Step 9, with the parameter `worktree` for the implementer of its section `## After the comparison`
 skills/quick-fix/SKILL.md|with `git -C <worktree>` or `cd <worktree> &&`
 skills/quick-fix/SKILL.md|Do not run step 10, and offer no leftovers and no merge question
 skills/quick-fix/SKILL.md|Return one of these to `sh:pr-review`
@@ -319,9 +322,8 @@ skills/pr-review/SKILL.md|The numbers are record numbers, as for posting
 skills/pr-review/SKILL.md|Load `sh:quick-fix` with the Skill tool, and run the section `## Pull request mode`
 skills/pr-review/SKILL.md|names in `<that directory>/wt-fix`, with `cd <that directory>/wt-fix &&` at its start
 skills/pr-review/SKILL.md|Copy from the main working tree into `<that directory>/wt-fix`
-skills/pr-review/SKILL.md|run the `git switch -c` command of step 11 when the head hash of the `stopped:` line, or else `git -C <worktree> rev-parse HEAD`, differs from `<head>`
+skills/pr-review/SKILL.md|run the `git switch -c` command of step 11 when the head hash of the `stopped:` line, or else `git -C <worktree> rev-parse HEAD`, differs from `<head>`, with the hash of the line as the start point of the new branch
 skills/quick-fix/SKILL.md|add `; head: <head hash>`, the head hash of its step 3
-skills/quick-fix/SKILL.md|no ref holds the commits made after it
 skills/pr-review/SKILL.md|The report gives the reason, the worktree'\''s path, the head hash and the branch that the command created
 skills/pr-review/SKILL.md|Git rejects the push when the branch moved: run the `git switch -c` command of step 11, keep the worktree and stop
 skills/pr-review/SKILL.md|The report gives the error of the push, the worktree'\''s path, the head hash and the branch that the command created
