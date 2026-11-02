@@ -91,6 +91,7 @@ agents/plan-writer.md
 agents/plan-reviewer.md
 agents/implementer.md
 agents/code-reviewer.md
+agents/document-reviewer.md
 tests/check-structure.sh
 LICENSE
 README.md'
@@ -100,6 +101,7 @@ README.md'
 # is the text that loads the skill. The check runs on the repository only.
 REQUIRED_TEXT='description:skills/backlog/SKILL.md|Fix small items
 description:skills/backlog/SKILL.md|sort the open items
+description:skills/review/SKILL.md|only when the user asks
 description:skills/pr-review/SKILL.md|post named findings
 description:skills/pr-review/SKILL.md|fix named findings
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
@@ -275,6 +277,28 @@ skills/pr-review/SKILL.md|Git rejects the push when the branch moved
 skills/pr-review/SKILL.md|except a finding that a `deviated:` line names
 skills/pr-review/SKILL.md|git -C <worktree> switch -c pr-<number>-fixes
 skills/pr-review/SKILL.md|report the error with the worktree
+agents/document-reviewer.md|`claims`, `reasoning` or `full`
+agents/document-reviewer.md|a wrong belief or a wrong decision
+agents/document-reviewer.md|A false or unsupported statement is a blocking defect
+agents/document-reviewer.md|A conclusion that does not follow, and a contradiction, are blocking defects
+agents/document-reviewer.md|Report blocking defects only
+agents/document-reviewer.md|Advice never makes the verdict blocking
+agents/document-reviewer.md|When `intent` names no sources, say so under `## Intent`
+agents/document-reviewer.md|that exists at `<head>`
+skills/review/SKILL.md|`sh:code-reviewer` and `sh:document-reviewer`
+skills/review/SKILL.md|`spec`, `plan`, `code` or `document`
+skills/review/SKILL.md|two full reads for `plan` and `document`
+skills/review/SKILL.md|For `document` it is a document path or `<base>..<head>`
+skills/review/SKILL.md|`claims`, `reasoning`
+skills/review/SKILL.md|Any other document is `document`
+skills/review/SKILL.md|never on your own initiative
+skills/review/SKILL.md|take no part in `document`
+skills/review/SKILL.md|`spec` and `document`: you are the fixer
+skills/review/SKILL.md|the target of the next reader is `<base>..<new head>`
+skills/review/SKILL.md|For `spec`, `plan` and `document` you commit the revised document
+skills/review/SKILL.md|`plan` and `document`: round 1, fix
+skills/review/SKILL.md|For `spec`, `plan` and `document`, add the advice you did not apply
+skills/review/SKILL.md|or `kind` is `spec`, `plan` or `document`, offer no leftovers
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
