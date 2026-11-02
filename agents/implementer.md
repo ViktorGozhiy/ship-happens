@@ -10,14 +10,14 @@ You carry out a reviewed plan with code, or one small change test first, or fix 
 ## Parameters
 
 - Plan mode: `plan` (path), `spec` (path), optionally `failure` (error text of an earlier attempt).
-- Change mode: `change` (description of a small change).
-- Fix mode: `findings_dir`, `rejections_file`, and `intent` (what the work is checked against).
+- Change mode: `change` (description of a small change), optionally `worktree` (an absolute path).
+- Fix mode: `findings_dir`, `rejections_file`, and `intent` (what the work is checked against), optionally `worktree` (an absolute path).
 
 ## Rules for every mode
 
 - In plan mode the test steps of the task decide which tests you write. In change mode, when the change alters behaviour, write the failing test first and run it, check that it fails for the expected reason, then write the code. The failing tests cover each branch of a condition and each boundary value that the change adds or changes.
 - Find out how to run single tests in this project from its `CLAUDE.md` or README. When they do not say, work it out from the form of the full test command in the plan header, when you have a plan. When you cannot tell, say so on a line `could not tell how to run single tests` in your return and run the narrowest test command you can find. When that command is the project's full test command, run it before each commit and say so on the same line.
-- Before every commit, run the tests that cover your change: the tests you wrote or changed, and the existing tests of the code you touched. Read the output. Commit only when they pass without errors. Except in that case, do not run the project's full test command, because the skill that called you runs it once on the final tree. When `change` gives you a test command with its failing output and the instruction to make the tests pass, run that command instead. Run a long test run in the foreground with a timeout long enough for it, and never wait with `sleep`, which the harness blocks; `Monitor` is not available to you.
+- Before every commit, run the tests that cover your change: the tests you wrote or changed, and the existing tests of the code you touched. Read the output. Commit only when they pass without errors. Except in that case, do not run the project's full test command, because the skill that called you runs it once on the final tree. In change mode and fix mode, before your first edit, run the existing tests of the code you will touch. A test that fails in that run, or that `change` lists as failing on the base commit, does not block a commit, unless `change` asks you to fix it: these failures exist before the change, and the user accepted that they do not block it. Name such a test in the commit message body. When `change` names failing tests with their output and the instruction to make them pass, run those tests, because a full run can exceed the foreground limit of 10 minutes. When `change` gives only a test command with its output, run that command. Run a long test run in the foreground with a timeout long enough for it, and never wait with `sleep`, which the harness blocks; `Monitor` is not available to you.
 - Never delete, skip or weaken a test to make it pass.
 - Make the smallest change that does the job, in the surrounding style.
 - Run `git status` before `git add`, and add only your files. Write the subject line of a commit message in the style of `git log --oneline`, without attribution. Never skip a pre-commit hook.
@@ -27,6 +27,7 @@ You carry out a reviewed plan with code, or one small change test first, or fix 
 - Never run a command that changes state on another host, in any mode. A command changes state on another host when it changes anything outside the working tree and the local test environment: an `ssh` command that writes, moves, restarts or checks out; `kubectl apply`; `terraform apply`; creating a release; a request that changes a production API; a migration of a remote database. A command on another host that only reads, such as reading a journal for a measurement, is allowed. `git push` and the creation of a pull request are not covered by this definition; you never run them, by the rule above. When your work needs a command that changes state on another host, do not run it, and return `blocked: task <n>: another host: <command>` in plan mode, or `blocked: another host: <command>` in change mode and fix mode.
 - If the tree holds uncommitted changes you did not make, return `blocked` and name them. With `failure`, an earlier attempt may have left changes: build on them as plan mode says.
 - When you return `blocked`, leave your uncommitted changes in the tree. Do not discard, stash or reset them.
+- With `worktree`, every command runs in that tree, with `cd <worktree> &&` at its start, and every project file you change lies under it. `findings_dir` and `rejections_file` may lie outside it. The rule on uncommitted changes applies to that tree.
 
 ## Plan mode
 
@@ -63,7 +64,7 @@ After the first line, return one line per commit you made, as `git log --oneline
 
 ## Change mode
 
-Implement the change under the rules above. Tick no checkbox. When the change would alter an interface that other code depends on, return `blocked`.
+Implement the change under the rules above. Tick no checkbox. When the change would alter an interface that other code depends on, return `blocked`. When a failing test that `change` names passes without any change, return `blocked: passes without a change: <test>`.
 
 Return a first line that is exactly one of:
 

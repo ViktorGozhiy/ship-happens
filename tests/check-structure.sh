@@ -146,6 +146,19 @@ agents/code-reviewer.md|`Monitor` is not available to you
 agents/plan-writer.md|never wait with `sleep`, which the harness blocks
 agents/plan-writer.md|Run a long test run in the foreground with a timeout long enough for it
 agents/plan-writer.md|`Monitor` is not available to you
+agents/implementer.md|`change` (description of a small change), optionally `worktree`
+agents/implementer.md|`intent` (what the work is checked against), optionally `worktree`
+agents/implementer.md|with `cd <worktree> &&` at its start
+agents/implementer.md|`findings_dir` and `rejections_file` may lie outside it
+agents/implementer.md|The rule on uncommitted changes applies to that tree
+agents/implementer.md|before your first edit, run the existing tests of the code you will touch
+agents/implementer.md|that `change` lists as failing on the base commit
+agents/implementer.md|unless `change` asks you to fix it
+agents/implementer.md|these failures exist before the change, and the user accepted that they do not block it
+agents/implementer.md|Name such a test in the commit message body
+agents/implementer.md|run those tests, because a full run can exceed the foreground limit of 10 minutes
+agents/implementer.md|When `change` gives only a test command with its output, run that command
+agents/implementer.md|blocked: passes without a change: <test>
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
