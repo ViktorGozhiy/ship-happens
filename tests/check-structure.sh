@@ -80,6 +80,7 @@ skills/plan/SKILL.md
 skills/plan/plan-format.md
 skills/implement/SKILL.md
 skills/quick-fix/SKILL.md
+skills/quick-fix/test-failures.md
 skills/debugging/SKILL.md
 skills/pr-review/SKILL.md
 skills/backlog/SKILL.md
@@ -159,6 +160,30 @@ agents/implementer.md|Name such a test in the commit message body
 agents/implementer.md|run those tests, because a full run can exceed the foreground limit of 10 minutes
 agents/implementer.md|When `change` gives only a test command with its output, run that command
 agents/implementer.md|blocked: passes without a change: <test>
+skills/quick-fix/test-failures.md|the user accepted that it does not block a merge
+skills/quick-fix/test-failures.md|on the head of the pull request
+skills/quick-fix/test-failures.md|it never satisfies "no new failure"
+skills/quick-fix/test-failures.md|After a void result, go to step 9
+skills/quick-fix/test-failures.md|the output names no failing test
+skills/quick-fix/test-failures.md|the command exited non-zero with all tests passing
+skills/quick-fix/test-failures.md|Stash nothing and discard nothing
+skills/quick-fix/test-failures.md|git branch --show-current
+skills/quick-fix/test-failures.md|git diff --name-only <base> HEAD
+skills/quick-fix/test-failures.md|When neither names one, the result is void
+skills/quick-fix/test-failures.md|already made it at the same base hash
+skills/quick-fix/test-failures.md|git checkout --detach <base>
+skills/quick-fix/test-failures.md|A failed checkout or a failed rebuild counts as a base run that could not start, and step 6 still runs
+skills/quick-fix/test-failures.md|git checkout --detach <head hash>
+skills/quick-fix/test-failures.md|stopped: tree: <error>
+skills/quick-fix/test-failures.md|when the base run could not start
+skills/quick-fix/test-failures.md|ran fewer tests than the head run by more than the branch added
+skills/quick-fix/test-failures.md|the same test fails in `test-base.txt`
+skills/quick-fix/test-failures.md|A number that the test compares
+skills/quick-fix/test-failures.md|does not name the test or its file
+skills/quick-fix/test-failures.md|the diff from the base commit does not change the file of the test
+skills/quick-fix/test-failures.md|Write `test-comparison.md`
+skills/quick-fix/test-failures.md|also for a void result
+skills/quick-fix/test-failures.md|every test run of these steps runs in the worktree
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
