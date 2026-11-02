@@ -184,6 +184,24 @@ skills/quick-fix/test-failures.md|the diff from the base commit does not change 
 skills/quick-fix/test-failures.md|Write `test-comparison.md`
 skills/quick-fix/test-failures.md|also for a void result
 skills/quick-fix/test-failures.md|every test run of these steps runs in the worktree
+skills/quick-fix/SKILL.md|with its output in `<review directory>/test-head.txt`
+skills/quick-fix/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`
+skills/quick-fix/SKILL.md|the names of the new failures, how to run them, their output
+skills/quick-fix/SKILL.md|After a void result `change` holds the test command
+skills/quick-fix/SKILL.md|delete `test-comparison.md`, because its failures are gone
+skills/quick-fix/SKILL.md|its step 5 reuses `test-base.txt` when it exists
+skills/quick-fix/SKILL.md|new failures remain a second time
+skills/quick-fix/SKILL.md|When the input named a backlog item and step 9 left no new failure
+skills/quick-fix/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
+skills/quick-fix/SKILL.md|- `done` when step 9 left no new failure.
+skills/quick-fix/SKILL.md|new failures remaining after the second run
+skills/quick-fix/SKILL.md|the first run in step 9 left no new failure
+skills/quick-fix/SKILL.md|A commit made after a test run with a new failure
+skills/quick-fix/SKILL.md|only when the first two conditions above hold
+skills/quick-fix/SKILL.md|with the reason `tests failed`
+skills/quick-fix/SKILL.md|after a failing run with no comparison, after a new failure and after a void result
+skills/quick-fix/SKILL.md|; tests: <path>
+skills/quick-fix/SKILL.md|so that the report can name the test that blocked the branch
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
