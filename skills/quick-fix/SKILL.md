@@ -5,7 +5,7 @@ description: Use when the user asks for a small change that fits one task and ch
 
 # Quick fix
 
-Carry out a small change, often one backlog item, on a branch with `sh:implementer`, review it with `sh:code-reviewer`, then ask the user about merging, except in the unattended mode that the **Fix small items** action of `sh:backlog` starts, which asks nothing. You never write code and never fix a failure yourself. Pass absolute paths to agents.
+Carry out a small change, often one backlog item, on a branch with `sh:implementer`, review it with `sh:code-reviewer`, then ask the user about merging, except in the unattended mode that the **Fix small items** action of `sh:backlog` starts, which asks nothing, and in the pull request mode that `sh:pr-review` starts, which ends before its push question. You never write code and never fix a failure yourself. Pass absolute paths to agents.
 
 ## Input
 
@@ -92,3 +92,29 @@ Return one line:
 - `unmerged: <reason>; branch: fix/<slug>; base: <base hash>; review: <review directory>` when the branch stays unmerged. `<reason>` is one or more of `deviated: <text>`, `open defects at the cap`, `tests failed`, `close changes <files>`, `checkout failed` and `fast-forward failed`, separated by commas. Add `; tests: <path>`, with the path of `test-comparison.md`, when that file exists, so that the report can name the test that blocked the branch.
 - `skipped: size: <reason>` when step 1 found the change too large. No branch and no commit were made.
 - `stopped: <reason>` when the mode stopped in steps 4 to 8, or when the work proved larger than step 1 allows. Add `; branch: fix/<slug>; base: <base hash>` when the branch exists, `; review: <review directory>` when the review directory exists, and `; uncommitted: <paths>`, with the paths that `git status --short` prints, when a blocked implementer left uncommitted changes.
+
+## Pull request mode
+
+Only `sh:pr-review` runs this mode. It fixes named findings in a worktree on the head of a pull request, and it ends before the push question of `sh:pr-review`.
+
+Input: the worktree, an absolute path; the items, each with its full text; the intent, which is the title and the body of the pull request; and the full test command.
+
+Every git command and every test run of these steps runs in `<worktree>`, with `git -C <worktree>` or `cd <worktree> &&`.
+
+Run these steps of the normal run, with these changes:
+
+1. Step 1, on all items together. When they do not fit, make no commit and return `stopped: size: <reason>`. Ask no question about a choice between solutions: make the choice and name it in the report.
+2. Step 2 does not run: the worktree is new.
+3. In place of step 3, run `git -C <worktree> rev-parse HEAD` and keep the hash as the base. Create no branch.
+4. Step 4, with `change` set to the items followed by the intent, and the parameter `worktree`.
+5. Steps 5 to 8, with `intent` set to the intent followed by the items, and the parameter `worktree` for every fixer. The reviewers need no change, because they work from commit hashes. When `round-4/full.md` reports a blocking defect, show the user the open blocking defects as a numbered list, write nothing into the backlog, and return `stopped: <reason>`: this mode has no fix branch.
+6. Step 9, with the parameter `worktree` for its implementer.
+7. The report of step 11, with the head of the pull request in place of the base: the `deviated:` lines, the commits made after the review, and the new failures and the base failures. List the advice as plain lines, as the fix-now mode says.
+
+Do not run step 10, and offer no leftovers and no merge question.
+
+Return one of these to `sh:pr-review`:
+
+- `done` when step 9 left no new failure.
+- `stopped: size: <reason>` when step 1 found the items too large. No commit was made.
+- `stopped: <reason>` when the mode stopped after it started work: a `blocked` implementer, a blocking defect in `round-4/full.md`, new failures remaining after the second run, or any other stop in steps 4 to 9.

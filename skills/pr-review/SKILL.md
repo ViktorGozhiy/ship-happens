@@ -1,19 +1,19 @@
 ---
 name: pr-review
-description: Use when the user asks to review a pull request by number or a branch by name, or to post named findings of such a review to GitHub.
+description: Use when the user asks to review a pull request by number or a branch by name, to post named findings of such a review to GitHub, or to fix named findings on the branch of a pull request.
 ---
 
 # Pull request review
 
-Review a pull request or a branch with three `sh:code-reviewer` agents, check its merge state and its CI checks, confirm the findings yourself, save the confirmed ones as a numbered review record, summarise them for the user, and post the findings the user names as one GitHub review. Never check out a branch or change a tracked file in the main working tree. Never post to GitHub unless the user explicitly tells you to in this session.
+Review a pull request or a branch with three `sh:code-reviewer` agents, check its merge state and its CI checks, confirm the findings yourself, save the confirmed ones as a numbered review record, summarise them for the user, and post the findings the user names as one GitHub review. At the user's request, fix named findings on the branch of a pull request, in a worktree of its own. Never check out a branch or change a tracked file in the main working tree. Never post to GitHub unless the user explicitly tells you to in this session.
 
 ## Input
 
-A pull request number, or a branch name. For a branch the user may also give a description of the change and the name of a base branch. Or the request to post named findings of a pull request, which step 1 handles.
+A pull request number, or a branch name. For a branch the user may also give a description of the change and the name of a base branch. Or the request to post or to fix named findings of a pull request, which step 1 handles.
 
 ## Steps
 
-1. When the user asks to post named findings of a pull request, and its review record `pr-<number>.md` of step 5 exists, run only this step and step 12. Read the head hash from line 1 of the record; it is the head in step 12. Run `gh pr view <number> --json title,body,baseRefName`, take the base branch from `baseRefName`, and run `git fetch origin <base branch>` and `git fetch origin pull/<number>/head`. When `git cat-file -e <head>^{commit}` fails for the head hash of the record, for example after a force push, say so and post nothing. Create the directory `<scratch>/review-pr-post-<YYYYMMDD-HHMMSS>` for the JSON file of step 12, with `<scratch>` as step 6 says. When no record exists, say so and post nothing. A request to review runs steps 2 to 11, and step 12 when the user names findings to post. When the user refers to a finding by the number in a posted review, for example because the author replied to it, take its record number from the `Posted` line of that review, and tell the user the record number.
+1. When the user asks to post named findings of a pull request, and its review record `pr-<number>.md` of step 5 exists, run only this step and step 12. Read the head hash from line 1 of the record; it is the head in step 12. Run `gh pr view <number> --json title,body,baseRefName`, take the base branch from `baseRefName`, and run `git fetch origin <base branch>` and `git fetch origin pull/<number>/head`. When `git cat-file -e <head>^{commit}` fails for the head hash of the record, for example after a force push, say so and post nothing. Create the directory `<scratch>/review-pr-post-<YYYYMMDD-HHMMSS>` for the JSON file of step 12, with `<scratch>` as step 6 says. When no record exists, say so and post nothing. When the user asks to fix named findings of a pull request, run only the section `## Fix named findings` of this file. A request to review runs steps 2 to 11, and step 12 when the user names findings to post. When the user refers to a finding by the number in a posted review, for example because the author replied to it, take its record number from the `Posted` line of that review, and tell the user the record number.
 2. Get the head commit.
    - Pull request number: run `git fetch origin pull/<number>/head`.
    - Branch name with no local branch: run `git fetch origin <branch>`.
@@ -66,3 +66,19 @@ A pull request number, or a branch name. For a branch the user may also give a d
     - Run `gh api repos/{owner}/{repo}/pulls/<number>/reviews -X POST --input <directory>/post-review.json`. `gh` fills in `{owner}` and `{repo}` from the repository.
     - When that command fails, write `post-review-body.json` in the same directory, with the same `commit_id` and `event`, every named finding in `body` with the same posted numbers, and no `comments`, and post it with the same command. When that fails too, report the error and the paths of both JSON files, and stop.
     - Report the URL of the review, which is the `html_url` field of the response, and for each posted finding the posted number with its record number. Append to the review record the line `Posted <YYYY-MM-DD>: <pairs>: <URL>`, where `<pairs>` has one `<posted number>=<record number>` for each posted finding, in posted order, separated by `, `. For example, `Posted 2026-11-01: 1=2, 2=9: https://github.com/<owner>/<repo>/pull/7#pullrequestreview-1` says that the review posted record finding 2 as number 1 and record finding 9 as number 2.
+
+## Fix named findings
+
+Fix the findings the user names on the branch of a pull request, in a worktree of its own, and ask one question: whether to push. A branch without a pull request is out of scope. The opening rule on the main working tree covers this section. Step numbers in this section refer to this section, unless they name `## Steps`.
+
+1. When no review record `pr-<number>.md` exists, say so and fix nothing.
+2. Run `git fetch origin pull/<number>/head` and `git rev-parse FETCH_HEAD`. The output is `<head>`. When the hash differs from line 1 of the record, stop and propose an update review, because the record's lines refer to another head.
+3. Take the named findings from the record. The numbers are record numbers, as for posting. A finding whose state is resolved, and a number the record does not hold, is left out, and the report says so. When no named finding is left, fix nothing.
+4. Run `gh pr view <number> --json title,body,baseRefName,headRefName,isCrossRepository`. When `isCrossRepository` is true, say that the branch lies in a fork, and stop. Take the full test command as the last sentence of step 2 of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says.
+5. Create `<scratch>/review-pr-fix-<YYYYMMDD-HHMMSS>`, with `<scratch>` as step 6 of `## Steps` says, and run `git worktree add --detach <that directory>/wt-fix <head>`. When `<that directory>/wt-fix/.gitmodules` exists, run `git -C <that directory>/wt-fix submodule update --init --recursive`. Run the setup command that the project's `CLAUDE.md` or README names. Copy from the main working tree each git-ignored file that the test command reads, such as `.env`, because without it tests may skip silently and the run looks green. Keep `git rev-parse HEAD` and `git status --short` of the main working tree.
+6. Run the section `## Pull request mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` with the worktree, the full text of the named findings, the intent (the title and the body of the pull request) and the test command.
+7. Compare `git rev-parse HEAD` and `git status --short` of the main working tree with the kept values. When they changed, say so in the report and go on: another session may work there.
+8. Take the mode's result. After `stopped: size: <reason>` no commit exists: remove the worktree with `git worktree remove --force`, report the reason and stop. After any other `stopped: <reason>`, keep the worktree, report the reason, the worktree's path and its head hash, offer no push and stop.
+9. After `done`, ask with `AskUserQuestion`: push to the branch of the pull request, or leave it.
+10. On "push": run `git -C <worktree> push origin HEAD:<headRefName>`. Never force. Git rejects the push when the branch moved: report the error, keep the worktree and stop. After a push, set `State: resolved at <new head>` for each fixed finding in the record, except a finding that a `deviated:` line names, and remove the worktree with `git worktree remove --force`.
+11. On "leave": run `git -C <worktree> switch -c pr-<number>-fixes`, so that a ref holds the commits after the scratch directory is gone. Keep the worktree, and report its path, the branch and the head hash. When that command fails, report the error with the worktree's path and its head hash, and stop.

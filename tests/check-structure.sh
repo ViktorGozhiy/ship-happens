@@ -101,6 +101,7 @@ README.md'
 REQUIRED_TEXT='description:skills/backlog/SKILL.md|Fix small items
 description:skills/backlog/SKILL.md|sort the open items
 description:skills/pr-review/SKILL.md|post named findings
+description:skills/pr-review/SKILL.md|fix named findings
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
 skills/quick-fix/SKILL.md|## Unattended mode
 skills/quick-fix/SKILL.md|Fix small items
@@ -241,6 +242,39 @@ skills/quick-fix/SKILL.md|and optionally the chosen option with its reason
 skills/quick-fix/SKILL.md|This sentence does not narrow the change
 skills/quick-fix/SKILL.md|`## Resolution` also names the option and the reason
 skills/quick-fix/SKILL.md|Try no second option
+skills/quick-fix/SKILL.md|## Pull request mode
+skills/quick-fix/SKILL.md|Only `sh:pr-review` runs this mode
+skills/quick-fix/SKILL.md|Step 2 does not run: the worktree is new
+skills/quick-fix/SKILL.md|run `git -C <worktree> rev-parse HEAD` and keep the hash as the base
+skills/quick-fix/SKILL.md|and the parameter `worktree` for every fixer
+skills/quick-fix/SKILL.md|this mode has no fix branch
+skills/quick-fix/SKILL.md|Step 9, with the parameter `worktree` for its implementer
+skills/quick-fix/SKILL.md|with `git -C <worktree>` or `cd <worktree> &&`
+skills/quick-fix/SKILL.md|Do not run step 10, and offer no leftovers and no merge question
+skills/quick-fix/SKILL.md|Return one of these to `sh:pr-review`
+skills/pr-review/SKILL.md|run only the section `## Fix named findings`
+skills/pr-review/SKILL.md|## Fix named findings
+skills/pr-review/SKILL.md|exists, say so and fix nothing
+skills/pr-review/SKILL.md|stop and propose an update review
+skills/pr-review/SKILL.md|a number the record does not hold
+skills/pr-review/SKILL.md|A finding whose state is resolved
+skills/pr-review/SKILL.md|When no named finding is left, fix nothing
+skills/pr-review/SKILL.md|--json title,body,baseRefName,headRefName,isCrossRepository
+skills/pr-review/SKILL.md|say that the branch lies in a fork, and stop
+skills/pr-review/SKILL.md|git worktree add --detach <that directory>/wt-fix <head>
+skills/pr-review/SKILL.md|git -C <that directory>/wt-fix submodule update --init --recursive
+skills/pr-review/SKILL.md|Copy from the main working tree each git-ignored file that the test command reads
+skills/pr-review/SKILL.md|section `## Pull request mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`
+skills/pr-review/SKILL.md|another session may work there
+skills/pr-review/SKILL.md|no commit exists: remove the worktree
+skills/pr-review/SKILL.md|offer no push and stop
+skills/pr-review/SKILL.md|push to the branch of the pull request, or leave it
+skills/pr-review/SKILL.md|git -C <worktree> push origin HEAD:<headRefName>
+skills/pr-review/SKILL.md|Never force
+skills/pr-review/SKILL.md|Git rejects the push when the branch moved
+skills/pr-review/SKILL.md|except a finding that a `deviated:` line names
+skills/pr-review/SKILL.md|git -C <worktree> switch -c pr-<number>-fixes
+skills/pr-review/SKILL.md|report the error with the worktree
 README.md|Fix small items
 README.md|--sandbox workspace-write'
 
