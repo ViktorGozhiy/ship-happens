@@ -297,6 +297,11 @@ skills/quick-fix/SKILL.md|When they do not fit, make no commit
 skills/quick-fix/SKILL.md|Ask no question about a choice between solutions: make the choice
 skills/quick-fix/SKILL.md|the items followed by the intent, and the parameter `worktree`
 skills/quick-fix/SKILL.md|the `deviated:` lines, the commits made after the review, and the new failures and the base failures
+skills/quick-fix/SKILL.md|git -C <worktree> submodule update --init --recursive
+skills/quick-fix/SKILL.md|each git-ignored file that the test command reads
+skills/quick-fix/SKILL.md|before you check for uncommitted changes
+skills/quick-fix/SKILL.md|Each runs this check before its check of uncommitted changes
+skills/quick-fix/SKILL.md|the state of the main tree does not matter
 skills/pr-review/SKILL.md|run only the section `## Fix named findings`
 skills/pr-review/SKILL.md|exists, say so and fix nothing
 skills/pr-review/SKILL.md|stop and propose an update review
@@ -507,6 +512,7 @@ skills/pr-review/SKILL.md|the full text of the named findings and `T` items
 skills/pr-review/SKILL.md|for each fixed `T` item in the threads file
 skills/pr-review/SKILL.md|whose first comment has the URL of the `Thread:` line
 skills/pr-review/SKILL.md|Resolved <YYYY-MM-DD>
+skills/pr-review/SKILL.md|apply the rule of step 9 of `## Steps` for `git check-ignore` and `info/exclude` to this file
 skills/review/SKILL.md|and `actionable` when the document sets a task for an executor, such as a ticket, a brief or a runbook
 skills/review/SKILL.md|write into `intent` that the document sets a task and for whom
 skills/review/SKILL.md|A ticket that exists only in Jira is written to a file in the scratchpad first
