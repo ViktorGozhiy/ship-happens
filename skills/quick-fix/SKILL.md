@@ -57,7 +57,7 @@ A normal run works in a worktree when the user chose it in step 2, because a pee
 
 The **Leftovers** action of `sh:backlog` runs this mode when the answer puts leftovers in the fix-now set. The work stays on the branch that is checked out and ends before the merge question of the skill that ran **Leftovers**.
 
-Input: the items to fix, each with its full text; the intent of the skill that ran **Leftovers**, which is empty in a direct run of **Leftovers**; optionally the full test command; and optionally the worktree of a normal run that works in one. With a worktree, every git command, every rebuild and every test run of this mode runs in it, and every implementer gets the parameter `worktree`.
+Input: the items to fix, each with its full text; the intent of the skill that ran **Leftovers**, which is empty in a direct run of **Leftovers**; optionally the full test command; and optionally the worktree of a normal run that works in one. With a worktree, every git command, every rebuild, every test run and every **Write** of this mode, with its commit, runs in it, and every implementer gets the parameter `worktree`.
 
 Run these steps of the normal run, with these changes:
 
@@ -65,7 +65,7 @@ Run these steps of the normal run, with these changes:
 2. Step 2, without the peer check. Take the test command as step 2 says only when the input has none.
 3. In place of step 3, run `git rev-parse HEAD` and keep the hash as the fix-now base. Create no branch. In every step this mode runs, `<base>` is the fix-now base, so steps 6 and 8 review `<fix-now base>..<HEAD hash>`. The base of the skill that ran **Leftovers** keeps its value, also when that skill is a normal run of `sh:quick-fix`, whose step 13 uses it.
 4. Step 4, with `change` set to the items followed by the intent.
-5. Steps 5 to 8, with `intent` set to the intent followed by the items. When `round-4/full.md` reports a blocking defect, the numbered list you show the user holds only the open blocking defects. Write the ones they name on the branch that is checked out with the **Write** action of `sh:backlog`.
+5. Steps 5 to 8, with `intent` set to the intent followed by the items. When `round-4/full.md` reports a blocking defect, the numbered list you show the user holds only the open blocking defects. Write the ones they name on the branch that is checked out, in the worktree when the input has one, with the **Write** action of `sh:backlog`.
 6. Step 9.
 7. The report of step 11, with the fix-now base in place of the base. Name each commit made after the review as not reviewed, as step 11 says. List the advice of the fix-now review directory as plain lines, collected as the **Leftovers** action of `sh:backlog` says for the advice of a code review. Do not offer it as a list.
 

@@ -199,7 +199,7 @@ skills/quick-fix/test-failures.md|the project needs a rebuild after each checkou
 skills/quick-fix/test-failures.md|Take the rebuild command from the project
 skills/quick-fix/test-failures.md|so the rebuild command has to rebuild it
 skills/quick-fix/test-failures.md|the rebuild when step 4 asks for it, and the commands of the base run
-skills/quick-fix/test-failures.md|then the rebuild when step 4 asks for it. It does not run only when no checkout happened
+skills/quick-fix/test-failures.md|then the rebuild when step 4 asks for it. The step is skipped only when no checkout happened
 skills/quick-fix/test-failures.md|return: `git checkout <branch>`, or
 skills/quick-fix/test-failures.md|When the checkout or the rebuild fails, stop and report the branch and the head hash
 skills/quick-fix/test-failures.md|A failure is a base failure only when all of these hold; otherwise it is new
@@ -374,6 +374,7 @@ skills/quick-fix/test-failures.md|git cat-file -e <base>:<file>
 skills/quick-fix/test-failures.md|An id whose file does not exist at the base commit is a new failure
 skills/quick-fix/test-failures.md|covers only the ids that no earlier base run of this skill covered
 skills/quick-fix/test-failures.md|When no id is left, no checkout happens
+skills/quick-fix/test-failures.md|A runner with no id to pass does not run on the base
 skills/quick-fix/test-failures.md|uv run pytest <ids>
 skills/quick-fix/test-failures.md|forge test --match-test <name>
 skills/quick-fix/test-failures.md|When you cannot tell how to run single tests of a runner, run that runner
@@ -446,6 +447,7 @@ skills/quick-fix/SKILL.md|so the item stays open, and the report says so
 skills/quick-fix/SKILL.md|step 1 of `## Work in a worktree` takes the place of this step
 skills/quick-fix/SKILL.md|In a worktree, the question offers what
 skills/quick-fix/SKILL.md|pass `<worktree>` to **Leftovers**
+skills/quick-fix/SKILL.md|every **Write** of this mode, with its commit, runs in it
 skills/implement/SKILL.md|look for a peer session with `ListAgents`
 skills/implement/SKILL.md|section `## Peer sessions` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`
 skills/implement/SKILL.md|also when the branch is already checked out
@@ -470,6 +472,7 @@ skills/pr-review/SKILL.md|then only the section `## Review threads`
 skills/pr-review/SKILL.md|run the section `## Review threads` after this step, also when step 5 then stops
 skills/pr-review/SKILL.md|list the threads of `## Review threads` as step 11 does
 skills/pr-review/SKILL.md|each `T` number with its author, its verdict and its reason
+skills/pr-review/SKILL.md|Give the user the list only for a separate request
 skills/pr-review/SKILL.md|## Review threads
 skills/pr-review/SKILL.md|gh api user --jq .login
 skills/pr-review/SKILL.md|reviewThreads(first: 50, after: $endCursor)
@@ -510,7 +513,8 @@ skills/pr-review/SKILL.md|A request with both kinds stops when the two heads dif
 skills/pr-review/SKILL.md|Only an item with the verdict `valid` and `State: open` is fixed
 skills/pr-review/SKILL.md|the full text of the named findings and `T` items
 skills/pr-review/SKILL.md|for each fixed `T` item in the threads file
-skills/pr-review/SKILL.md|whose first comment has the URL of the `Thread:` line
+skills/pr-review/SKILL.md|take the id from its `Thread id:` line
+skills/pr-review/SKILL.md|the line `Thread id: <id>`
 skills/pr-review/SKILL.md|Resolved <YYYY-MM-DD>
 skills/pr-review/SKILL.md|apply the rule of step 9 of `## Steps` for `git check-ignore` and `info/exclude` to this file
 skills/review/SKILL.md|and `actionable` when the document sets a task for an executor, such as a ticket, a brief or a runbook

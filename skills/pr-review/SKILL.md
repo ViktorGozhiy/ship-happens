@@ -27,7 +27,7 @@ A pull request number, or a branch name. For a branch the user may also give a d
    - For a pull request, run `gh pr view <number> --json mergeable,mergeStateStatus`. Report `mergeable` `UNKNOWN` as unknown. `git merge-tree` decides whether the head conflicts.
    - For a pull request, run `gh pr checks <number>` and read its printed output, never its exit code: a pending check, a failed check and a pull request with no checks all exit non-zero. Each line names a check and its state, such as `pass`, `fail`, `pending` or `skipping`. A pull request with no checks prints that no checks were reported. Keep the checks that failed or are pending.
 
-   For a pull request, run the section `## Review threads` after this step, also when step 5 then stops.
+   For a pull request, run the section `## Review threads` after this step, also when step 5 then stops. In a review its step 7 gives no list, because the summary of step 11 or the stop message of step 5 gives it.
 5. Look for an existing review record. Its name is `pr-<number>.md` for a pull request, or `branch-<name>.md` for a branch with every `/` in the name replaced by `-`. It lives in `.claude/reviews/` of the project. Its first line is `Reviewed head: <hash>`.
    - When the recorded hash equals the head, there is nothing new to review. Give the user the merge state of step 4 as the second bullet of step 11 says, say that the head has no new commits since the record, list the threads of `## Review threads` as step 11 does, and stop. Change no record.
    - No record: the range starts at `git merge-base origin/<base branch> <head>`.
@@ -141,10 +141,10 @@ Check the review threads and the review bodies of others on a pull request again
 5. Read the bodies of the reviews by other logins. Give each remark in them that has no thread a verdict in the same way.
 6. Write `.claude/reviews/pr-<number>-threads.md`. Line 1 of `pr-<number>.md` claims a code review of a head, so the check never writes the review record.
    - Line 1 is `Checked head: <head hash>`.
-   - Each thread or remark gets a heading `### T<n>. <verdict>: <title>`. Then follows the line `Thread: <url>` with the URL of the first comment of the thread, or, for a remark in a review body, the line `Review: <url>` with the URL of the review and the line `Quote: <the first sentence of the remark>`. Then follow `Author: <login>`, `Line: <path>:<line>` with its line at the head or `Line: none`, `State: open`, and the text with the reason.
-   - A later check keeps each earlier `T` number: a thread by its URL, a remark in a review body by its review URL and its quote. It numbers new items after the highest number. It keeps the `Replied` and `Resolved` lines, and a `State: resolved at <hash>` that a fix set. It changes a state only from `open`: to `State: resolved on GitHub` when the thread is resolved on GitHub, or to `State: gone` when the review body lacks the quote. An item in such a state is not fixed and not replied to. For each item whose state stays `open`, it writes the verdict, the line and the reason of this check.
+   - Each thread or remark gets a heading `### T<n>. <verdict>: <title>`. Then follows the line `Thread: <url>` with the URL of the first comment of the thread and the line `Thread id: <id>` with the `id` of the thread (the `PRRT_` node id), or, for a remark in a review body, the line `Review: <url>` with the URL of the review and the line `Quote: <the first sentence of the remark>`. Then follow `Author: <login>`, `Line: <path>:<line>` with its line at the head or `Line: none`, `State: open`, and the text with the reason.
+   - A later check keeps each earlier `T` number: a thread by its URL, a remark in a review body by its review URL and its quote. It numbers new items after the highest number. It keeps the `Thread id`, `Replied` and `Resolved` lines, and a `State: resolved at <hash>` that a fix set. It changes a state only from `open`: to `State: resolved on GitHub` when the thread is resolved on GitHub, or to `State: gone` when the review body lacks the quote. An item in such a state is not fixed and not replied to. For each item whose state stays `open`, it writes the verdict, the line and the reason of this check.
    - Create `.claude/reviews/` if it is missing. Before the first write, apply the rule of step 9 of `## Steps` for `git check-ignore` and `info/exclude` to this file.
-7. Give the user the list as step 11 of `## Steps` says: each `T` number with its author, its verdict and its reason.
+7. Give the user the list only for a separate request, as step 11 of `## Steps` says: each `T` number with its author, its verdict and its reason. Inside a review, the summary of step 11 or the stop message of step 5 gives it.
 
 ## Replies in threads
 
@@ -159,7 +159,7 @@ Reply in the threads of others, or resolve them, only on the word of the user in
    gh api repos/{owner}/{repo}/pulls/<number>/comments/<databaseId>/replies -X POST -f body=<text>
    ```
 
-5. Resolving skips a `valid` item with `State: open`, and the report says so. To resolve another item, run the threads query of step 2 of `## Review threads` again, take the `id` of the thread whose first comment has the URL of the `Thread:` line, and run:
+5. Resolving skips a `valid` item with `State: open`, and the report says so. To resolve another item, take the id from its `Thread id:` line and run:
 
    ```
    gh api graphql -F threadId=<id> -f query='mutation($threadId: ID!) { resolveReviewThread(input: {threadId: $threadId}) { thread { isResolved } } }'
