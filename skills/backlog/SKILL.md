@@ -61,7 +61,7 @@ First report the open items in three groups and wait for the user's answer. Then
 Before the report:
 
 1. Find the default branch: the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, ask the user for the default branch.
-2. When `git status --short` prints anything, stop and ask the user how to handle the changes.
+2. Look for a peer session with `ListAgents`, as the section `## Peer sessions` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says. When there is a peer, ask the user: wait, or work in the main tree anyway. Then, when `git status --short` prints anything, stop and ask the user how to handle the changes.
 3. When the branch that is checked out is not the default branch, ask the user whether to check out the default branch or to stop. **List** reads the backlog of the branch that is checked out, and every item is fixed on a branch cut from the default branch.
 4. Take the full test command as the last sentence of step 2 of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says: from the project's `CLAUDE.md`, then the README, else ask the user.
 
@@ -86,7 +86,7 @@ The answer:
 
 The work, after the answer. Every question came before this point, and nothing is asked after it:
 
-10. Say in one line that the action now runs without questions to its end, and name the items.
+10. Look for peer sessions again as step 2 says, because the answer may come much later. A peer that step 2 did not find stops the action with a short report that quotes its line, because nothing is asked after the answer. The unattended mode runs no check of its own. Otherwise say in one line that the action now runs without questions to its end, and name the items.
 11. Take the items in the order of step 5, up to the largest number when the user named one. An item that returns `skipped: size` does not count toward that number.
 12. Before each item, run `git checkout <default branch>`, then `git status --short`. When the checkout fails or the status prints anything, stop the action as step 14 says for a dirty tree, and name the item, the error text of a failed checkout and the files.
 13. Load `sh:quick-fix` with the Skill tool, and run the section `## Unattended mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` with the item's path, the full test command, the default branch, and the chosen option with its reason when the item has one. Record the line it returns.

@@ -434,6 +434,18 @@ skills/quick-fix/SKILL.md|so the item stays open, and the report says so
 skills/quick-fix/SKILL.md|step 1 of `## Work in a worktree` takes the place of this step
 skills/quick-fix/SKILL.md|In a worktree, the question offers what
 skills/quick-fix/SKILL.md|pass `<worktree>` to **Leftovers**
+skills/implement/SKILL.md|look for a peer session with `ListAgents`
+skills/implement/SKILL.md|section `## Peer sessions` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`
+skills/implement/SKILL.md|also when the branch is already checked out
+skills/implement/SKILL.md|step 4 applies and the check asks nothing
+skills/implement/SKILL.md|wait, or work in the main tree anyway
+skills/implement/SKILL.md|is not a statement that another session works in this repository
+skills/backlog/SKILL.md|Look for a peer session with `ListAgents`
+skills/backlog/SKILL.md|section `## Peer sessions` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`
+skills/backlog/SKILL.md|wait, or work in the main tree anyway
+skills/backlog/SKILL.md|Look for peer sessions again as step 2 says
+skills/backlog/SKILL.md|A peer that step 2 did not find stops the action
+skills/backlog/SKILL.md|The unattended mode runs no check of its own
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec

@@ -13,7 +13,7 @@ The path of a reviewed plan. Its header names the spec and the project's full te
 
 ## Setup
 
-1. When `git status` shows uncommitted changes, stop and ask the user how to handle them.
+1. First, also when the branch is already checked out, look for a peer session with `ListAgents`, as the section `## Peer sessions` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` says. When the user has said that another session works in this repository, step 4 applies and the check asks nothing. Otherwise, when there is a peer, ask the user: wait, or work in the main tree anyway. The answer "work in the main tree anyway" is not a statement that another session works in this repository. Then, when `git status` shows uncommitted changes, stop and ask the user how to handle them.
 2. The branch name is the plan's file name without the date and without `.md`. For `2026-10-05-skill-set.md` it is `skill-set`.
 3. When the branch does not exist, run `git rev-parse HEAD` and keep the hash as the base, then create the branch in the current working tree. When it exists, check it out, and the base is the output of `git merge-base HEAD <default branch>`. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix, which is the name of the local branch. When that fails, ask the user.
 4. Use a git worktree only when the user has said that another session works in this repository.
