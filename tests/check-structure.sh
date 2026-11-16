@@ -106,6 +106,7 @@ description:skills/review/SKILL.md|only when the user asks
 description:skills/pr-review/SKILL.md|post named findings
 description:skills/pr-review/SKILL.md|fix named findings
 description:skills/pr-review/SKILL.md|check the review comments of others on a pull request
+description:skills/pr-review/SKILL.md|reply in their threads or resolve them
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
 skills/quick-fix/SKILL.md|## Unattended mode
 skills/quick-fix/SKILL.md|Fix small items
@@ -301,7 +302,7 @@ skills/pr-review/SKILL.md|exists, say so and fix nothing
 skills/pr-review/SKILL.md|stop and propose an update review
 skills/pr-review/SKILL.md|a number the record does not hold
 skills/pr-review/SKILL.md|A finding whose state is resolved
-skills/pr-review/SKILL.md|When no named finding is left, fix nothing
+skills/pr-review/SKILL.md|When no named finding and no `T` item is left, fix nothing
 skills/pr-review/SKILL.md|--json title,body,baseRefName,headRefName,isCrossRepository
 skills/pr-review/SKILL.md|say that the branch lies in a fork, and stop
 skills/pr-review/SKILL.md|git worktree add --detach <that directory>/wt-fix <head>
@@ -454,7 +455,7 @@ skills/pr-review/SKILL.md|"ok" posts the findings proposed `post`, and numbers n
 skills/pr-review/SKILL.md|or answers "ok" to a summary of step 11
 skills/pr-review/SKILL.md|and step 12 when the user names findings to post or answers "ok" to the summary
 skills/pr-review/SKILL.md|Check the open review threads of others on a pull request against the head
-skills/pr-review/SKILL.md|or to check the review comments of others on a pull request, which step 1 handles
+skills/pr-review/SKILL.md|or to reply in their threads or resolve them, which step 1 handles
 skills/pr-review/SKILL.md|then only the section `## Review threads`
 skills/pr-review/SKILL.md|run the section `## Review threads` after this step, also when step 5 then stops
 skills/pr-review/SKILL.md|list the threads of `## Review threads` as step 11 does
@@ -479,6 +480,28 @@ skills/pr-review/SKILL.md|For an outdated thread, read the code
 skills/pr-review/SKILL.md|`wrong` when it does not apply
 skills/pr-review/SKILL.md|`fixed` when the head does not have the problem
 skills/pr-review/SKILL.md|whose first comment is not by the login of step 1
+skills/pr-review/SKILL.md|Reply in those threads or resolve them only when the user names them in this session
+skills/pr-review/SKILL.md|then only the section `## Replies in threads`
+skills/pr-review/SKILL.md|A `T` item of the threads file is never posted
+skills/pr-review/SKILL.md|## Replies in threads
+skills/pr-review/SKILL.md|a reply on GitHub cannot be taken back
+skills/pr-review/SKILL.md|Reply and resolve nothing until the user names `T` numbers from that list
+skills/pr-review/SKILL.md|except those with `State: resolved on GitHub` or `State: gone`
+skills/pr-review/SKILL.md|An item with `Review:` has no thread
+skills/pr-review/SKILL.md|for `valid` with `State: open`, that it is not fixed yet
+skills/pr-review/SKILL.md|the number after `discussion_r` in the `Thread:` URL
+skills/pr-review/SKILL.md|pulls/<number>/comments/<databaseId>/replies -X POST -f body=<text>
+skills/pr-review/SKILL.md|Resolving skips a `valid` item with `State: open`
+skills/pr-review/SKILL.md|resolveReviewThread
+skills/pr-review/SKILL.md|Replied <YYYY-MM-DD>: <url>
+skills/pr-review/SKILL.md|`T` numbers need only the threads file
+skills/pr-review/SKILL.md|differs from `Checked head:` of the threads file
+skills/pr-review/SKILL.md|A request with both kinds stops when the two heads differ
+skills/pr-review/SKILL.md|Only an item with the verdict `valid` and `State: open` is fixed
+skills/pr-review/SKILL.md|the full text of the named findings and `T` items
+skills/pr-review/SKILL.md|for each fixed `T` item in the threads file
+skills/pr-review/SKILL.md|whose first comment has the URL of the `Thread:` line
+skills/pr-review/SKILL.md|Resolved <YYYY-MM-DD>
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec
