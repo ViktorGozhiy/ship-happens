@@ -408,6 +408,32 @@ skills/backlog/SKILL.md|They are not candidates, and they start no further set
 skills/backlog/SKILL.md|each dropped candidate, with its reason
 skills/backlog/SKILL.md|When there is no candidate, go to step 17
 skills/backlog/SKILL.md|come from one review directory, run no second set
+skills/quick-fix/SKILL.md|## Peer sessions
+skills/quick-fix/SKILL.md|When the session has a tool `ListAgents`, call it
+skills/quick-fix/SKILL.md|or starts with that name and a hyphen
+skills/quick-fix/SKILL.md|`ListAgents` does not list the current session
+skills/quick-fix/SKILL.md|quote the line of the peer from `ListAgents`
+skills/quick-fix/SKILL.md|say in the question that the changes may belong to the peer
+skills/quick-fix/SKILL.md|Never poll for the peer
+skills/quick-fix/SKILL.md|wait, work in a worktree without a merge, or work in the main tree anyway
+skills/quick-fix/SKILL.md|Step 2, without the peer check
+skills/quick-fix/SKILL.md|## Work in a worktree
+skills/quick-fix/SKILL.md|git worktree add -b fix/<slug> <worktree> <default branch>
+skills/quick-fix/SKILL.md|<scratch>/quick-fix-<YYYYMMDD-HHMMSS>
+skills/quick-fix/SKILL.md|because the branch in the main tree belongs to the peer
+skills/quick-fix/SKILL.md|so their commits land on `fix/<slug>`
+skills/quick-fix/SKILL.md|git checkout <default branch> && git merge --ff-only fix/<slug>
+skills/quick-fix/SKILL.md|The worktree stays
+skills/quick-fix/SKILL.md|optionally the worktree of a normal run that works in one
+skills/backlog/SKILL.md|and the worktree when the skill works in one
+skills/backlog/SKILL.md|the worktree you were given, when there is one
+skills/quick-fix/test-failures.md|and in a run of `sh:quick-fix` that works in a worktree
+skills/quick-fix/SKILL.md|Without the tool, skip the check
+skills/quick-fix/SKILL.md|ask the user for it when that command fails
+skills/quick-fix/SKILL.md|so the item stays open, and the report says so
+skills/quick-fix/SKILL.md|step 1 of `## Work in a worktree` takes the place of this step
+skills/quick-fix/SKILL.md|In a worktree, the question offers what
+skills/quick-fix/SKILL.md|pass `<worktree>` to **Leftovers**
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec

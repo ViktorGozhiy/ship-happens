@@ -14,7 +14,7 @@ The base commit of the comparison is:
 
 "Void" means that the comparison cannot be made, and every failure counts as new. A void result counts as a failure of the command, also when it names no test, and it never satisfies "no new failure". After a void result, go to step 9.
 
-In the pull request mode every git command, every rebuild and every test run of these steps runs in the worktree, so that the main working tree stays untouched.
+In the pull request mode, and in a run of `sh:quick-fix` that works in a worktree, every git command, every rebuild and every test run of these steps runs in the worktree, so that the main working tree stays untouched.
 
 1. Read `test-head.txt`. The result is void when any of these holds, and no base run happens: the output names no failing test; it shows a build error, a collection error, a lint error or a timeout; the command exited non-zero with all tests passing; the run stopped before all its suites ran, as `uv run pytest && forge test` does after a failing pytest, as `mvn test` does at the first failed module, and as `cargo test` does at the first failing test binary.
 2. Run `git status --short`. When it prints anything, the result is void. Stash nothing and discard nothing.

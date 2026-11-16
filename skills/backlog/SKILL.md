@@ -136,7 +136,7 @@ Input: an item, and an outcome from the user unless the item's head already reco
 
 The procedure that `sh:review`, `sh:quick-fix` and `sh:implement` follow at their end, and the action for "what should go into the backlog before this session ends".
 
-Input from a skill that runs this action: the sources of the candidates, with the path of the review directory when a source is the advice of a code review; whether fix now is allowed; and the skill's intent and full test command when it has them. Run directly, the source is the session, and there is no intent and no test command. Fix now is then allowed only when the branch that is checked out is not the default branch. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, fix now is not allowed.
+Input from a skill that runs this action: the sources of the candidates, with the path of the review directory when a source is the advice of a code review; whether fix now is allowed; the skill's intent and full test command when it has them; and the worktree when the skill works in one. With a worktree, every **Write** and every git command of this action runs in it, with the backlog directory that the format gives for a git worktree, and step 6 passes the worktree to the fix-now mode. Run directly, the source is the session, and there is no intent and no test command. Fix now is then allowed only when the branch that is checked out is not the default branch. The default branch is the output of `git symbolic-ref --short refs/remotes/origin/HEAD` without the `origin/` prefix. When that command fails, fix now is not allowed.
 
 1. Collect the candidates: work that remains to be done, a problem that was not fixed, a question that was not answered. A skill that runs this action names its sources. Run directly, the source is the session.
    - The advice of a code review is the `## Advice` section of every findings file in the review directory. Read each section from the `## Advice` line to the next line that starts with `## `, never the whole file:
@@ -161,5 +161,6 @@ Input from a skill that runs this action: the sources of the candidates, with th
 6. When the fix-now set is empty, the action ends here, and the skill that ran it goes on with its next step. Otherwise run `sh:quick-fix` in the section `## Fix-now mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md`. This step is the only place that starts a fix-now run. Pass:
    - the full text of each item of the fix-now set: for the advice of a code review, the whole remark from the `## Advice` section of its findings file, not the one-line candidate; for a candidate from the session, the candidate as the session states it, with its evidence;
    - the intent you were given, or none in a direct run;
-   - the test command you were given, or none.
+   - the test command you were given, or none;
+   - the worktree you were given, when there is one.
 7. When the run returns `stopped: size: <reason>`, show the user the reason and offer to write the items of the fix-now set with **Write**. Write the ones they name. Return the result of the run to the skill that ran this action: `done`, `stopped: size: <reason>` or `stopped: <reason>`.
