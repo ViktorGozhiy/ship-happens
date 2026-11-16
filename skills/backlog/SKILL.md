@@ -56,7 +56,7 @@ When the item is under `closed/`, or its head records its close, say so and stop
 
 Input: optionally the largest number of items to fix. There is no limit unless the user names one.
 
-First report the open items in three groups and wait for the user's answer. Then fix the items the answer takes, one after another, each with `sh:quick-fix` in its unattended mode, and merge each clean result into the default branch. Never push, never run a command that changes state on another host, and never change another repository. Every question comes before the first item. After the answer to the report, ask the user nothing until the leftovers list of step 16.
+First report the open items in three groups and wait for the user's answer. Then fix the items the answer takes, one after another, each with `sh:quick-fix` in its unattended mode, and merge each clean result into the default branch. Never push, never run a command that changes state on another host, and never change another repository. Every question comes before the first item. After the answer to the report, the action asks nothing: it fixes in the same way the leftovers that fit `sh:quick-fix`, and writes to the backlog only those that need a design or belong to an unmerged branch.
 
 Before the report:
 
@@ -84,26 +84,44 @@ The answer:
 - An answer may give another choice for an item. It becomes the chosen option of that item.
 - A number of **Needs a design** or **Not now** is not taken, also with another choice, and the report says so.
 
-The work, after the answer. Every question came before this point, and nothing is asked until the leftovers list:
+The work, after the answer. Every question came before this point, and nothing is asked after it:
 
-10. Say in one line that the action now runs without questions until its leftovers list, and name the items.
+10. Say in one line that the action now runs without questions to its end, and name the items.
 11. Take the items in the order of step 5, up to the largest number when the user named one. An item that returns `skipped: size` does not count toward that number.
 12. Before each item, run `git checkout <default branch>`, then `git status --short`. When the checkout fails or the status prints anything, stop the action as step 14 says for a dirty tree, and name the item, the error text of a failed checkout and the files.
 13. Load `sh:quick-fix` with the Skill tool, and run the section `## Unattended mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` with the item's path, the full test command, the default branch, and the chosen option with its reason when the item has one. Record the line it returns.
-14. After the line, whatever it says, run `git status --short`. When it prints anything, stop the action. A line that starts `stopped: tree:` stops the action in the same way, also on a clean tree, because the environment may still be built for another commit. Stay on the branch that is checked out, give the report of step 15 with the files that `git status --short` prints and the review directories that the returned lines named, and end. Show no leftovers list and ask nothing: the user can run **Leftovers** directly once the tree is clean. Write nothing on a fix branch. When the tree is clean and the line does not start `stopped: tree:`, go on with the next item.
+14. After the line, whatever it says, run `git status --short`. When it prints anything, stop the action. A line that starts `stopped: tree:` stops the action in the same way, also on a clean tree, because the environment may still be built for another commit. Stay on the branch that is checked out, give the report of step 17 with the files that `git status --short` prints and the review directories that the returned lines named, and end. Run no leftovers and ask nothing: the user can run **Leftovers** directly once the tree is clean. Write nothing on a fix branch. When the tree is clean and the line does not start `stopped: tree:`, go on with the next item.
 
 After the last item:
 
-15. Unless the action stopped as step 14 says, run `git checkout <default branch>`. When that checkout fails, treat it as a stop on a dirty tree as step 14 says: stay on the branch that is checked out, give the report below with the error text of the failed checkout and the files that `git status --short` prints, show no leftovers list and ask nothing. Report:
+15. Unless the action stopped as step 14 says, run `git checkout <default branch>`. When that checkout fails, treat it as a stop on a dirty tree as step 14 says: stay on the branch that is checked out, give the report of step 17 with the error text of the failed checkout and the files that `git status --short` prints, run no leftovers and ask nothing.
+16. Handle the leftovers without a question:
+    1. Collect the candidates as step 1 of **Leftovers** says, from the advice of every review directory that a returned line names, and from the open blocking defects of `round-4/full.md` in the review directory of each item that returned `unmerged:` with `open defects at the cap`. When there is no candidate, go to step 17.
+    2. Sort each candidate on its own:
+       - **fix**: the advice of an item that returned `merged:`, when it fits one implementer task and changes no interface that other code depends on, the test of step 1 of `sh:quick-fix`;
+       - **backlog**: a candidate that needs a design, an open blocking defect of `round-4/full.md`, and the advice of an item that returned `unmerged:` or `stopped:`. The last two name the branch they were found on, because their code exists only on that branch;
+       - **drop**: a candidate that is probably done already or whose benefit does not repay the work.
+    3. Write each **backlog** candidate with **Write** on the default branch. Before each **Write** of this step, run `git checkout <default branch>`, because an unmerged set leaves its branch checked out and **Write** commits on the branch that is checked out. A failed checkout is a stop as step 15 says.
+    4. When there are **fix** candidates, run `git checkout <default branch>` and `git status --short` as step 12 says. Then load `sh:quick-fix` with the Skill tool, and run the section `## Unattended mode` of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/SKILL.md` with:
+       - in place of an item path, the full text of each **fix** candidate, as step 6 of **Leftovers** passes it to the fix-now mode;
+       - the slug `leftovers-<YYYYMMDD-HHMMSS>`, with the time at which this set starts;
+       - the full test command and the default branch.
+    5. After each returned line, first run the check of step 14: `git status --short`, and the test for a line that starts `stopped: tree:`. When step 14 stops the action, stay on the branch that is checked out, write nothing, and give the report of step 17, with the candidates of this set and of the sets not yet run listed as not handled, so that the user can run **Leftovers** once the tree is clean.
+    6. When the set returns `skipped: size`, run one set per source review directory in the same way, each with its own time in its slug. When all **fix** candidates come from one review directory, run no second set, and write each of them as an item of its own with **Write**, as sub-step 3 says. Write each candidate of a set per directory that returns `skipped: size` too in the same way.
+    7. When a set returns `unmerged:`, or `stopped:` that step 14 did not stop on, write its candidates with **Write** as one backlog item `<date>-leftovers-<YYYYMMDD-HHMMSS>.md`, with the same time as its branch, as sub-step 3 says. The item names the branch `fix/leftovers-<YYYYMMDD-HHMMSS>` and the reason of the returned line, so that step 6 of a later run finds the branch and puts the item under **Not now**.
+17. Report:
     - each item merged, with its branch, the commits that `git log --oneline <base hash>..fix/<slug>` prints with the base hash of its returned line, the number of `round-*` directories in its review directory, and the commit or the `mv` that closed the item;
     - each branch left unmerged, with its reason: the items that returned `unmerged:`, the items that returned `stopped:` on a clean tree, and the branches of an earlier run that step 6 put under **Not now**;
     - each item skipped, with its reason. An item with a chosen option that returned `skipped: size` is listed as needing a design: **Fix small items** tries no second option;
     - a list of decisions: each item, its option and the reason;
     - the new failures and the base failures of each item, with the path from its returned line. An `unmerged:` line with `tests failed` and no `; tests:` part means that the comparison did not run, and the report says so;
-    - the items the action did not take, with their groups, also those past the largest number.
+    - the items the action did not take, with their groups, also those past the largest number;
+    - each leftovers set, with its branch, the commits that `git log --oneline <base hash>..fix/leftovers-<YYYYMMDD-HHMMSS>` prints with the base hash of its returned line, and whether it merged;
+    - the advice of the review directory of each leftovers set, as plain lines, collected as step 1 of **Leftovers** says for the advice of a code review. They are not candidates, and they start no further set;
+    - each backlog item written in step 16, with its path;
+    - each dropped candidate, with its reason.
 
     Say that nothing was pushed. No merged tree had a new failure before its fast-forward, so run no further test.
-16. Run **Leftovers** with fix now not allowed. Its sources are the advice of every review directory that a returned line names, with the path of each, and the open blocking defects of `round-4/full.md` in the review directory of each item that returned `unmerged:` with `open defects at the cap`. Those defects are backlog only, and each candidate made from one names the unmerged branch it was found on. **Leftovers** writes the candidates that the answer puts in the backlog set on the default branch, which is checked out.
 
 ## Close by hand
 

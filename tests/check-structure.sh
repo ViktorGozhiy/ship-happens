@@ -238,9 +238,9 @@ skills/implement/SKILL.md|follow `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-fa
 skills/implement/SKILL.md|When `test-comparison.md` exists, list the new failures and the base failures with its path
 skills/backlog/SKILL.md|There is no limit unless the user names one
 skills/backlog/SKILL.md|Every question comes before the first item
-skills/backlog/SKILL.md|ask the user nothing until the leftovers list of step 16
-skills/backlog/SKILL.md|Every question came before this point, and nothing is asked until the leftovers list
-skills/backlog/SKILL.md|runs without questions until its leftovers list
+skills/backlog/SKILL.md|After the answer to the report, the action asks nothing
+skills/backlog/SKILL.md|Every question came before this point, and nothing is asked after it
+skills/backlog/SKILL.md|runs without questions to its end
 skills/backlog/SKILL.md|Load `sh:quick-fix` with the Skill tool, and run the section
 skills/backlog/SKILL.md|The answer may come later in the session, and it continues at step 10
 skills/backlog/SKILL.md|in the order **Not now**, **Needs a design**, **Quick fix with a choice**, **Quick fix, no choice**
@@ -392,6 +392,22 @@ skills/quick-fix/SKILL.md|Without a close commit, the condition on the close com
 skills/quick-fix/SKILL.md|or the slug of the input with a description
 skills/quick-fix/SKILL.md|Step 10, only with an item path
 skills/quick-fix/SKILL.md|with an item path in a git-ignored backlog, close the item
+skills/backlog/SKILL.md|Run no leftovers and ask nothing
+skills/backlog/SKILL.md|give the report of step 17
+skills/backlog/SKILL.md|Sort each candidate on its own
+skills/backlog/SKILL.md|the test of step 1 of `sh:quick-fix`
+skills/backlog/SKILL.md|The last two name the branch they were found on
+skills/backlog/SKILL.md|Before each **Write** of this step, run `git checkout <default branch>`
+skills/backlog/SKILL.md|in place of an item path, the full text of each **fix** candidate
+skills/backlog/SKILL.md|the slug `leftovers-<YYYYMMDD-HHMMSS>`, with the time at which this set starts
+skills/backlog/SKILL.md|first run the check of step 14
+skills/backlog/SKILL.md|listed as not handled
+skills/backlog/SKILL.md|run one set per source review directory
+skills/backlog/SKILL.md|as one backlog item `<date>-leftovers-<YYYYMMDD-HHMMSS>.md`
+skills/backlog/SKILL.md|They are not candidates, and they start no further set
+skills/backlog/SKILL.md|each dropped candidate, with its reason
+skills/backlog/SKILL.md|When there is no candidate, go to step 17
+skills/backlog/SKILL.md|come from one review directory, run no second set
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec
