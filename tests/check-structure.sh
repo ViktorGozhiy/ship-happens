@@ -386,6 +386,12 @@ skills/quick-fix/SKILL.md|in its `remains` part what of `## Done when` is not tr
 skills/quick-fix/SKILL.md|When step 10 wrote a `Partly done` line, or left one for step 13, repeat the line
 skills/implement/SKILL.md|its `remains` part says what of `## Done when` is not true yet
 skills/implement/SKILL.md|When step 3 wrote a `Partly done` line, or left one for step 6, repeat the line
+skills/quick-fix/SKILL.md|a description and a slug in place of the item path
+skills/quick-fix/SKILL.md|With it, the branch is `fix/<slug>`, step 10 does not run, and there is no `## Resolution`
+skills/quick-fix/SKILL.md|Without a close commit, the condition on the close commit holds
+skills/quick-fix/SKILL.md|or the slug of the input with a description
+skills/quick-fix/SKILL.md|Step 10, only with an item path
+skills/quick-fix/SKILL.md|with an item path in a git-ignored backlog, close the item
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec

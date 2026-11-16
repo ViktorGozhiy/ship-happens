@@ -63,6 +63,8 @@ Only the **Fix small items** action of `sh:backlog` runs this mode. It asks the 
 
 Input: the path of a backlog item, the full test command, the default branch, and optionally the chosen option with its reason. The description of the change is the item's whole text, as `## Input` says. With a chosen option, a sentence that names the option follows the text. This sentence does not narrow the change, so step 10 closes the item and writes no `Partly done` line. `## Resolution` also names the option and the reason, because `git log` does not hold them.
 
+For the leftovers of **Fix small items**, the input holds a description and a slug in place of the item path, with the full test command and the default branch. The description is the description of the change. With it, the branch is `fix/<slug>`, step 10 does not run, and there is no `## Resolution`. Without a close commit, the condition on the close commit holds. The merge conditions, the return lines and the comparison of `test-failures.md` are the same as with an item path, and in step 8 of `test-failures.md` the source of the change is the description.
+
 Merge the fix branch only when all of these hold:
 
 - the review ended with a clean read within the cap of step 8;
@@ -78,13 +80,13 @@ Run the steps of the normal run with these changes:
 
 1. Step 1: when the change does not fit, make no commit and return `skipped: size: <reason>`. Never ask about a choice between solutions, and propose no `sh:design`. Try no second option.
 2. Step 2 does not run. The caller checked the tree and passed the test command.
-3. Step 3: the branch is `fix/<slug>`, where `<slug>` is the item's file name without the date prefix and without `.md`.
+3. Step 3: the branch is `fix/<slug>`, where `<slug>` is the item's file name without the date prefix and without `.md`, or the slug of the input with a description.
 4. Step 4: return `stopped: <reason>` when the implementer returns `blocked`, ends with an error or returns none of the three lines. The branch is not merged after a `deviated:` line.
 5. Steps 5 to 8: return `stopped: <reason>` when a reviewer fails twice as step 7 says, or when a fixer ends with an error or returns a line starting with `blocked: `. The branch is not merged after a `deviated:` line of a fixer. When `round-4/full.md` reports a blocking defect, the review ends there and the branch is not merged. Show nothing to the user and write nothing into the backlog.
 6. Step 9: run the test command once with its output in `<review directory>/test-head.txt`, by a plain redirect, because with `| tee` the exit status is that of `tee`, also when the branch will not be merged for another reason. When it fails, dispatch no implementer. Run the comparison of `${CLAUDE_PLUGIN_ROOT}/skills/quick-fix/test-failures.md`, which is its steps and not its section `## After the comparison`, only when the first two conditions above hold, so that a branch that cannot merge costs no second run. The branch is not merged, with the reason `tests failed`, after a failing run with no comparison, after a new failure and after a void result.
-7. Step 10, only when the first three conditions above hold. In a tracked backlog, close the item and commit the close on the fix branch. When that commit changes a file that is not a `.md` file, the branch is not merged. In a git-ignored backlog, change nothing in this step; step 9 of this list closes the item after the merge.
+7. Step 10, only with an item path and only when the first three conditions above hold. In a tracked backlog, close the item and commit the close on the fix branch. When that commit changes a file that is not a `.md` file, the branch is not merged. In a git-ignored backlog, change nothing in this step; step 9 of this list closes the item after the merge.
 8. Steps 11 to 13 do not run: make no report to the user, run no **Leftovers** and ask no merge question.
-9. When all four conditions hold, run `git checkout <default branch>`. When the checkout fails, run no merge and the branch stays unmerged. Then run `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, in a git-ignored backlog, close the item as step 10 says; it needs no commit.
+9. When all four conditions hold, run `git checkout <default branch>`. When the checkout fails, run no merge and the branch stays unmerged. Then run `git merge --ff-only fix/<slug>`. When the fast-forward fails, the branch stays unmerged. After the merge, with an item path in a git-ignored backlog, close the item as step 10 says; it needs no commit.
 
 Return one line:
 
