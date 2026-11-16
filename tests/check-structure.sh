@@ -513,6 +513,13 @@ skills/review/SKILL.md|A ticket that exists only in Jira is written to a file in
 skills/review/SKILL.md|`git check-ignore` exits 128 for such a path
 skills/review/SKILL.md|For `document`, name the aspects that round 1 ran
 skills/review/SKILL.md|so they check `actionable` too
+README.md|the leftovers that fit `sh:quick-fix`
+README.md|with the aspect `actionable`
+README.md|on the base commit only the tests that failed
+README.md|another Claude Code session in the same repository
+README.md|"ok" posts the proposed ones
+README.md|review threads of colleagues and bots
+README.md|what remains of a partly done item
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec
