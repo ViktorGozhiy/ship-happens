@@ -446,6 +446,12 @@ skills/backlog/SKILL.md|wait, or work in the main tree anyway
 skills/backlog/SKILL.md|Look for peer sessions again as step 2 says
 skills/backlog/SKILL.md|A peer that step 2 did not find stops the action
 skills/backlog/SKILL.md|The unattended mode runs no check of its own
+skills/pr-review/SKILL.md|after a summary of step 11 counts as
+skills/pr-review/SKILL.md|each with a proposal, `post` or `skip`, and its reason in one clause
+skills/pr-review/SKILL.md|A finding that a `Posted` line lists, and a resolved finding, get no proposal
+skills/pr-review/SKILL.md|"ok" posts the findings proposed `post`, and numbers name the findings to post
+skills/pr-review/SKILL.md|or answers "ok" to a summary of step 11
+skills/pr-review/SKILL.md|and step 12 when the user names findings to post or answers "ok" to the summary
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec
