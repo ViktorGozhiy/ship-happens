@@ -31,17 +31,18 @@ When the user corrects the priority, change it with **Update**.
 Input: an item and what to change, from the user or from another action: the priority, the state, a `Partly done` line, or a dated section.
 
 1. When the item has no status line of the format, give it one as the format's section on old items says, and propose a priority when it has none.
-2. Change the item as the format's section on updates says. Keep everything else.
+2. Change the item as the format's section on updates says. Keep everything else. A `Partly done` line has the `remains` part of the format, taken from `## Done when`.
 3. Commit it, and report the change and the branch.
 
 ## List
 
 Input: none.
 
-1. Read the head of every `.md` file directly in the backlog directory, not in `closed/` or another subdirectory, with `sed '/^## /q' <item>`. Never read a body for the list.
+1. Read the head of every `.md` file directly in the backlog directory, not in `closed/` or another subdirectory, with `sed '/^## /q' <item>`. Read a body only as step 4 says.
 2. Take the state, the priority and the date raised from the status line. For an old item, take them from whatever header it has, and the date from the file name when the header has none. A missing priority is "not set".
-3. Show a numbered table with the columns priority, date raised, H1 and file name. Order the rows `high`, `normal`, `low`, then "not set"; within a priority, oldest first. Show the deferred items after the table, each with its condition, numbered after the table's last number.
-4. Below that, flag each item whose head says it is closed but which is still outside `closed/`. Propose to move them, and move only the ones the user confirms, with **Close by hand**.
+3. Show a numbered table with the columns priority, date raised, H1, remains and file name. The column remains holds the `remains` part of the newest `Partly done` line, `not stated` when that line has none, and nothing for an item without a `Partly done` line. Order the rows `high`, `normal`, `low`, then "not set"; within a priority, oldest first. Show the deferred items after the table, each with its condition, numbered after the table's last number.
+4. For each item whose head has a `Partly done` line, read the whole item. When a dated part of its body, such as a section `## Update <YYYY-MM-DD>`, is newer than the newest `Partly done` line and records more work, say below the table that the head line of that item is stale, and give what remains from the newest part. Read every other item by its head only.
+5. Below that, flag each item whose head says it is closed but which is still outside `closed/`. Propose to move them, and move only the ones the user confirms, with **Close by hand**.
 
 Do not flag an item because its status line names a branch. An item raised in the review of a branch names that branch, and the merge of that branch does not close the item.
 

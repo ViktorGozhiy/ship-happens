@@ -374,6 +374,18 @@ skills/quick-fix/test-failures.md|when the base run did not reach all its comman
 skills/quick-fix/test-failures.md|shows a build error or a collection error, as step 1 says for the head
 skills/quick-fix/test-failures.md|the first command of the first base run with
 skills/quick-fix/test-failures.md|does not show such an error
+skills/backlog/backlog-format.md|; remains: <what remains>.
+skills/backlog/backlog-format.md|is taken from `## Done when`
+skills/backlog/SKILL.md|A `Partly done` line has the `remains` part of the format
+skills/backlog/SKILL.md|Read a body only as step 4 says
+skills/backlog/SKILL.md|the columns priority, date raised, H1, remains and file name
+skills/backlog/SKILL.md|`not stated` when that line has none
+skills/backlog/SKILL.md|For each item whose head has a `Partly done` line, read the whole item
+skills/backlog/SKILL.md|the head line of that item is stale
+skills/quick-fix/SKILL.md|in its `remains` part what of `## Done when` is not true yet
+skills/quick-fix/SKILL.md|When step 10 wrote a `Partly done` line, or left one for step 13, repeat the line
+skills/implement/SKILL.md|its `remains` part says what of `## Done when` is not true yet
+skills/implement/SKILL.md|When step 3 wrote a `Partly done` line, or left one for step 6, repeat the line
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec

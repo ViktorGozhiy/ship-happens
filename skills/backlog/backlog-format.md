@@ -22,7 +22,7 @@ The head is the lines from the H1 up to the first line that starts with `## `. R
 - After a blank line comes the status line, one paragraph that may wrap: `Status: <state>, priority <high|normal|low>. Raised <YYYY-MM-DD> <source>.`
   - `<state>` is `open`, or `deferred by the user <YYYY-MM-DD> until <condition>`.
   - `<source>` says where the item came from, for example `in the branch review of <branch>`, `by the user`, `while <what the session was doing>`, or `from the Deferred section of <spec path>`.
-- For each partial fix, a line `Partly done <YYYY-MM-DD> on <branch>: <what was done>.` follows the status line, after any earlier `Partly done` line.
+- For each partial fix, a line `Partly done <YYYY-MM-DD> on <branch>: <what was done>; remains: <what remains>.` follows the status line, after any earlier `Partly done` line. `<what remains>` is taken from `## Done when`: the part of it that is not true yet.
 - On a closed item, the line `Closed <YYYY-MM-DD>: <outcome>.` comes before the status line.
 
 Each of these lines is its own paragraph, with a blank line before it. The status line is the only place for the state and the priority.
@@ -36,7 +36,7 @@ Closed 2026-10-20: fixed on fix/gas-base-fee.
 
 Status: open, priority high. Raised 2026-10-13 in the branch review of wip/gas-model.
 
-Partly done 2026-10-15 on fix/gas-l1-fee: the L1 part of the fee is included.
+Partly done 2026-10-15 on fix/gas-l1-fee: the L1 part of the fee is included; remains: the L2 part of the fee is included.
 ```
 
 ## Priority
