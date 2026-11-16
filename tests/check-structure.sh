@@ -182,7 +182,6 @@ skills/quick-fix/test-failures.md|A failed checkout or a failed rebuild counts a
 skills/quick-fix/test-failures.md|git checkout --detach <head hash>
 skills/quick-fix/test-failures.md|stopped: tree: <error>
 skills/quick-fix/test-failures.md|when the base run could not start
-skills/quick-fix/test-failures.md|ran fewer tests than the head run by more than the branch added
 skills/quick-fix/test-failures.md|the same test fails in `test-base.txt`
 skills/quick-fix/test-failures.md|A number that the test compares
 skills/quick-fix/test-failures.md|does not name the test or its file
@@ -197,8 +196,8 @@ skills/quick-fix/test-failures.md|When it prints anything, the result is void
 skills/quick-fix/test-failures.md|the project needs a rebuild after each checkout
 skills/quick-fix/test-failures.md|Take the rebuild command from the project
 skills/quick-fix/test-failures.md|so the rebuild command has to rebuild it
-skills/quick-fix/test-failures.md|the rebuild when step 4 asks for it, and the test command
-skills/quick-fix/test-failures.md|then the rebuild when step 4 asks for it. After a reused
+skills/quick-fix/test-failures.md|the rebuild when step 4 asks for it, and the commands of the base run
+skills/quick-fix/test-failures.md|then the rebuild when step 4 asks for it. It does not run only when no checkout happened
 skills/quick-fix/test-failures.md|return: `git checkout <branch>`, or
 skills/quick-fix/test-failures.md|When the checkout or the rebuild fails, stop and report the branch and the head hash
 skills/quick-fix/test-failures.md|A failure is a base failure only when all of these hold; otherwise it is new
@@ -358,6 +357,23 @@ skills/review/SKILL.md|For `spec`, `plan` and `document` you commit the revised 
 skills/review/SKILL.md|`plan` and `document`: round 1, fix
 skills/review/SKILL.md|For `spec`, `plan` and `document`, add the advice you did not apply
 skills/review/SKILL.md|or `kind` is `spec`, `plan` or `document`, offer no leftovers
+skills/quick-fix/test-failures.md|only the tests that failed on the head, by the ids that `test-head.txt` names
+skills/quick-fix/test-failures.md|git cat-file -e <base>:<file>
+skills/quick-fix/test-failures.md|An id whose file does not exist at the base commit is a new failure
+skills/quick-fix/test-failures.md|covers only the ids that no earlier base run of this skill covered
+skills/quick-fix/test-failures.md|When no id is left, no checkout happens
+skills/quick-fix/test-failures.md|uv run pytest <ids>
+skills/quick-fix/test-failures.md|forge test --match-test <name>
+skills/quick-fix/test-failures.md|When you cannot tell how to run single tests of a runner, run that runner
+skills/quick-fix/test-failures.md|one command per test runner, each whatever the others exit with
+skills/quick-fix/test-failures.md|pytest runs none of the ids when one is missing
+skills/quick-fix/test-failures.md|`ERROR: file or directory not found` for such an id is this case, not a collection error
+skills/quick-fix/test-failures.md|A test that passes alone on the base commit is a new failure
+skills/quick-fix/test-failures.md|also after a reuse that covered new ids
+skills/quick-fix/test-failures.md|when the base run did not reach all its commands
+skills/quick-fix/test-failures.md|shows a build error or a collection error, as step 1 says for the head
+skills/quick-fix/test-failures.md|the first command of the first base run with
+skills/quick-fix/test-failures.md|does not show such an error
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec
