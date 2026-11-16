@@ -374,6 +374,7 @@ skills/quick-fix/test-failures.md|git cat-file -e <base>:<file>
 skills/quick-fix/test-failures.md|An id whose file does not exist at the base commit is a new failure
 skills/quick-fix/test-failures.md|covers only the ids that no earlier base run of this skill covered
 skills/quick-fix/test-failures.md|When no id is left, no checkout happens
+skills/quick-fix/test-failures.md|This holds also on a first base run where every failing id is a new failure
 skills/quick-fix/test-failures.md|A runner with no id to pass does not run on the base
 skills/quick-fix/test-failures.md|uv run pytest <ids>
 skills/quick-fix/test-failures.md|forge test --match-test <name>
@@ -515,6 +516,7 @@ skills/pr-review/SKILL.md|the full text of the named findings and `T` items
 skills/pr-review/SKILL.md|for each fixed `T` item in the threads file
 skills/pr-review/SKILL.md|take the id from its `Thread id:` line
 skills/pr-review/SKILL.md|the line `Thread id: <id>`
+skills/pr-review/SKILL.md|It keeps the `Thread id`, `Replied` and `Resolved` lines
 skills/pr-review/SKILL.md|Resolved <YYYY-MM-DD>
 skills/pr-review/SKILL.md|apply the rule of step 9 of `## Steps` for `git check-ignore` and `info/exclude` to this file
 skills/review/SKILL.md|and `actionable` when the document sets a task for an executor, such as a ticket, a brief or a runbook
