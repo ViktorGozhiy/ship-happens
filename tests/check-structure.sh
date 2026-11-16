@@ -105,6 +105,7 @@ description:skills/backlog/SKILL.md|without questions
 description:skills/review/SKILL.md|only when the user asks
 description:skills/pr-review/SKILL.md|post named findings
 description:skills/pr-review/SKILL.md|fix named findings
+description:skills/pr-review/SKILL.md|check the review comments of others on a pull request
 skills/quick-fix/SKILL.md|git merge --ff-only fix/<slug>
 skills/quick-fix/SKILL.md|## Unattended mode
 skills/quick-fix/SKILL.md|Fix small items
@@ -452,6 +453,32 @@ skills/pr-review/SKILL.md|A finding that a `Posted` line lists, and a resolved f
 skills/pr-review/SKILL.md|"ok" posts the findings proposed `post`, and numbers name the findings to post
 skills/pr-review/SKILL.md|or answers "ok" to a summary of step 11
 skills/pr-review/SKILL.md|and step 12 when the user names findings to post or answers "ok" to the summary
+skills/pr-review/SKILL.md|Check the open review threads of others on a pull request against the head
+skills/pr-review/SKILL.md|or to check the review comments of others on a pull request, which step 1 handles
+skills/pr-review/SKILL.md|then only the section `## Review threads`
+skills/pr-review/SKILL.md|run the section `## Review threads` after this step, also when step 5 then stops
+skills/pr-review/SKILL.md|list the threads of `## Review threads` as step 11 does
+skills/pr-review/SKILL.md|each `T` number with its author, its verdict and its reason
+skills/pr-review/SKILL.md|## Review threads
+skills/pr-review/SKILL.md|gh api user --jq .login
+skills/pr-review/SKILL.md|reviewThreads(first: 50, after: $endCursor)
+skills/pr-review/SKILL.md|originalCommit { oid }
+skills/pr-review/SKILL.md|node(id: $id)
+skills/pr-review/SKILL.md|A bot counts like a person
+skills/pr-review/SKILL.md|The verdict is `valid` when the remark holds at the head
+skills/pr-review/SKILL.md|Give each remark in them that has no thread a verdict in the same way
+skills/pr-review/SKILL.md|.claude/reviews/pr-<number>-threads.md
+skills/pr-review/SKILL.md|Checked head: <head hash>
+skills/pr-review/SKILL.md|### T<n>. <verdict>: <title>
+skills/pr-review/SKILL.md|Quote: <the first sentence of the remark>
+skills/pr-review/SKILL.md|A later check keeps each earlier `T` number
+skills/pr-review/SKILL.md|State: resolved on GitHub
+skills/pr-review/SKILL.md|State: gone
+skills/pr-review/SKILL.md|so the check never writes the review record
+skills/pr-review/SKILL.md|For an outdated thread, read the code
+skills/pr-review/SKILL.md|`wrong` when it does not apply
+skills/pr-review/SKILL.md|`fixed` when the head does not have the problem
+skills/pr-review/SKILL.md|whose first comment is not by the login of step 1
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec
