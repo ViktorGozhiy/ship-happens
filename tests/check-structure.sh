@@ -329,7 +329,12 @@ skills/pr-review/SKILL.md|The report gives the reason, the worktree'\''s path, t
 skills/pr-review/SKILL.md|Git rejects the push when the branch moved: run the `git switch -c` command of step 11, keep the worktree and stop
 skills/pr-review/SKILL.md|The report gives the error of the push, the worktree'\''s path, the head hash and the branch that the command created
 skills/pr-review/SKILL.md|Keep the worktree, and report its path, the branch and the head hash
-agents/document-reviewer.md|`claims`, `reasoning` or `full`
+agents/document-reviewer.md|`claims`, `reasoning`, `actionable` or `full`
+agents/document-reviewer.md|when the document sets a task, that it does and for whom
+agents/document-reviewer.md|can do the work without asking
+agents/document-reviewer.md|Each criterion of done can be checked, each dependency on other work is named
+agents/document-reviewer.md|A gap that would make the executor ask or guess is a blocking defect
+agents/document-reviewer.md|and `actionable` too when `intent` says that the document sets a task
 agents/document-reviewer.md|a wrong belief or a wrong decision
 agents/document-reviewer.md|A false or unsupported statement is a blocking defect
 agents/document-reviewer.md|A conclusion that does not follow, and a contradiction, are blocking defects
@@ -502,6 +507,12 @@ skills/pr-review/SKILL.md|the full text of the named findings and `T` items
 skills/pr-review/SKILL.md|for each fixed `T` item in the threads file
 skills/pr-review/SKILL.md|whose first comment has the URL of the `Thread:` line
 skills/pr-review/SKILL.md|Resolved <YYYY-MM-DD>
+skills/review/SKILL.md|and `actionable` when the document sets a task for an executor, such as a ticket, a brief or a runbook
+skills/review/SKILL.md|write into `intent` that the document sets a task and for whom
+skills/review/SKILL.md|A ticket that exists only in Jira is written to a file in the scratchpad first
+skills/review/SKILL.md|`git check-ignore` exits 128 for such a path
+skills/review/SKILL.md|For `document`, name the aspects that round 1 ran
+skills/review/SKILL.md|so they check `actionable` too
 README.md|`document-reviewer`
 README.md|in three groups
 README.md|A document other than a spec

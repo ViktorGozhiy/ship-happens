@@ -31,7 +31,9 @@ Dispatch one reviewer per aspect, all in one message.
 | spec | `repo-claims`, `completeness`, `complexity` |
 | plan | `coverage`, `feasibility` |
 | code | `behaviour`, `tests`, `simplicity` |
-| document | `claims`, `reasoning` |
+| document | `claims`, `reasoning`, and `actionable` when the document sets a task for an executor, such as a ticket, a brief or a runbook |
+
+For `document`, decide whether the document sets a task for an executor. When it does, add `actionable` to round 1, and write into `intent` that the document sets a task and for whom. The full reads get the same `intent`, so they check `actionable` too. A ticket that exists only in Jira is written to a file in the scratchpad first, because `target` is a path.
 
 For `spec` and `code` the round also has Codex or the `adversarial` reviewer, as follows. Codex and the `adversarial` reviewer take no part in `document`. Run at most four Claude agents at a time.
 
@@ -68,7 +70,7 @@ Codex counts as skipped when `codex` is not on `PATH`, when `git worktree add` o
    - `plan`: dispatch `sh:plan-writer` in fix mode with `plan`, `format` (`${CLAUDE_PLUGIN_ROOT}/skills/plan/plan-format.md`), `findings_dir`, `rejections_file` and `intent`.
    - `code`: dispatch `sh:implementer` in fix mode with `findings_dir`, `rejections_file` and `intent`. It commits its fixes. When it ends with an error or returns a line starting with `blocked: `, stop and report that to the user. Otherwise add the text of each `deviated:` line it returns to the `intent` of every later full reader and of every later fixer, keep the line for the report, then run `git rev-parse HEAD` and use `<base>..<new head>` as the target of the next reader.
 
-   Both agents return one line per finding: `fixed: <title>` or `rejected: <title> (<reason>)`. `sh:implementer` also returns zero or more lines `deviated: <what and why>` and one line per commit, as `git log --oneline` prints it. For `spec`, `plan` and `document` you commit the revised document. When `git check-ignore -q <path>` exits 0 for the document, skip the commit and say so in your report.
+   Both agents return one line per finding: `fixed: <title>` or `rejected: <title> (<reason>)`. `sh:implementer` also returns zero or more lines `deviated: <what and why>` and one line per commit, as `git log --oneline` prints it. For `spec`, `plan` and `document` you commit the revised document. When `git check-ignore -q <path>` exits 0 for the document, skip the commit and say so in your report. A document outside the repository, such as a ticket in the scratchpad, is not committed either, and the report says so: `git check-ignore` exits 128 for such a path, so the rule for ignored files does not cover it.
 3. Dispatch one fresh reviewer of the same kind with the aspect `full` and `findings_file` `round-<n>/full.md`, where `<n>` is the next round number. It reads the whole target and `rejections.md` and reports blocking defects only.
 4. When its verdict is `clean`, stop. Otherwise go to step 2 with this round's directory.
 5. The cap depends on the kind, and it holds when another skill called you.
@@ -81,6 +83,7 @@ Codex counts as skipped when `codex` is not on `PATH`, when `git worktree add` o
 Return the status, the number of rounds, one line per change made, each `deviated:` line a fixer returned, and the rejected findings with their reasons.
 
 - For `spec`, `plan` and `document`, add the advice you did not apply.
+- For `document`, name the aspects that round 1 ran.
 - For `code`, add the advice of the review directory, collected as the **Leftovers** action of `sh:backlog` in `${CLAUDE_PLUGIN_ROOT}/skills/backlog/SKILL.md` says for the advice of a code review. When the review stopped at the cap, add the open blocking defects as the numbered list you showed the user.
 
 ## Leftovers
